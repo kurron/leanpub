@@ -1,3 +1,20 @@
 # Chapter 1
 
+## Section 1
+
+### Sub-Section 1
+
 Hello, world!
+
+[Footnote](http://leanpub.com)
+
+Just click on <hello@leanpub.com> to send us an email.
+
+{language=groovy,line-numbers=on}
+
+// 1950 pixels wide and up to 2700 pixels high at 300PPI
+
+![This is the Image Caption](images/Bob.png)
+
+-# Part 1
+

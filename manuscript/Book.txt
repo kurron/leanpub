@@ -1,2 +1,7 @@
+FrontMatter.txt
+Introduction.txt
+MainMatter.txt
 Chapter01.txt
 Chapter02.txt
+BackMatter.txt
+Appendix01.txt
