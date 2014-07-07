@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/manuscript/code/Code.iml" filepath="$PROJECT_DIR$/manuscript/code/Code.iml" />
       <module fileurl="file://$PROJECT_DIR$/leanpub.iml" filepath="$PROJECT_DIR$/leanpub.iml" />
     </modules>
   </component>
