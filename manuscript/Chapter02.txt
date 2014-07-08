@@ -1,5 +1,29 @@
-# Chapter 2
-   
-It was a **bold** and *italic* night!
-   
-Suddenly, a shot rang out!
+# Technology Stack
+
+## Java 8
+
+## Groovy
+
+## Spring Boot
+
+## Spring AMQP
+
+## Spring Integration
+
+## Spring Data MongoDB
+
+## Spring Data Redis
+
+## RabbitMQ
+
+## MongoDB
+
+## Redis
+
+## SLF4j/Logback
+
+## Gradle
+
+## Git
+
+## Jenkins
