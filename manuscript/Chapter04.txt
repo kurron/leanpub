@@ -1,0 +1,35 @@
+# Authentication Micro-service
+
+## Architecture
+
+### AMQP
+
+### Spring Integration
+
+### MongoDB
+
+## AMQP API
+
+### Spring Boot
+
+### Spring Integration
+
+### Spring Data MongoDB
+
+### Spock
+
+## Shell Implementation
+
+### Spring Shell
+
+### Spring AMQP
+
+## REST API
+
+### Spring MVC
+
+### Spring HATEOAS
+
+### Spring REST Shell
+
+### Swagger 
