@@ -6,7 +6,6 @@ buildscript {
         httpClientVersion = '4.3.3'
         junitVersion = '4.11'
         logbackVersion = '1.1.1'
-        mongoDbDriverVersion = '2.11.4'
         servletApiVersion = '3.0.1'
         slf4jVersion = '1.7.7'
         spockVersion = '0.7-groovy-2.0'
@@ -17,6 +16,10 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
+}
+
+configurations.all {
+    exclude group: 'commons-logging'
 }
 
 if ( true ) {
