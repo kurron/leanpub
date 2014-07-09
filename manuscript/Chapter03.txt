@@ -2,6 +2,17 @@
 The build pipeline refers to all the steps in the tool chain to go from Groovy code to a deployed artifact.  This set of steps may not apply to all projects but it has served me well on the ones I've worked on.  The primary goal is to automated as much as possible.  I'm talking code reviews, testing, documentation, all of it.  Let the computer do the boring, routine stuff leaving the more complex decisions to humans.
 
 ## Stage One
+### Groovy Plugin
+### Application Plugin
+### WAR Plugin
+### Codenarc Plugin
+### Checkstyle Plugin
+### Findbugs Plugin
+### JDepend Plugin
+### PMD Plugin
+### Project Report Plugin
+### Sonar Plugin
+### Jacoco Plugin
 
 ### Stage One
 
