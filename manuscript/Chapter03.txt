@@ -1,5 +1,18 @@
 # Build Pipeline
-The build pipeline refers to all the steps in the tool chain to go from Groovy code to a deployed artifact.  This set of steps may not apply to all projects but it has served me well on the ones I've worked on.  The primary goal is to automated as much as possible.  I'm talking code reviews, testing, documentation, all of it.  Let the computer do the boring, routine stuff leaving the more complex decisions to humans.
+The build pipeline refers to all the steps in the tool chain to go from Groovy source code to a deployed artifact.  This set of steps may not apply to all
+projects but it has served me well on the ones I've worked on.  The primary goal is to automate as much as possible.  I'm talking code reviews,
+testing, documentation, all of it.  Let the computer do the boring, routine stuff leaving the more complex decisions to humans. People get tired and
+distracted.  Computers don't.
+
+## Gradle
+My build tool of choice is Gradle.  It is a powerful tool primarily because it is a domain specific language written in Groovy geared towards the build process.
+Unlike tools like Ant and Maven, you have full access to the Groovy programming language and the entire JVM ecosystem if Gradle doesn't provide an off-the-shelf
+solution for a particular problem you are trying to solve.  In a nutshell, Gradle is a great tool and you should take advantage of it in your builds.
+
+T> ## GVM
+T> Although I'll show you how to set up your builds so that Gradle does not have to be installed on a development machine, you will need to bootstrap
+T> yourself initially.  One nice tool to do that is [Groovy enVironment Manager](http://gvmtool.net/) or GVM for short.  Install it and then get it
+T> to install Gradle and you'll be bootstrapped and ready to go.
 
 ## Stage One
 ### Groovy Plugin
