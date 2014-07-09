@@ -25,7 +25,7 @@ apply plugin: 'war'
 apply plugin: 'project-report'
 
 jar {
-    baseName = 'code'
+    baseName = 'pipeline'
     version =  '0.0.1-SNAPSHOT'
 }
 
@@ -37,12 +37,6 @@ configurations {
     providedRuntime
 }
 
-configurations.all {
-    exclude group: 'commons-logging'
-    exclude module: 'junit-dep'
-    exclude module: 'groovy-all'
-}
-
 dependencies {
     compile "org.codehaus.groovy:groovy:${groovyVersion}"
 
@@ -52,7 +46,7 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
+    gradleVersion = '1.12'
 }
 
 defaultTasks 'clean', 'projectReport', 'build'
