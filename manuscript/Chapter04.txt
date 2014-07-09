@@ -32,4 +32,8 @@
 
 ### Spring REST Shell
 
-### Swagger 
+### Swagger
+
+<<[Simple REST Controller](pipeline/src/main/groovy/hello/SampleController.groovy)
+
+<<[Simple REST Integration Test](pipeline/src/test/groovy/hello/SampleControllerIntegrationTest.groovy)
