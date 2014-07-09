@@ -20,6 +20,7 @@ T> ## GVM
 T> Although I'll show you how to set up your builds so that Gradle does not have to be installed on a development machine, you will need to bootstrap
 T> yourself initially.  One nice tool to do that is the [Groovy enVironment Manager](http://gvmtool.net/) or GVM for short.  It manages the procurement and
 T> installation of a variety of useful tools, including:
+T>
 T> * [crash](http://www.crashub.org/)
 T> * [gaiden](https://github.com/kobo/gaiden)
 T> * [glide](http://glide-gae.appspot.com/)
@@ -31,6 +32,7 @@ T> * [groovyserv](http://kobo.github.io/groovyserv/)
 T> * [lazybones](https://github.com/pledbrook/lazybones)
 T> * [springboot](http://projects.spring.io/spring-boot/)
 T> * [vertx](http://vertx.io/)
+T>
 T> GVM knows when an update has been released and can apply the update to your system, if desired.
 
 ## Project File Structure
@@ -39,6 +41,7 @@ two defacto standards: dependency management and project file structure.  Having
 humans and programs to locate files and resources.  Convention over configuration makes life a little simpler.
 
 Gradle is highly configurable but defaults to the Maven project layout.  The Maven standard looks like this:
+
 * src/main/java - application sources
 * src/main/resources - application resources
 * src/main/filters - resource filter files
@@ -62,35 +65,31 @@ To create our example project, we'll use a simple script.
 
 <<[new-project.sh](pipeline/src/main/scripts/new-project.sh)
 
-If we run `./new-project /tmp/hello` we should end up with a directory structure like so:
-
-/tmp/hello
-├── build.gradle
-├── .gitignore
-├── gradle.properties
-├── LICENSE.txt
-├── NOTICE.txt
-├── README.md
-├── settings.gradle
-└── src
-    ├── assembly
-    ├── main
-    │   ├── config
-    │   ├── filters
-    │   ├── groovy
-    │   ├── java
-    │   ├── resources
-    │   ├── scripts
-    │   └── webapp
-    └── test
-        ├── filters
-        ├── groovy
-        ├── java
-        └── resources
+If we run `./new-project /tmp/hello` we should end up with a skeleton directory structure.
 
 Obviously, a more sophisticated script would copy template Gradle files from a central location but this is good
 enough to get us started.
 
+## Build Stages
+The build process we're creating is normally used in two contexts.  The first context is the developer.  She wants
+her source compiled, packaged up and unit tested.  The second context is the Continuous Integration (CI) server, aka
+the build box.  The CI server, in addition to performing the same tasks in the developer context, will also execute
+integration tests and perform more time consuming inspections.  Finally, the CI server will make the resulting
+artifacts available to the next stage in the pipeline.  We'll discuss additional stages later in the book.
+
+### Stage One: Developer
+This stage is meant to give quick feedback to the developer and plays the role of watchdog.  "Did you put your
+braces in the correct spot?"  "Did you write a unit test for that new class?"  "Is that new algorithm too complex?"
+If your build process provides this kind of feedback you will find that even the most junior member of your
+team can have a positive impact on the project.  There will be less need for rework due to some obvious standards
+violation allowing humans to focus on the more complex and interesting parts of the review.
+
+T> ## Keep The Build Short
+T> Try and keep your stage one builds to under 2 minutes.  Anything longer than that and people will hesitate
+T> to run the build.  If the build gets too long that could be an indication that you are building something larger
+T> than a micro-service, aka another ball of mud.  The rule we have on my teams is that you can code as much as
+T> you want in your IDE but you *must* run the Gradle build before pushing code to the repository.  That way,
+T> people still get the desired feedback but don't feel constrained by the tooling.
 
 ## Stage One
 ### Groovy Plugin
