@@ -21,17 +21,17 @@ T> Although I'll show you how to set up your builds so that Gradle does not have
 T> yourself initially.  One nice tool to do that is the [Groovy enVironment Manager](http://gvmtool.net/) or GVM for short.  It manages the procurement and
 T> installation of a variety of useful tools, including:
 T>
-T> * [crash](http://www.crashub.org/)
-T> * [gaiden](https://github.com/kobo/gaiden)
-T> * [glide](http://glide-gae.appspot.com/)
-T> * [gradle](http://www.gradle.org/)
-T> * [grails](https://grails.org/)
-T> * [griffon](http://griffon.codehaus.org/)
-T> * [groovy](http://groovy.codehaus.org/)
-T> * [groovyserv](http://kobo.github.io/groovyserv/)
-T> * [lazybones](https://github.com/pledbrook/lazybones)
-T> * [springboot](http://projects.spring.io/spring-boot/)
-T> * [vertx](http://vertx.io/)
+T>* [crash](http://www.crashub.org/)
+T>* [gaiden](https://github.com/kobo/gaiden)
+T>* [glide](http://glide-gae.appspot.com/)
+T>* [gradle](http://www.gradle.org/)
+T>* [grails](https://grails.org/)
+T>* [griffon](http://griffon.codehaus.org/)
+T>* [groovy](http://groovy.codehaus.org/)
+T>* [groovyserv](http://kobo.github.io/groovyserv/)
+T>* [lazybones](https://github.com/pledbrook/lazybones)
+T>* [springboot](http://projects.spring.io/spring-boot/)
+T>* [vertx](http://vertx.io/)
 T>
 T> GVM knows when an update has been released and can apply the update to your system, if desired.
 
@@ -42,21 +42,21 @@ humans and programs to locate files and resources.  Convention over configuratio
 
 Gradle is highly configurable but defaults to the Maven project layout.  The Maven standard looks like this:
 
-* src/main/java - application sources
-* src/main/resources - application resources
-* src/main/filters - resource filter files
-* src/main/config - configuration files
-* src/main/scripts - application scripts
-* src/main/webapp - web application sources
-* src/test/java - test sources
-* src/test/resources - test resources
-* src/test/filters - test resource filter files
-* src/it - integration tests
-* src/assembly - assembly descriptors
-* src/site - project web site
-* LICENSE.txt - project's license
-* NOTICE.txt - notices and attributions required by libraries that the project depends on
-* README.txt - project's readme
+| src/main/java      | application sources                                                        |
+| src/main/resources | application resources                                                      |
+| src/main/filters   | resource filter files                                                      |
+| src/main/config    | configuration files                                                        |
+| src/main/scripts   | application scripts                                                        |
+| src/main/webapp    | web application sources                                                    |
+| src/test/java      | test sources                                                               |
+| src/test/resources | test resources                                                             |
+| src/test/filters   | test resource filter files                                                 |
+| src/it             | integration tests                                                          |
+| src/assembly       | assembly descriptors                                                       |
+| src/site           | project web site                                                           |
+| LICENSE.txt        | project's license                                                          |
+| NOTICE.txt         | notices and attributions required by libraries that the project depends on |
+| README.txt         | project's readme                                                           |
 
 As you can see, this is an intelligent layout and can work with most applications.  We'll be using a slightly smaller sub-set for our projects but,
 for the most part, the names and definitions of the directories will match the above list.
@@ -84,12 +84,12 @@ If your build process provides this kind of feedback you will find that even the
 team can have a positive impact on the project.  There will be less need for rework due to some obvious standards
 violation allowing humans to focus on the more complex and interesting parts of the review.
 
-T> ## Keep The Build Short
-T> Try and keep your stage one builds to under 2 minutes.  Anything longer than that and people will hesitate
-T> to run the build.  If the build gets too long that could be an indication that you are building something larger
-T> than a micro-service, aka another ball of mud.  The rule we have on my teams is that you can code as much as
-T> you want in your IDE but you *must* run the Gradle build before pushing code to the repository.  That way,
-T> people still get the desired feedback but don't feel constrained by the tooling.
+W> ## Keep The Build Short
+W> Try and keep your stage one builds to under 2 minutes.  Anything longer than that and people will hesitate
+W> to run the build.  If the build gets too long that could be an indication that you are building something larger
+W> than a micro-service, aka another ball of mud.  The rule we have on my teams is that you can code as much as
+W> you want in your IDE but you *must* run the Gradle build before pushing code to the repository.  That way,
+W> people still get the desired feedback but don't feel constrained by the tooling.
 
 ## Stage One
 ### Groovy Plugin
