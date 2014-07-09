@@ -19,38 +19,46 @@ buildscript {
     }
 }
 
-apply plugin: 'groovy'
-apply plugin: 'spring-boot'
-apply plugin: 'war'
-apply plugin: 'project-report'
+if ( true ) {
+    logger.quiet 'Stage One'
 
-description = 'Sample REST service'
-group = 'org.kurron'
+    apply plugin: 'groovy'
+    apply plugin: 'spring-boot'
+    apply plugin: 'war'
+    apply plugin: 'project-report'
 
-jar {
-    baseName = 'pipeline'
-    version =  '0.0.1-SNAPSHOT'
+    description = 'Sample REST service'
+    group = 'org.kurron'
+
+    jar {
+        baseName = 'pipeline'
+        version =  '0.0.1-SNAPSHOT'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    configurations {
+        providedRuntime
+    }
+
+    dependencies {
+        compile "org.codehaus.groovy:groovy:${groovyVersion}"
+        compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+
+        testCompile "junit:junit:${junitVersion}"
+        testCompile( "org.spockframework:spock-core:${spockVersion}" ) { exclude module: 'groovy-all' }
+        testCompile( "org.spockframework:spock-spring:${spockVersion}" ) { exclude module: 'groovy-all' }
+    }
+
+    task wrapper(type: Wrapper) {
+        gradleVersion = '1.12'
+    }
+
+    defaultTasks 'clean', 'projectReport', 'build'
 }
+else {
+    logger.quiet 'Stage Two'
 
-repositories {
-    mavenCentral()
 }
-
-configurations {
-    providedRuntime
-}
-
-dependencies {
-    compile "org.codehaus.groovy:groovy:${groovyVersion}"
-    compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-
-    testCompile "junit:junit:${junitVersion}"
-    testCompile( "org.spockframework:spock-core:${spockVersion}" ) { exclude module: 'groovy-all' }
-    testCompile( "org.spockframework:spock-spring:${spockVersion}" ) { exclude module: 'groovy-all' }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
-}
-
-defaultTasks 'clean', 'projectReport', 'build'
