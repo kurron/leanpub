@@ -3,61 +3,94 @@ This section of the book may be the most important.  Why?  It is here where we l
 It has been my experience that any manual step will eventually get dropped from the process.  At best, it will be sporadically applied, avoiding the consistency
 you need to see real benefits.
 
-T> If you find yourself performing the same task for the third time, stop and find a way to automate it.  It could be a simple Bash script that simply
+T> If you find yourself performing the same task for a third time, stop and find a way to automate it.  It could be as simple as Bash script that
 T> moves files from one place to another or as complex as re-configuring your load balancer to point to a different group of servers.  Leaving something
-T> done frequently as a manual process is an invitation for a mistake to be made and mistakes slow you down.
+T> done frequently as a manual process is an invitation for a mistake to be made, and mistakes slow you down.
 
 The build pipeline refers to all the steps required to go from Groovy source code to a deployed artifact.  The primary goal is to automate as much as possible.
 I'm talking code reviews, testing, documentation, all of it.  Let the computer do the boring, routine stuff leaving the more complex decisions to humans.
-People get tired, bored and distracted.  Computers don't.
+People get tired, bored and distracted.  Computers don't so use them.
 
 ## Gradle
-My build tool of choice is [Gradle](http://www.gradle.org/).  It is a powerful tool that is simple to understand and customize.  It consists of an expressive
+My build tool of choice is [Gradle](http://www.gradle.org/).  It is a powerful tool that is simple to understand and easy to customize.  It consists of an expressive
 Domain Specific Language and numerous plug-ins. Unlike Ant and Maven, which can restrict what can easily be expressed, you have full access to the Groovy
-programming language and the entire JVM ecosystem to solve your particular problem.  In a nutshell, Gradle is a great tool and you should take advantage of it.
+programming language and the entire JVM ecosystem to solve any problem.  In a nutshell, Gradle is a great tool and you should take advantage of it.
 
 T> ## GVM
 T> Although I'll show you how to set up your builds so that Gradle does not have to be installed on a development machine, you will need to bootstrap
 T> yourself initially.  One nice tool to do that is the [Groovy enVironment Manager](http://gvmtool.net/) or GVM for short.  It manages the procurement and
 T> installation of a variety of useful tools, including:
-T> * crash
-T> * gaiden
-T> * glide
-T> * gradle
-T> * grails
-T> * griffon
-T> * groovy
-T> * groovyserv
-T> * lazybones
-T> * springboot
-T> * vertx
+T> * [crash](http://www.crashub.org/)
+T> * [gaiden](https://github.com/kobo/gaiden)
+T> * [glide](http://glide-gae.appspot.com/)
+T> * [gradle](http://www.gradle.org/)
+T> * [grails](https://grails.org/)
+T> * [griffon](http://griffon.codehaus.org/)
+T> * [groovy](http://groovy.codehaus.org/)
+T> * [groovyserv](http://kobo.github.io/groovyserv/)
+T> * [lazybones](https://github.com/pledbrook/lazybones)
+T> * [springboot](http://projects.spring.io/spring-boot/)
+T> * [vertx](http://vertx.io/)
 T> GVM knows when an update has been released and can apply the update to your system, if desired.
 
 ## Project File Structure
-Despite the fact that I'm not a huge [Maven] (http://maven.apache.org/) fan, I must give kudos to the team for introducing the JVM world with
+Despite the fact that I'm not a huge [Maven](http://maven.apache.org/) fan, I must give kudos to the team for providing the JVM world with
 two defacto standards: dependency management and project file structure.  Having a standard directory layout makes it much easier on
-humans and programs to locate files and resources without having to constantly provide configuration meta-data about where production source lives
-versus test source.  Convention over configuration does make life a little simpler.
+humans and programs to locate files and resources.  Convention over configuration makes life a little simpler.
 
 Gradle is highly configurable but defaults to the Maven project layout.  The Maven standard looks like this:
-* src/main/java -  	Application/Library sources
-* src/main/resources - Application/Library resources
-* src/main/filters - Resource filter files
-* src/main/config - Configuration files
-* src/main/scripts - Application/Library script
-* src/main/webapp - Web application sources
-* src/test/java -  	test sources
+* src/main/java - application sources
+* src/main/resources - application resources
+* src/main/filters - resource filter files
+* src/main/config - configuration files
+* src/main/scripts - application scripts
+* src/main/webapp - web application sources
+* src/test/java - test sources
 * src/test/resources - test resources
-* src/test/filters - test Resource filter files
-* src/it - Integration Tests (primarily for plugins)
-* src/assembly -  	Assembly descriptors
-* src/site - Site
-* LICENSE.txt - Project's license
-* NOTICE.txt - Notices and attributions required by libraries that the project depends on
-* README.txt - Project's readme
+* src/test/filters - test resource filter files
+* src/it - integration tests
+* src/assembly - assembly descriptors
+* src/site - project web site
+* LICENSE.txt - project's license
+* NOTICE.txt - notices and attributions required by libraries that the project depends on
+* README.txt - project's readme
 
 As you can see, this is an intelligent layout and can work with most applications.  We'll be using a slightly smaller sub-set for our projects but,
 for the most part, the names and definitions of the directories will match the above list.
+
+To create our example project, we'll use a simple script.
+
+<<[new-project.sh](pipeline/src/main/scripts/new-project.sh)
+
+If we run `./new-project /tmp/hello` we should end up with a directory structure like so:
+
+/tmp/hello
+├── build.gradle
+├── .gitignore
+├── gradle.properties
+├── LICENSE.txt
+├── NOTICE.txt
+├── README.md
+├── settings.gradle
+└── src
+    ├── assembly
+    ├── main
+    │   ├── config
+    │   ├── filters
+    │   ├── groovy
+    │   ├── java
+    │   ├── resources
+    │   ├── scripts
+    │   └── webapp
+    └── test
+        ├── filters
+        ├── groovy
+        ├── java
+        └── resources
+
+Obviously, a more sophisticated script would copy template Gradle files from a central location but this is good
+enough to get us started.
+
 
 ## Stage One
 ### Groovy Plugin
