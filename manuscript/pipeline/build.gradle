@@ -28,11 +28,11 @@ if ( 'one' == stage ) {
 
     apply plugin: 'groovy'
     apply plugin: 'war'
-    apply plugin: 'codenarc'
-    apply plugin: 'jdepend'
-    apply plugin: 'pmd'
+//    apply plugin: 'codenarc'
+//    apply plugin: 'jdepend'
+//    apply plugin: 'pmd'
     apply plugin: 'project-report'
-    apply plugin: 'jacoco'
+//    apply plugin: 'jacoco'
     apply plugin: 'spring-boot'
 
     description = 'Sample REST service'

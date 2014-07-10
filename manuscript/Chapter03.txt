@@ -135,11 +135,10 @@ package.  We'll examine the plug-ins I like to include and delve into why they a
 {crop-start-line=27,crop-end-line=37}
 <<[plug-in section](pipeline/build.gradle)
 
-### Groovy Plugin
-The Groovy plug-in is the workhorse of the bunch and the one we count on the most.  It is responsible for
-compiling the code, generating documentation, running unit-tests and packaging everything up into deployable
+The **Groovy plug-in** is the workhorse of the bunch and the one we count on the most.  It is responsible for
+compiling the code, generating documentation, running unit-tests and packaging everything up into deployble
 artifacts.  It also has the capability to do joint compilation so if you have a mixture of Java and Groovy
-code in your project, then this plug-in can handle both languages.
+code in your project this plug-in can handle both languages.
 
 ### Application Plugin
 ### WAR Plugin

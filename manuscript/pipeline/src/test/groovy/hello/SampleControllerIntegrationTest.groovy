@@ -3,6 +3,7 @@ package hello
 import groovy.util.logging.Slf4j
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationContextLoader
+import org.springframework.boot.test.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ContextConfiguration
@@ -18,15 +19,19 @@ import spock.lang.Specification
 @IntegrationTest
 @ContextConfiguration( classes = Application, loader = SpringApplicationContextLoader )
 class SampleControllerIntegrationTest extends Specification {
-    def 'exercise the / endpoint'() {
+    def 'exercise the REST endpoints'() {
         given: 'valid REST template'
-        def template = new RestTemplate()
+        def template = new TestRestTemplate()
 
-        when: 'the / endpoint is called'
-        ResponseEntity<String> response = template.getForEntity( new URI( 'http://localhost:8080/' ), String )
+        when: 'the endpoint is called'
+        log.debug( 'Calling endpoint {}', uri )
+        ResponseEntity<String> response = template.getForEntity( new URI( uri ), String )
 
         then: 'hello is returned'
         response.statusCode == HttpStatus.OK
         response.body == 'Hello, World!'
+
+        where: 'the endpoint changes'
+        uri << ['http://localhost:8080/', 'http://localhost:8080/java']
     }
 }
