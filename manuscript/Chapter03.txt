@@ -92,6 +92,22 @@ W> you want in your IDE but you *must* run the Gradle build before pushing code 
 W> people still get the desired feedback but don't feel constrained by the tooling.
 
 ## Stage One
+Since Gradle is primary a DSL written in Groovy, you can treat your build script as a mini-program, complete
+with conditionals and iteration constructs.  We'll take advantage of this by splitting our build file into
+two halves: one for each stage.  The default stage will be one and is the one that be will be run the most.
+
+<<[build.gradle](pipeline/build.gradle)
+
+Let's examine the individual pieces of the build file.
+
+{crop-start-line=1,crop-end-line=25}
+<<[preamble](pipeline/build.gradle)
+This section of the file establishes some properties that hold the version numbers for some of the libraries
+we depend on.   Secondly, it declares where on the network we should look to download missing dependencies.
+Finally, it declares a dependency on the Spring Boot plug-in, which we'll discuss in detail in another chapter.
+You'll notice that we're excluding the `commons-logging` library.  That library has served its purpose and
+we prefer the more modern `sl4j` and `logback` combination but some dependencies insist on dragging it in.
+
 ### Groovy Plugin
 ### Application Plugin
 ### WAR Plugin
