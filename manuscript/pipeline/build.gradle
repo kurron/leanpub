@@ -15,7 +15,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
 
@@ -23,13 +23,17 @@ configurations.all {
     exclude group: 'commons-logging'
 }
 
-if ( true ) {
+if ( 'one' == stage ) {
     logger.quiet 'Stage One'
 
     apply plugin: 'groovy'
     apply plugin: 'spring-boot'
     apply plugin: 'war'
+    apply plugin: 'codenarc'
+    apply plugin: 'jdepend'
+    apply plugin: 'pmd'
     apply plugin: 'project-report'
+    apply plugin: 'jacoco'
 
     description = 'Sample REST service'
     group = 'org.kurron'
@@ -66,5 +70,4 @@ if ( true ) {
 }
 else {
     logger.quiet 'Stage Two'
-
 }
