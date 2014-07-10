@@ -27,13 +27,13 @@ if ( 'one' == stage ) {
     logger.quiet 'Stage One'
 
     apply plugin: 'groovy'
-    apply plugin: 'spring-boot'
     apply plugin: 'war'
     apply plugin: 'codenarc'
     apply plugin: 'jdepend'
     apply plugin: 'pmd'
     apply plugin: 'project-report'
     apply plugin: 'jacoco'
+    apply plugin: 'spring-boot'
 
     description = 'Sample REST service'
     group = 'org.kurron'

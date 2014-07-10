@@ -108,7 +108,39 @@ Finally, it declares a dependency on the Spring Boot plug-in, which we'll discus
 You'll notice that we're excluding the `commons-logging` library.  That library has served its purpose and
 we prefer the more modern `sl4j` and `logback` combination but some dependencies insist on dragging it in.
 
+{crop-start-line=26,crop-end-line=30}
+<<[Conditional Build Logic](pipeline/build.gradle)
+
+Here we are getting a little more sophisticated and checking the value of the `stage` property to see which
+section of the `if` statement we need to execute.  One question you might be asking yourself is "where is the
+property declared?"  That is a good question with an easy answer: `gradle.properties`.
+
+<<[gradle.properties](pipeline/gradle.properties)
+
+For reasons I don't fully understand, if you want to create a property that can be overridden on the command-line,
+like we do, then you have to put it in the `gradle.properties` file.  By controlling the `stage` property, we
+can run stage one by default and have the CI server run stage two.  To control the build stage, all you have to
+do is add an additional flag on the command-line:
+
+|`./gradlew`             | stage one is run|
+|`./gradlew -Pstage=one` | stage one is run|
+|`./gradlew -Pstage=two` | stage two is run|
+
+Obviously, you could expand this idea to support as many stages as you need but we'll stick with two for now.
+
+### Plug-Ins
+Gradle is driven primarily by plug-ins which encapsulate combinations of behavior into a single, configurable
+package.  We'll examine the plug-ins I like to include and delve into why they are important.
+
+{crop-start-line=27,crop-end-line=37}
+<<[plug-in section](pipeline/build.gradle)
+
 ### Groovy Plugin
+The Groovy plug-in is the workhorse of the bunch and the one we count on the most.  It is responsible for
+compiling the code, generating documentation, running unit-tests and packaging everything up into deployable
+artifacts.  It also has the capability to do joint compilation so if you have a mixture of Java and Groovy
+code in your project, then this plug-in can handle both languages.
+
 ### Application Plugin
 ### WAR Plugin
 ### Codenarc Plugin
