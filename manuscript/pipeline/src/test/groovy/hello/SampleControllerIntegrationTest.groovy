@@ -10,6 +10,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * REST integration test of the SampleController object.
@@ -19,7 +20,9 @@ import spock.lang.Specification
 @IntegrationTest
 @ContextConfiguration( classes = Application, loader = SpringApplicationContextLoader )
 class SampleControllerIntegrationTest extends Specification {
-    def 'exercise the REST endpoints'() {
+
+    @Unroll( 'exercise REST endpoint #uri' )
+    def 'exercise REST endpoint'() {
         given: 'valid REST template'
         def template = new TestRestTemplate()
 
