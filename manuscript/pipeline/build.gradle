@@ -39,9 +39,11 @@ if ( 'one' == stage ) {
     group = 'org.kurron'
     version = '0.0.1'
 
-    logger.quiet 'Configuring Java compiler options'
+    logger.quiet 'Configuring compiler options'
     compileJava.options*.compilerArgs = ['-Xlint:deprecation', '-encoding', 'UTF-8']
     compileTestJava.options*.compilerArgs = ['-Xlint:deprecation', '-encoding', 'UTF-8']
+    compileGroovy.groovyOptions.optimizationOptions['indy'] = true
+    compileTestGroovy.groovyOptions.optimizationOptions['indy'] = true
 
     logger.quiet 'Configuring unit testing options'
     test {
@@ -90,18 +92,6 @@ if ( 'one' == stage ) {
         }
     }
 
-    artifacts {
-        archives sourcesJar
-        archives testSourcesJar
-        archives testBinariesJar
-        archives javadocJar
-    }
-
-    logger.quiet 'Configuring Groovy compiler options'
-    compileGroovy.groovyOptions.optimizationOptions['indy'] = true
-    compileTestGroovy.groovyOptions.optimizationOptions['indy'] = true
-
-    logger.quiet 'Configuring secondary Groovy artifacts'
     task groovydocJar(type: Jar, dependsOn: groovydoc) {
         classifier = 'groovydoc'
         from project.docsDir.path + '/groovydoc'
@@ -111,6 +101,10 @@ if ( 'one' == stage ) {
     }
 
     artifacts {
+        archives sourcesJar
+        archives testSourcesJar
+        archives testBinariesJar
+        archives javadocJar
         archives groovydocJar
     }
 
