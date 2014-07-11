@@ -2,6 +2,7 @@ package hello
 
 import groovy.util.logging.Slf4j
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
 /**
@@ -12,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class SampleController {
 
-    @RequestMapping( '/' )
-    String hello() {
+    @RequestMapping( value = '/', method = RequestMethod.GET )
+    String handleGet() {
         log.debug( 'hello called' )
         'Hello, World!'
     }
