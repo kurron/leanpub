@@ -37,10 +37,81 @@ if ( 'one' == stage ) {
 
     description = 'Sample REST service'
     group = 'org.kurron'
+    version = '0.0.1'
 
-    jar {
-        baseName = 'pipeline'
-        version =  '0.0.1-SNAPSHOT'
+    logger.quiet 'Configuring Java compiler options'
+    compileJava.options*.compilerArgs = ['-Xlint:deprecation', '-encoding', 'UTF-8']
+    compileTestJava.options*.compilerArgs = ['-Xlint:deprecation', '-encoding', 'UTF-8']
+
+    logger.quiet 'Configuring unit testing options'
+    test {
+        scanForTestClasses = false
+        includes = ['**/*UnitTest.class']
+        excludes = ['**/AbstractUnitTest.class']
+        maxParallelForks = Runtime.runtime.availableProcessors()
+    }
+
+    logger.quiet 'Configuring secondary artifacts'
+    ext.sharedManifest = manifest {
+        attributes( "Implementation-Title": project.name, "Implementation-Version": project.version )
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+        exclude('**/*.properties')
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
+
+    task testSourcesJar(type: Jar, dependsOn: testClasses) {
+        classifier = 'test-sources'
+        from sourceSets.test.allSource
+        exclude('**/*.properties')
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
+
+    task testBinariesJar(type: Jar, dependsOn: testClasses) {
+        classifier = 'test'
+        from sourceSets.test.output
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from project.docsDir.path + '/javadoc'
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives testSourcesJar
+        archives testBinariesJar
+        archives javadocJar
+    }
+
+    logger.quiet 'Configuring Groovy compiler options'
+    compileGroovy.groovyOptions.optimizationOptions['indy'] = true
+    compileTestGroovy.groovyOptions.optimizationOptions['indy'] = true
+
+    logger.quiet 'Configuring secondary Groovy artifacts'
+    task groovydocJar(type: Jar, dependsOn: groovydoc) {
+        classifier = 'groovydoc'
+        from project.docsDir.path + '/groovydoc'
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
+
+    artifacts {
+        archives groovydocJar
     }
 
     repositories {
@@ -52,7 +123,7 @@ if ( 'one' == stage ) {
     }
 
     dependencies {
-        compile "org.codehaus.groovy:groovy:${groovyVersion}"
+        compile "org.codehaus.groovy:groovy:${groovyVersion}:indy"
         compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
 
         testCompile "junit:junit:${junitVersion}"

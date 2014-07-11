@@ -1,14 +1,13 @@
 <component name="ArtifactManager">
-  <artifact type="war" name="Gradle : org.kurron:pipeline : pipeline.war">
+  <artifact type="war" name="Gradle : org.kurron:pipeline : pipeline-0.0.1.war">
     <output-path>$PROJECT_DIR$/out/artifacts/pipeline</output-path>
-    <root id="archive" name="pipeline.war">
-      <element id="javaee-facet-resources" facet="pipeline/web/Web Gradle : pipeline.war" />
+    <root id="archive" name="pipeline-0.0.1.war">
+      <element id="javaee-facet-resources" facet="pipeline/web/Web Gradle : pipeline-0.0.1.war" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="pipeline" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Gradle: groovy-2.3.3" />
           <element id="library" level="project" name="Gradle: spring-boot-starter-web-1.0.2.RELEASE" />
           <element id="library" level="project" name="Gradle: spring-core-4.0.3.RELEASE" />
           <element id="library" level="project" name="Gradle: spring-beans-4.0.3.RELEASE" />
@@ -36,10 +35,11 @@
           <element id="library" level="project" name="Gradle: jackson-databind-2.3.3" />
           <element id="library" level="project" name="Gradle: spring-web-4.0.3.RELEASE" />
           <element id="library" level="project" name="Gradle: spring-webmvc-4.0.3.RELEASE" />
+          <element id="library" level="project" name="Gradle: groovy-2.3.3-indy" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/out/artifacts/pipeline/exploded/pipeline.war/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/out/artifacts/pipeline/exploded/pipeline-0.0.1.war/META-INF/MANIFEST.MF" />
       </element>
     </root>
   </artifact>
