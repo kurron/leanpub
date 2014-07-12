@@ -44,7 +44,7 @@
         </rule-config>
         <rule-config name='MethodName'>
             <!-- account for Spock test methods -->
-            <property name='ignoreMethodNames' value='exercise*, verify*'/>
+            <property name='ignoreMethodNames' value='exercise*, verify*, detect*'/>
         </rule-config>
     </ruleset-ref>
     <ruleset-ref path='rulesets/security.xml'/>
