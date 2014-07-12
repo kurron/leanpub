@@ -1,12 +1,48 @@
 # Development Environment
+Setting up a development environment can be a painful task.  You have get your operating system just right.
+You have to ensure the correct versions of all your tools are installed.  You have to make sure the databases
+and messaging brokers are properly configured and networked.  I'll show you a way to take away most of the pain and
+make setting up an environment a non-event.
+
+The key is **virtualization**.  Modern hardware has enough computing power to run multiple operating systems and
+that is exactly what virtualization is: running multiple operating system simultaneously on a single piece of hardware.
+Using virtualization, we easily create an operating environment that is close to what will be run in production.
+Need 3 instances of MongoDB?  No problem.  Need HAProxy routing traffic to Redis, Tomcat and RabbitMQ?  Simple.
+All you need is a relatively modern laptop and 8 GB of RAM.  Obviously, more RAM is better but 8 should do for
+most use cases.
 
 ## Ubuntu Linux
+The operating system that many of my applications are deployed on run on Linux.  Typically, Ubuntu Linux.  There
+are numerous advantages of using Linux but I'll call attention to three: cost, remote access and efficient
+use of resources.  You can run Ubuntu without having to pay for license fees which is perfect virtualized environments.
+You can spin up as many virtual machines as you want and not have to worry about violating some license agreement.
 
-## Packer
+The ability to access a Linux box over slow WAN connections via SSH is extremely useful.  No need fire up a remote
+ desktop just to deploy a new version of the application.  Often times, deployments can be scripted and run as part
+ of an automated deployment system.  Very useful.
 
-## Vagrant
+Finally, the fact that you can run Linux headless that is, without a graphical user interface, far fewer resources
+ are required to run an instance of Linux.  Considering that our goal is to run multiple virtual machines on our
+ laptop, keeping the footprint of the machine small is desirable.
+
+I> I want you to know that using Microsoft Windows as a virtualized operating system is absolutely possible but
+I> harder to implement than Linux.  The tools I'll be discussing work wonderfully with Linux but sometimes have
+I> a hard time with Windows.  You'll have to look elsewhere if you want advice on virtualizing Microsoft Windows.
 
 ## VirtualBox
+VirtualBox is what is known as a hypervisor and its job is to allow you to run multiple operating systems at once.
+You can think of it as a piece of software that acts as a mini computer running on your laptop. As far as Linux
+is concerned it is installed on an Intel box and has complete control over the RAM, hard drive, network and video
+card.  In reality, VirtualBox is giving Linux control over a **fraction** of the available hardware.  Consider it
+a hardware sandbox where you can easily create and destroy computers at will.
+
+## Packer and Vagrant
+Packer and Vagrant are two invaluable tools that work together, along with VirtualBox, to provide an automated
+mechanism for creating and managing virtual machines.  Packer, the first step in the tool chain, makes it easy
+to create a virtualized Linux machine that can be feed into Vagrant.  Vagrant will take this machine and create
+the multiple VMs required for your development environment.  Once you experience the combination of Packer,
+Vagrant and VirtualBox you will never go back to the old way of managing your environments.
+
 
 ## Docker
 
