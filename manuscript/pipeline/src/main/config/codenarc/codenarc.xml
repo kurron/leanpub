@@ -49,7 +49,12 @@
     </ruleset-ref>
     <ruleset-ref path='rulesets/security.xml'/>
     <ruleset-ref path='rulesets/serialization.xml'/>
-    <ruleset-ref path='rulesets/size.xml'/>
+    <ruleset-ref path='rulesets/size.xml'>
+        <!-- requires a Cobertura output file but we use JaCoCo -->
+        <rule-config name='CrapMetric'>
+            <property name='enabled' value='false'/>
+        </rule-config>
+    </ruleset-ref>
     <ruleset-ref path='rulesets/unnecessary.xml'/>
     <ruleset-ref path='rulesets/unused.xml'/>
 
