@@ -1,0 +1,83 @@
+{
+    "description": "Builds a bare bones Ubuntu 14.04 Server x64 box",
+    "min_packer_version": "0.6.0",
+
+    "variables": {
+        "ssh_name": "vagrant",
+        "ssh_pass": "vagrant",
+        "hostname": "trusty-server"
+    },
+
+    "builders": [{
+        "type": "virtualbox-iso",
+        "iso_checksum": "01545fa976c8367b4f0d59169ac4866c",
+        "iso_checksum_type": "md5",
+        "iso_url": "http://releases.ubuntu.com/trusty/ubuntu-14.04-server-amd64.iso",
+        "ssh_username": "{{user `ssh_name`}}",
+
+        "boot_command" : [
+            "<esc><esc><enter><wait>",
+            "/install/vmlinuz noapic ",
+            "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+            "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+            "hostname={{user `hostname`}} ",
+            "fb=false debconf/frontend=noninteractive ",
+            "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+            "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+            "initrd=/install/initrd.gz -- <enter>"
+        ],
+
+        "boot_wait": "10s",
+        "disk_size" : 40000,
+        "floppy_files": [],
+        "format": "ovf",
+        "guest_additions_mode": "upload",
+        "guest_os_type": "Ubuntu_64",
+        "hard_drive_interface": "sata",
+        "headless": false,
+        "http_directory" : "trusty-x64-server",
+        "http_port_min" : 8000,
+        "http_port_max" : 9000,
+        "output_directory": "output-virtualbox-iso",
+        "shutdown_command": "echo {{user `ssh_pass`}} | sudo -S shutdown -P now",
+        "ssh_password": "{{user `ssh_pass`}}",
+        "ssh_port": 22,
+        "ssh_wait_timeout": "20m",
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--vram", "16"],
+            ["modifyvm", "{{.Name}}", "--memory", "512"],
+            ["modifyvm", "{{.Name}}", "--cpus", "1"],
+            ["modifyvm", "{{.Name}}", "--audio", "none"],
+            ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional"]
+        ],
+        "vboxmanage_post": [],
+        "vm_name": "trusty-x64-server"
+    }],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `ssh_pass`}}' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+            "inline": [
+                "echo '%sudo    ALL=(ALL)  NOPASSWD:ALL' >> /etc/sudoers",
+                "ln -sf /usr/bin/docker.io /usr/local/bin/docker",
+                "sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io",
+                "mkdir /home/vagrant/.ssh",
+                "wget --no-check-certificate -O authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'",
+                "mv authorized_keys /home/vagrant/.ssh",
+                "chown -R vagrant /home/vagrant/.ssh",
+                "chmod -R go-rwsx /home/vagrant/.ssh",
+                "apt-get install linux-headers-$(uname -r)",
+                "mkdir -p /mnt/virtualbox",
+                "mount -o loop /home/vagrant/VBoxGuestAdditions.iso /mnt/virtualbox",
+                "/mnt/virtualbox/VBoxLinuxAdditions.run --nox11",
+                "umount /mnt/virtualbox"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "vagrant",
+            "output": "vagrant/trusty-x64-server.box"
+        }
+    ]
+}
