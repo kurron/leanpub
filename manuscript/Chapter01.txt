@@ -132,18 +132,31 @@ Of that list, shell scripts are the simplest get started with and is what I used
 <<[trusty-x64-server.json](neon/trusty-x64-server.json)
 
 Let's break things down a bit.  Vagrant requires that the primary account can run passwordless sudo so we set that up.
+
 {crop-start-line=61,crop-end-line=61}
 <<[trusty-x64-server.json](neon/trusty-x64-server.json)
 
 Next, we have to do some minor touches on the Docker installation that took place as part of the preseed file.
+
 {crop-start-line=62,crop-end-line=63}
 <<[trusty-x64-server.json](neon/trusty-x64-server.json)
 
 Vagrant uses SSH to talk to the box so you need to set up passwordless SSH access via keys.  Here I'm using the insecure,
 well-known Vagrant key but I could have installed my own key just a easily.
+
 {crop-start-line=64,crop-end-line=68}
 <<[trusty-x64-server.json](neon/trusty-x64-server.json)
 
 The final set of commands is to install VirtualBox's Guest Additions, which provide shared folders and video drivers.
+
 {crop-start-line=69,crop-end-line=74}
 <<[trusty-x64-server.json](neon/trusty-x64-server.json)
+
+## Building The Box
+Once you have your Packer descriptor and your preseed file in place, all that is left is to run Packer and have it
+assemble your box.
+
+* `packer validate trusty-x64-server.json` to ensure the desciptor is valid
+* `packer build trusty-x64-server.json` to create the Vagrant box
+
+After several moments, you should have your self a Vagrant box ready for customization.
