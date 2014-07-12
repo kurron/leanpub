@@ -1,5 +1,9 @@
+
+import static org.junit.Assert.assertEquals
+
 import jdepend.framework.DependencyConstraint
 import jdepend.framework.JDepend
+import jdepend.framework.JavaPackage
 import spock.lang.Specification
 
 /**
@@ -7,13 +11,19 @@ import spock.lang.Specification
  */
 class CodeMetricsUnitTest extends Specification {
 
-    def jdepend = new JDepend()
+    private final jdepend = new JDepend()
 
-    def void setup() {
-        jdepend.addDirectory( 'manuscript/pipeline/build/classes/main' )
+    void setup() {
+        String main = "${System.getProperty( 'user.dir' )}/manuscript/pipeline/build/classes/main"
+        try {
+            jdepend.addDirectory( main )
+        }
+        catch ( Exception e ) {
+            e.printStackTrace()
+        }
     }
 
-    def 'validate package dependencies' () {
+    def 'verify package dependencies' () {
 
         given: 'valid operating constraints'
         def constraint = new DependencyConstraint()
@@ -50,8 +60,9 @@ class CodeMetricsUnitTest extends Specification {
         def results = jdepend.analyze()
 
         then: 'no circular dependencies are detected'
-        results.each {
-            assert it.distance() == ideal
+        results.each { JavaPackage it ->
+            String offender = "Distance exceeded:  ${it.name}"
+            assertEquals( offender, ideal, it.distance(), tolerance)
         }
     }
 }

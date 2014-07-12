@@ -117,7 +117,7 @@ if ( 'one' == stage ) {
     codenarc {
         configFile = file( "${projectDir}/src/main/config/codenarc/codenarc.xml" )
         toolVersion = '0.21'
-        ignoreFailures = false
+        ignoreFailures = true
     }
 
     repositories {
