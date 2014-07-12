@@ -28,7 +28,7 @@ if ( 'one' == stage ) {
 
     apply plugin: 'groovy'
     apply plugin: 'war'
-//    apply plugin: 'codenarc'
+    apply plugin: 'codenarc'
 //    apply plugin: 'jdepend'
 //    apply plugin: 'pmd'
     apply plugin: 'project-report'
@@ -108,12 +108,19 @@ if ( 'one' == stage ) {
         archives groovydocJar
     }
 
-    repositories {
-        mavenCentral()
-    }
-
     configurations {
         providedRuntime
+    }
+
+    logger.quiet 'Configuring CodeNarc options'
+    codenarc.configFile = file( "${projectDir}/src/main/config/codenarc/codenarc.xml" )
+    codenarc.toolVersion = '0.21'
+    codenarc.ignoreFailures = false
+    codenarcMain.enabled = true
+    codenarcTest.enabled = true
+
+    repositories {
+        mavenCentral()
     }
 
     dependencies {

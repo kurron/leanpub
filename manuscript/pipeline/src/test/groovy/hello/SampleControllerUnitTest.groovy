@@ -1,12 +1,12 @@
 package hello
 
-import groovy.util.logging.Slf4j
-import org.springframework.http.HttpStatus
-import spock.lang.Specification
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
+
+import groovy.util.logging.Slf4j
+import org.springframework.http.HttpStatus
+import spock.lang.Specification
 
 /**
  * Unit test of the SampleController object.

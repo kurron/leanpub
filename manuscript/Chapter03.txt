@@ -136,12 +136,28 @@ package.  We'll examine the plug-ins I like to include and delve into why they a
 <<[plug-in section](pipeline/build.gradle)
 
 The **Groovy plug-in** is the workhorse of the bunch and the one we count on the most.  It is responsible for
-compiling the code, generating documentation, running unit-tests and packaging everything up into deployble
+compiling the code, generating documentation, running unit-tests and packaging everything up into deployable
 artifacts.  It also has the capability to do joint compilation so if you have a mixture of Java and Groovy
 code in your project this plug-in can handle both languages.
 
+The **WAR plug-in** creates a web archive instead of a standard JAR.  I'll explain it later in detail but be aware
+that we are creating a web application despite the fact that we aren't creating any web pages.  We're using a web
+container to stand up the application as well as provide for HTTP-based monitoring and control.
+
+The **CodeNarc plug-in** is one of those tools that you will love to hate.  Its job is be your personal code
+reviewer. It looks for formatting issues, methods that are too large or complex.  My favorite feature is that
+it can recommend 'Groovyier' ways of writing code.  Regardless of whether your team is just starting out with
+Groovy or are seasoned veterans, this plug-in can save your team from wasting time on silly mistakes.
+
+T> ### Inspection of Test Code
+T> CodeNarc gives you the option of not inspecting test code.  I've worked on projects where CodeNarc only
+T> inspected the production code and I've regretted the decision.  What happens is that the test code isn't given
+T> the same amount of respect the production code is and you run into the typical issues -- duplicate code,
+T> code brittle to change, duplicate code, all the usual bad stuff.  My suggestion is to have CodeNarc inspect
+T> **everything** and use selective overrides as needed.  You'll be glad you did.
+T>
+
 ### Application Plugin
-### WAR Plugin
 ### Codenarc Plugin
 ### Checkstyle Plugin
 ### Findbugs Plugin
