@@ -113,11 +113,13 @@ if ( 'one' == stage ) {
     }
 
     logger.quiet 'Configuring CodeNarc options'
-    codenarc.configFile = file( "${projectDir}/src/main/config/codenarc/codenarc.xml" )
-    codenarc.toolVersion = '0.21'
-    codenarc.ignoreFailures = false
-    codenarcMain.enabled = true
-    codenarcTest.enabled = true
+    codenarc {
+        configFile = file( "${projectDir}/src/main/config/codenarc/codenarc.xml" )
+        toolVersion = '0.21'
+        ignoreFailures = false
+        enabled = true
+        enabled = true
+    }
 
     repositories {
         mavenCentral()
