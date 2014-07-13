@@ -46,6 +46,13 @@ if ( 'one' == stage ) {
     compileGroovy.groovyOptions.optimizationOptions['indy'] = true
     compileTestGroovy.groovyOptions.optimizationOptions['indy'] = true
 
+    task printVersion( group: 'help',
+                       description: 'Prints the project version number' ) {
+        doLast {
+            logger.quiet "Version: ${version}"
+        }
+    }
+
     logger.quiet 'Configuring unit testing options'
     test {
         scanForTestClasses = false
