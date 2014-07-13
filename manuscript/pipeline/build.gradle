@@ -11,6 +11,7 @@ buildscript {
         spockVersion = '0.7-groovy-2.0'
         springBootVersion = '1.0.2.RELEASE'
         springFrameworkVersion = '4.0.3.RELEASE'
+        versionFile = file( 'gradle.properties' )
     }
     repositories {
         mavenCentral()
@@ -39,8 +40,22 @@ class SemanticVersion {
 
     @Override
     String toString() {
-        "${major}.${minor}.${patch}"
+        "${major}.${minor}.${patch}${release ? '' : '-SNAPSHOT'}"
     }
+}
+
+SemanticVersion loadVersion() {
+    if ( !versionFile.exists() ) {
+        throw new GradleException( 'gradle.properties does not exist!' )
+    }
+    def properties = new Properties()
+    versionFile.withInputStream { stream ->
+        properties.load( stream )
+    }
+    new SemanticVersion( properties.major.toInteger(),
+            properties.minor.toInteger(),
+            properties.patch.toInteger(),
+            properties.release.toBoolean() )
 }
 
 if ( 'one' == stage ) {
@@ -57,7 +72,7 @@ if ( 'one' == stage ) {
 
     description = 'Sample REST service'
     group = 'org.kurron'
-    version = new SemanticVersion( 0, 0, 1, false )
+    version = new SemanticVersion( 0, 0, 0, false )
 
     logger.quiet 'Configuring compiler options'
     compileJava.options*.compilerArgs = ['-Xlint:deprecation', '-encoding', 'UTF-8']
@@ -65,13 +80,18 @@ if ( 'one' == stage ) {
     compileGroovy.groovyOptions.optimizationOptions['indy'] = true
     compileTestGroovy.groovyOptions.optimizationOptions['indy'] = true
 
+    task loadVersionProperties () {
+        // configuration-time block
+        logger.quiet( 'Loading version properties' )
+        project.version = loadVersion()
+    }
+
     task printVersion( group: 'help',
                        description: 'Prints the project version number' ) {
         doLast {
             logger.quiet "Version: ${version}"
         }
     }
-
 
     logger.quiet 'Configuring unit testing options'
     test {
