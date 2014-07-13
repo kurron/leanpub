@@ -24,6 +24,25 @@ configurations.all {
     exclude group: 'commons-logging'
 }
 
+class SemanticVersion {
+    Integer major
+    Integer minor
+    Integer patch
+    Boolean release
+
+    SemanticVersion( Integer major, Integer minor, Integer patch, Boolean release ) {
+        this.major = major
+        this.minor = minor
+        this.patch = patch
+        this.release = release
+    }
+
+    @Override
+    String toString() {
+        "${major}.${minor}.${patch}"
+    }
+}
+
 if ( 'one' == stage ) {
     logger.quiet 'Stage One'
 
@@ -38,7 +57,7 @@ if ( 'one' == stage ) {
 
     description = 'Sample REST service'
     group = 'org.kurron'
-    version = '0.0.1'
+    version = new SemanticVersion( 0, 0, 1, false )
 
     logger.quiet 'Configuring compiler options'
     compileJava.options*.compilerArgs = ['-Xlint:deprecation', '-encoding', 'UTF-8']
@@ -52,6 +71,7 @@ if ( 'one' == stage ) {
             logger.quiet "Version: ${version}"
         }
     }
+
 
     logger.quiet 'Configuring unit testing options'
     test {
