@@ -203,7 +203,8 @@ At this point we are ready to proceed to the next tool: Vagrant.
 ##Vagrant
 
 From the Vagrant web site:
+
 > Development environments made easy. Create and configure lightweight, reproducible, and portable development environments.
 
-Similar to Packer. Vagrant requires a descriptor that details how you want the boxes build.  Unlike Pakcer, however,
+Similar to Packer. Vagrant requires a descriptor that details how you want the boxes build.  Unlike Packer, however,
 Vagrant uses Ruby as it description language.
