@@ -197,7 +197,7 @@ Just like the server, all we need to create the GUI box is to issue a few simple
 * `packer validate trusty-x64-desktop.json`
 * `packer build trusty-x64-desktop.json`
 
-Once the box is build, import it into Vagrant via `vagrant box add packer/trusty-x64-desktop trusty-x64-desktop.box`.
+Once the box is built, import it into Vagrant via `vagrant box add packer/trusty-x64-desktop trusty-x64-desktop.box`.
 At this point we are ready to proceed to the next tool: Vagrant.
 
 ##Vagrant
@@ -207,4 +207,23 @@ From the Vagrant web site:
 > Development environments made easy. Create and configure lightweight, reproducible, and portable development environments.
 
 Similar to Packer. Vagrant requires a descriptor that details how you want the boxes build.  Unlike Packer, however,
-Vagrant uses Ruby as it description language.
+Vagrant uses Ruby as it description language.  The idea behind Vagrant is to take the base boxes we've built previously
+and customize it to our needs.  In the case of project Neon we'll need to create machines to run:
+
+* MongoDB
+* Redis
+* MySQL
+* HAProxy
+* RabbitMQ
+* our IDE and other development tools
+
+That's 5 boxes we have to create.  How much of our laptop's resources is that going to take?  Everything but the IDE box
+should be able to function just fine on 256 mb of RAM.  We're not going into production with these configurations.  We
+just need them to work well enough for us to run our integration tests.  The IDE box is where we will spend the majority
+of our time and is where we will want to invest more memory.  Xubuntu is light weight and can probably function on less
+but I normally run it with at least 2 gb of RAM, or more if I have available RAM.
+
+Disk space usage has already been determined when we created the base box and cannot easily be changed via Vagrant.
+I typically set my boxes up to use a dynamically expanding disk with a cap of 100 gb.  I also typically configure my
+base boxes to use LVM which allows you to add additional virtual disks as needed.  Normally, however, I find that I
+never approach 100 gb of usage, especially when you factor in the ease of destroying and recreating boxes.

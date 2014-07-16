@@ -1,8 +1,8 @@
 <component name="ArtifactManager">
-  <artifact type="war" name="Gradle : org.kurron:pipeline : pipeline-0.0.1.war">
+  <artifact type="war" name="Gradle : org.kurron:pipeline : pipeline-1.2.3-SNAPSHOT.war">
     <output-path>$PROJECT_DIR$/out/artifacts/pipeline</output-path>
-    <root id="archive" name="pipeline-0.0.1.war">
-      <element id="javaee-facet-resources" facet="pipeline/web/Web Gradle : pipeline-0.0.1.war" />
+    <root id="archive" name="pipeline-1.2.3-SNAPSHOT.war">
+      <element id="javaee-facet-resources" facet="pipeline/web/Web Gradle : pipeline-1.2.3-SNAPSHOT.war" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="pipeline" />
@@ -39,7 +39,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/out/artifacts/pipeline/exploded/pipeline-0.0.1.war/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/out/artifacts/pipeline/exploded/pipeline-1.2.3-SNAPSHOT.war/META-INF/MANIFEST.MF" />
       </element>
     </root>
   </artifact>
