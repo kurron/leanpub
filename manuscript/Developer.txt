@@ -8,7 +8,6 @@
 
 **The JVM Guy Recommends: Packer, Vagrant**
 
-
 ## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
 
 > *Dear JVM Guy, ...*
@@ -16,6 +15,14 @@
 > Sleepless in Seattle
 
 **The JVM Guy Recommends: lazybones**
+
+## As a Developer I want to quickly bootstrap my new micro-service project
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Solution: Spring Boot**
 
 ## As a Developer I want to be able to easily create unit tests
 
@@ -41,7 +48,7 @@
 
 #**The JVM Guy Recommends: CodeNarc**
 
-## As a Developer I want to auoomically detect missing unit tests for new code
+## As a Developer I want to automatically detect missing unit tests for new code
 
 > *Dear JVM Guy, ...*
 >
@@ -49,11 +56,66 @@
 
 **The JVM Guy Recommends: JaCoCo**
 
-## As a Developer I want to quickly bootstrap my new micro-service project
+## As a Developer I want to run integration test against fake services
 
 > *Dear JVM Guy, ...*
 >
 > Sleepless in Seattle
 
-**The JVM Guy Solution: Spring Boot**
+**The JVM Guy Recommends: betamax**
 
+## As a Developer I want to add features to the main branch without breaking the system
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: feature toggles, branch by abstraction, Spring Profiles**
+
+## As a Developer I want to document my micro-service's REST APIs
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Swagger**
+
+## As a Developer I want to document my micro-service's relational database schema
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: SchemaSpy**
+
+## As a Developer I want to document my micro-service's class relationships
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: UMLGraph (check Neal's talk)**
+
+## As a Developer I want to keep my logic adaptive to change
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Spring Integration**
+
+## As a Developer I want my code changes automatically built
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Jenkins**
+
+## As a Developer I want my artifacts automatically made available
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Artifactory, bintray**

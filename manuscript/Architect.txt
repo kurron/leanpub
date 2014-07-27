@@ -8,4 +8,50 @@
 
 **The JVM Guy Recommends: JDepend**
 
+## As an Architect I want to be able to "see" a project's code base
 
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: CodeCity**
+
+## As an Architect I want projects to guard against cascading failures
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Hystrix**
+
+## As an Architect I want a view of the inter-system dependencies
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: ???**
+
+## As an Architect I want high-level functional tests that the business can understand
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Cucumber**
+
+## As an Architect I want to see trends of code metrics over time
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Sonar**
+
+## As an Architect I want to discover the 'brain' classes of my projects
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: ckjm**

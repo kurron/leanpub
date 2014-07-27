@@ -1,5 +1,6 @@
 # As a Tester I want to be able to
 
+## As a Tester I want to push-button deploy candidate builds into my testing environment
 > *Dear JVM Guy, ...*
 >
 > Sleepless in Seattle

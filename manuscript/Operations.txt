@@ -1,9 +1,50 @@
 # As an Operations Specialist I want to be able to
 
+## As an Operations Specialist I want a centralized view of all logged messages
 > *Dear JVM Guy, ...*
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: JDepend**
+**The JVM Guy Recommends: Graylog2**
 
+## As an Operations Specialist I want insight to running instances
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
 
+**The JVM Guy Recommends: hawtio**
+
+## As an Operations Specialist I want to quickly 'sanity check' an installation
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: embedded smoke testing**
+
+## As an Operations Specialist I want to rollback bad deployments
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: red blue deployments**
+
+## As an Operations Specialist I want access to customized analysis tools
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Spring Boot scripts, groovyserv **
+
+## As an Operations Specialist I want to quickly build a production environment
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Packer, Vagrant, Docker, CoreOS**
+
+## As an Operations Specialist I want to quickly install an update
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: debian package manager**
