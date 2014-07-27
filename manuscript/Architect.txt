@@ -1,0 +1,12 @@
+# As an Architect I want to be able to detect layering violations
+
+> *One of the issues I constantly see on the projects I work on are the eventual violations 
+> of the architechual layerings established at the beginning of the project. Eventually, 
+> a "good reason" for the controller to circumvent the service layer and interact directly 
+> with the persistence layer.*
+>
+> Max
+
+## The JVM Guy Solution: JDepend
+
+

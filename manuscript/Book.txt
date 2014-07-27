@@ -1,6 +1,10 @@
 FrontMatter.txt
 Introduction.txt
 MainMatter.txt
+Architect.txt
+Developer.txt
+Tester.txt
+Operations.txt
 Chapter01.txt
 Chapter02.txt
 Chapter03.txt

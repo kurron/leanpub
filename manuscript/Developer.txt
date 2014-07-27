@@ -1,0 +1,57 @@
+# As a Developer I want to be able to quickly create a near-production environment for my new micro-service project
+
+> *One of the issues I constantly see on the projects I work on are the eventual violations*
+>
+> Max
+
+## The JVM Guy Solution: Packer, Vagrant
+
+
+# As a Developer I want to be able to quickly create a skeleton for my new micro-service project
+
+> *One of the issues I constantly see on the projects I work on are the eventual violations*
+>
+> Max
+
+## The JVM Guy Solution: lazybones 
+
+# As a Developer I want to be able to easily create unit tests 
+
+> *One of the issues I constantly see on the projects I work on are the eventual violations*
+>
+> Max
+
+## The JVM Guy Solution: Spock 
+
+# As a Developer I want to be able to easily create integration tests 
+
+> *One of the issues I constantly see on the projects I work on are the eventual violations*
+>
+> Max
+
+## The JVM Guy Solution: Spock 
+
+# As a Developer I want to my code automatically inspected for style violations and bad practices   
+
+> *One of the issues I constantly see on the projects I work on are the eventual violations*
+>
+> Max
+
+## The JVM Guy Solution: CodeNarc 
+
+# As a Developer I want to automically detect missing unit tests for new code   
+
+> *One of the issues I constantly see on the projects I work on are the eventual violations*
+>
+> Max
+
+## The JVM Guy Solution: JaCoCo 
+
+# As a Developer I want to quickly bootstrap my new micro-service project   
+
+> *One of the issues I constantly see on the projects I work on are the eventual violations*
+>
+> Max
+
+## The JVM Guy Solution: Spring Boot 
+
