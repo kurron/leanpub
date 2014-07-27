@@ -1,57 +1,59 @@
-# As a Developer I want to be able to quickly create a near-production environment for my new micro-service project
+# As a Developer...
 
-> *One of the issues I constantly see on the projects I work on are the eventual violations*
+## As a Developer I want to be able to quickly create a near-production environment for my new micro-service project
+
+> *Dear JVM Guy, ...*
 >
-> Max
+> Sleepless in Seattle
 
-## The JVM Guy Solution: Packer, Vagrant
+**The JVM Guy Recommends: Packer, Vagrant**
 
 
-# As a Developer I want to be able to quickly create a skeleton for my new micro-service project
+## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
 
-> *One of the issues I constantly see on the projects I work on are the eventual violations*
+> *Dear JVM Guy, ...*
 >
-> Max
+> Sleepless in Seattle
 
-## The JVM Guy Solution: lazybones 
+**The JVM Guy Recommends: lazybones**
 
-# As a Developer I want to be able to easily create unit tests 
+## As a Developer I want to be able to easily create unit tests
 
-> *One of the issues I constantly see on the projects I work on are the eventual violations*
+> *Dear JVM Guy, ...*
 >
-> Max
+> Sleepless in Seattle
 
-## The JVM Guy Solution: Spock 
+**The JVM Guy Recommends: Spock**
 
-# As a Developer I want to be able to easily create integration tests 
+## As a Developer I want to be able to easily create integration tests
 
-> *One of the issues I constantly see on the projects I work on are the eventual violations*
+> *Dear JVM Guy, ...*
 >
-> Max
+> Sleepless in Seattle
 
-## The JVM Guy Solution: Spock 
+**The JVM Guy Recommends: Spock**
 
-# As a Developer I want to my code automatically inspected for style violations and bad practices   
+## As a Developer I want to my code automatically inspected for style violations and bad practices
 
-> *One of the issues I constantly see on the projects I work on are the eventual violations*
+> *Dear JVM Guy, ...*
 >
-> Max
+> Sleepless in Seattle
 
-## The JVM Guy Solution: CodeNarc 
+#**The JVM Guy Recommends: CodeNarc**
 
-# As a Developer I want to automically detect missing unit tests for new code   
+## As a Developer I want to auoomically detect missing unit tests for new code
 
-> *One of the issues I constantly see on the projects I work on are the eventual violations*
+> *Dear JVM Guy, ...*
 >
-> Max
+> Sleepless in Seattle
 
-## The JVM Guy Solution: JaCoCo 
+**The JVM Guy Recommends: JaCoCo**
 
-# As a Developer I want to quickly bootstrap my new micro-service project   
+## As a Developer I want to quickly bootstrap my new micro-service project
 
-> *One of the issues I constantly see on the projects I work on are the eventual violations*
+> *Dear JVM Guy, ...*
 >
-> Max
+> Sleepless in Seattle
 
-## The JVM Guy Solution: Spring Boot 
+**The JVM Guy Solution: Spring Boot**
 

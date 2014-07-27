@@ -1,12 +1,9 @@
 # As an Operations Specialist I want to be able to
 
-> *One of the issues I constantly see on the projects I work on are the eventual violations 
-> of the architechual layerings established at the beginning of the project. Eventually, 
-> a "good reason" for the controller to circumvent the service layer and interact directly 
-> with the persistence layer.*
+> *Dear JVM Guy, ...*
 >
-> Max
+> Sleepless in Seattle
 
-## The JVM Guy Solution: JDepend
+**The JVM Guy Recommends: JDepend**
 
 
