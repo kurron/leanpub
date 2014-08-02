@@ -1,0 +1,20 @@
+## As a Developer I want to be able to quickly create a skeleton for my new micro-service
+
+> *Dear JVM Guy, normally I get pretty excited when starting a new project but one of the first tasks that needs to be
+done is no fun at all: initial set-up.  A build file has to be created, skeleton classes, tests and configuration files
+need to placed in the proper folders and I always have to look up the machine names of the various servers involved,
+such as the Artifactory server.  All this stuff is necessary but really, really boring to do.  I just want to get
+started coding, not spend all my time setting up!  Is there something that can be done to make things easier?*
+>
+> Impatient Coder
+
+**The JVM Guy Recommends: lazybones**
+
+Well, Impatient, you are in luck.  There is a simple tool called [lazybones](http://nowhere.org) that can really speed
+up the process of spinning up a new project.  It is easy to install and very simple to use.  It gives you access to
+the numerous templates in the public domain but the real power is evident when you provide your own template.  Invest
+an hour or so crafting your own template and you will be able to set up a project in seconds!
+
+To ease installation, I recommend using [GVM](http://nowhere.org).  Simply type `gvm install lazybones` and you are
+off to the races.  The first thing you'll want to do is to verify that lazybones is working.  Type `lazybones list`
+to get a listing of templates that lazybones knows about.

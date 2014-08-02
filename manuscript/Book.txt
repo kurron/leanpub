@@ -1,6 +1,7 @@
 FrontMatter.txt
 Introduction.txt
 MainMatter.txt
+lazybones.txt
 Architect.txt
 Developer.txt
 Tester.txt
