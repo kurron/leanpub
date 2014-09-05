@@ -6,7 +6,7 @@
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: Packer, Vagrant**
+**The JVM Guy Recommends: Packer, Vagrant, Ansible**
 
 ## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
 
@@ -32,13 +32,13 @@
 
 **The JVM Guy Recommends: Spock**
 
-## As a Developer I want to be able to easily create integration tests
+## As a Developer I want to be able to easily create components tests
 
 > *Dear JVM Guy, ...*
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: Spock**
+**The JVM Guy Recommends: Spock, Spring Test**
 
 ## As a Developer I want to my code automatically inspected for style violations and bad practices
 
@@ -56,7 +56,7 @@
 
 **The JVM Guy Recommends: JaCoCo**
 
-## As a Developer I want to run integration test against fake services
+## As a Developer I want to run component test against fake services
 
 > *Dear JVM Guy, ...*
 >
@@ -110,7 +110,7 @@
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: Jenkins**
+**The JVM Guy Recommends: Jenkins, Bamboo**
 
 ## As a Developer I want my artifacts automatically made available
 
