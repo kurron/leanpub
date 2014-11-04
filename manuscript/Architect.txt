@@ -1,5 +1,37 @@
 # As an Architect...
 
+## As an Architect I want to be able to coordinate my micro-services 
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: etcd or Eureka**
+
+## As an Architect I want to be able to easily load balance my micro-services 
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: HAProxy or Ribbon**
+
+## As an Architect I want to be able to manage the configurations of my micro-services 
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Archaius or etcd**
+
+## As an Architect I want to manage interface between the public API and my micro-services 
+
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Zuul**
+
 ## As an Architect I want to be able to detect layering violations in my projects
 
 > *Dear JVM Guy, ...*
