@@ -1,5 +1,12 @@
 # As an Operations Specialist I want to be able to
 
+## As an Operations Specialist I want push-button deployment of released software 
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Rundeck, Docker**
+
 ## As an Operations Specialist I want a centralized view of all logged messages
 > *Dear JVM Guy, ...*
 >

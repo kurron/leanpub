@@ -46,7 +46,7 @@
 >
 > Sleepless in Seattle
 
-#**The JVM Guy Recommends: CodeNarc**
+**The JVM Guy Recommends: CodeNarc**
 
 ## As a Developer I want to automatically detect missing unit tests for new code
 
@@ -62,7 +62,7 @@
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: betamax**
+**The JVM Guy Recommends: betamax, Spring Profiles**
 
 ## As a Developer I want to add features to the main branch without breaking the system
 
