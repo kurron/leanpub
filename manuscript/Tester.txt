@@ -1,10 +1,17 @@
 # As a Tester I want to be able to
 
+## As a Tester I want to bits that are nearly identical to what will be run in production  
+> *Dear JVM Guy, ...*
+>
+> Sleepless in Seattle
+
+**The JVM Guy Recommends: Docker **
+
 ## As a Tester I want to push-button deploy candidate builds into my testing environment
 > *Dear JVM Guy, ...*
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: JDepend**
+**The JVM Guy Recommends: Rundeck **
 
 

@@ -5,7 +5,7 @@
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: Graylog2**
+**The JVM Guy Recommends: logstash**
 
 ## As an Operations Specialist I want insight to running instances
 > *Dear JVM Guy, ...*
@@ -47,4 +47,4 @@
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: debian package manager**
+**The JVM Guy Recommends: Docker**

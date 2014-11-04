@@ -1,14 +1,9 @@
 FrontMatter.txt
 Introduction.txt
 MainMatter.txt
-lazybones.txt
 Architect.txt
 Developer.txt
 Tester.txt
 Operations.txt
-Chapter01.txt
-Chapter02.txt
-Chapter03.txt
-Chapter04.txt
 BackMatter.txt
 Appendix01.txt
