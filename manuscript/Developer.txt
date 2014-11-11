@@ -1,12 +1,46 @@
 # As a Developer...
 
-## As a Developer I want to be able to quickly create a near-production environment for my new micro-service project
+## As a Developer I want to be able to quickly create a proper development environment for the various projects I work on.
 
-> *Dear JVM Guy, ...*
+> *Dear JVM Guy, at my company people wear many hats and work on a variety of projects.  One problem I'm continually running into is how long
+> it takes for me to set up a working development environment each time I switch projects.  Some projects require a slightly different version
+> of the JDK or different Eclipse plug-ins. Some require Python 2 but some are using Python 3. It can take me hours to switch my Windows 
+> box from environment to another.  What should I do?*
 >
-> Sleepless in Seattle
+> Constantly Switching in Cairo
 
-**The JVM Guy Recommends: Packer, Vagrant, Ansible**
+**The JVM Guy Recommends: VirtualBox, Linux, Packer, Vagrant, Ansible**
+
+Dear Constantly Switching, I feel your pain and I think the solution is well within your reach. All you need to do is stop using your real
+box for development and switch to a virtualized one.  The free hypervisor VirtualBox is an excellent tool that I have been using for many
+years.  Using virtualization you can quickly switch between project setups without having to adjust your real machine.  Before you can switch
+to a virtualized environment you'll have to pick up a few technologies. 
+
+A> Do I have to ditch Windows for Linux?  In a word -- yes.  Its not that Windows is bad, its just that tooling works so much better
+A> with Linux than Windows.  In addition, it has been my experience that many of the applications are deployed to virtualized Linux 
+A> environments so why not develop the skills to work with those servers by experiencing Linux as you develop?
+
+VirtualBox allows you to run almost any operating system you want but somebody still has to install the OS and applications.  That is where 
+Vagrant comes in.  Vagrant understands VirtualBox's command-line and orchestrates the installation of the OS and applications.  It does so
+by loading what Vagrant calls a base box. A base box is an image of a pre-configured OS usually pulled down from Vagrant's registry in
+the cloud.  I prefer to create my own base box configured just the way I want.  Luckily, that process can be automated as well using
+Packer.  Tweaking the base box for particular environments, such as installing IntelliJ or a JDK is also automated using the Ansible
+provisioner.  Let's put it all together.
+
+A> Do I have to use VirtualBox? Absolutely not.  You can use any hypervisor you have access to, such as VMWare, but you probably want to 
+A> check the Vagrant documentation and verify that your hypervisor is supported.  The same can be said for Ansible.  If you are more
+A> comfortable with Salt, Puppet or Chef then use one of those tools.  The tool chain isn't what is important, it is the use of virtualization
+A> for your day-to-day development.
+
+To recap, the goal is to create a tuned development environment using as much automation as possible.  The first step is to create 
+a base box that we'll use for our environments.  The base box I like to use is built upon Xubuntu 14.04 (Ubuntu Linux using the Xfce 
+window manager), using Ansible as the provisioner.
+
+The Packer documentation does a good job explaining how to set things up so I'll concentrate on the major pieces. First up is the Packer
+template file.  It is a JSON file that tells Packer where to grab the OS image to boot up and what provisioners to run against the 
+running machine.
+
+{title="trusty-x64-desktop.json", lang=json, line-numbers=on}(packer/trusty-x64-desktop.json)  
 
 ## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
 
