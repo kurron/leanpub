@@ -1,12 +1,12 @@
 # As a Developer...
 
-## As a Developer I want to be able to quickly create a proper development environment for the various projects I work on.
+## As a Developer I need to quickly create development environments for the multiple projects I work on.
 
-> *Dear JVM Guy, at my company people wear many hats and work on a variety of projects.  I find myself constantly struggling to get a working
+> *Dear JVM Guy, at my company people wear many hats and work on a variety of projects.  I find myself constantly struggling to recreate a working
 > development environment for the project I'm switching over to.  Its a nightmare to get the right JDK installed with the right versions of
-> MySQL and Python.  Please help!
+> MySQL and Python.  Please help!*
 >
-> Constantly Switching in Cairo*
+> *Constantly Switching in Cairo*
 
 **The JVM Guy Recommends: VirtualBox, Linux, Packer, Vagrant, Ansible**
 
@@ -39,7 +39,7 @@ The Packer documentation does a good job explaining how to set things up so I'll
 template file.  It is a JSON file that tells Packer where to grab the OS image to boot up and what provisioners to run against the 
 running machine.
 
-[trusty-x64-desktop.json](packer/trusty-x64-desktop.json)  
+<<[trusty-x64-desktop.json](packer/trusty-x64-desktop.json)  
 
 ## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
 
