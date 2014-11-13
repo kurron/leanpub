@@ -39,7 +39,9 @@ The Packer documentation does a good job explaining how to set things up so I'll
 template file.  It is a JSON file that tells Packer where to grab the OS image to boot up and what provisioners to run against the 
 running machine.
 
-<<[trusty-x64-desktop.json](packer/trusty-x64-desktop.json)  
+
+<<[This Code Sample Has A Title](packer/trusty-x64-desktop.json)  
+
 
 ## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
 
