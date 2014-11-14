@@ -39,8 +39,8 @@ The Packer documentation does a good job explaining how to set things up so I'll
 template file.  It is a JSON file that tells Packer where to grab the OS image to boot up and what provisioners to run against the 
 running machine.
 
-{lang="JavaScript"} 
-<<[Packer Template File: trusty-x64-desktop.json](packer/trusty-x64-desktop.json)
+{title="Packer Template File: trusty-x64-desktop.json", lang="JavaScript"} 
+<<(packer/trusty-x64-desktop.json)
 
 The Packer documentation is well written so I won't go into great detail here about the file format but I will highlight some items that took some
 research to figure out how to do.  First off is how to actually get Ubuntu installed in automated fashion?  Typically, the Ubuntu installation process
@@ -49,10 +49,27 @@ interaction.  Fortunately, Ubuntu supports the notion of a `preseed` file which 
 do is to get Packer to tell the installer to use the preseed file.  That is what all of that odd looking text in the `boot_command` section is.  That text
 is what a human would have to type in order to get the installer to run an automated installation.
 
-Another interesting seciton of the Packer template file is the `provisioners` section.  Here we are running a few shell scripts using the `sudo` command
+Another interesting section of the Packer template file is the `provisioners` section.  Here we are running a few shell scripts using the `sudo` command
 to make the box Vagrant friendly.  The contents of the scripts are uninteresting and can be viewed on the website so look there if you are curious about
 the details.  Now, you'll notice a second block in the `provisioners` section and that block launches the Ansible provisioning tool.  In a nutshell, Ansible
-allows you to script your provisioning commandd and execute them over SSH.
+allows you to script your provisioning commands and execute them over SSH.  Very easy to set up and extremely useful.  You might have noticed in the prior block
+that we are a script to install Ansible into the base box itself.  Normally, you run Ansible on a single machine on the network and have it SSH out to any boxes
+that need provisioning.  Since we are using Vagrant, we want everything to be self-contained which means Ansible will always be talking to itself.
+
+{title="Ansible Installation Script: install-ansible.sh", lang="Bash"} 
+<<(packer/ansible/scripts/install-ansible.sh)
+
+You dictate to Ansible what the desired state of the machine should be and let Ansible figure out how to make that happen.  The desired state is described in
+what is known as a `playbook` file which is a YAML file that references the numerous Ansible modules that are available out of the box.  Custom logic can be
+encapsulated in simple shell scripts or, if you want to share your logic with others, in a custom Ansible module.  One thing to note is that any custom logic
+you write should be created in such a way as to make the steps idempotent.  The baked-in Ansible modules are idempotent and won't do anything if the desired
+state is already in place.  Your logic should follow the same pattern.  I didn't do this my first time out and I had 50 entries in an `/etc/hosts` file for the
+same machine!
+
+{title="Ansible Playbook (desktop): ansible-desktop.yml", lang="YAML"} 
+<<(packer/ansible/ansible-desktop.yml)
+
+
 ## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
 
 > *Dear JVM Guy, ...*
