@@ -31,6 +31,8 @@ A> check the Vagrant documentation and verify that your hypervisor is supported.
 A> comfortable with Salt, Puppet or Chef then use one of those tools.  The tool chain isn't what is important -- the use of virtualization
 A> is.
 
+**Using Packer To Create Custom Vagrant Base Boxes**
+
 To recap, the goal is to create a tuned development environment using as much automation as possible.  The first step is to create 
 a base box that we'll use for our environments.  The base box I like to use is built upon Xubuntu 14.04 (Ubuntu Linux using the Xfce 
 window manager), using Ansible as the provisioner.
@@ -42,12 +44,12 @@ running machine.
 {title="Packer Template File: trusty-x64-desktop.json", lang="JavaScript"} 
 <<(packer/trusty-x64-desktop.json)
 
-The Packer documentation is well written so I won't go into great detail here about the file format but I will highlight some items that took some
+The Packer documentation is well written so I won't go into great detail here about the file format but I will highlight items that took some
 research to figure out how to do.  First off is how to actually get Ubuntu installed in automated fashion?  Typically, the Ubuntu installation process
-is interactive with a human at the keyboard answering various questions. Obviously, if you want Packer to automate the process you can require human 
+is interactive with a human at the keyboard answering various questions. Obviously, if you want Packer to automate the process you cannot require human 
 interaction.  Fortunately, Ubuntu supports the notion of a `preseed` file which contains all the answers to the installer's questions.  All you have to
 do is to get Packer to tell the installer to use the preseed file.  That is what all of that odd looking text in the `boot_command` section is.  That text
-is what a human would have to type in order to get the installer to run an automated installation.
+is what a human would have to type in order to get the installer to perform an automated installation.
 
 Another interesting section of the Packer template file is the `provisioners` section.  Here we are running a few shell scripts using the `sudo` command
 to make the box Vagrant friendly.  The contents of the scripts are uninteresting and can be viewed on the website so look there if you are curious about
@@ -60,7 +62,7 @@ that need provisioning.  Since we are using Vagrant, we want everything to be se
 <<(packer/ansible/scripts/install-ansible.sh)
 
 You dictate to Ansible what the desired state of the machine should be and let Ansible figure out how to make that happen.  The desired state is described in
-what is known as a `playbook` file which is a YAML file that references the numerous Ansible modules that are available out of the box.  Custom logic can be
+what is known as a `playbook` file which is a YAML file that references the numerous Ansible modules available out of the box.  Custom logic can be
 encapsulated in simple shell scripts or, if you want to share your logic with others, in a custom Ansible module.  One thing to note is that any custom logic
 you write should be created in such a way as to make the steps idempotent.  The baked-in Ansible modules are idempotent and won't do anything if the desired
 state is already in place.  Your logic should follow the same pattern.  I didn't do this my first time out and I had 50 entries in an `/etc/hosts` file for the
@@ -69,6 +71,40 @@ same machine!
 {title="Ansible Playbook (desktop): ansible-desktop.yml", lang="YAML"} 
 <<(packer/ansible/ansible-desktop.yml)
 
+This playbook is very simple and installs a handful of package suitable for a desktop.  Depending on what you decide to install provisioning can take several
+minutes and is typically dictated by your network connection speeds to the various repositories.  Ansible is an extremely powerful tool and we will be using
+much more of in when build our custom environments.  To be complete, here is the playbook for our headless boxes.  You'll notice that it is almost identical
+to the desktop playbook but installs a slightly different set of packages.
+
+{title="Ansible Playbook (server): ansible-server.yml", lang="YAML"} 
+<<(packer/ansible/ansible-server.yml)
+
+Before we can use our base boxes we must have Packer build them and then install them into Vagrant's list of available boxes.  I normally script this
+process so I don't fat finger something.
+
+{title="Desktop Build Script: build-trusty-desktop.sh", lang="Bash"} 
+<<(packer/build-trusty-desktop.sh)
+
+{title="Server Build Script: packer/build-trusty-server.sh", lang="Bash"} 
+<<(packer/packer/build-trusty-server.sh)
+
+T> ## Line up distractions to help pass the time as you test out different build configurations
+T>
+T> Developing the recipe for your particular base boxes involves a lot of trial and error which means executing lots of failed builds.  Each build
+T> can take quite a while as you wait for ISOs to be downloaded and spun up.  Doing this on a laptop while sitting on the couch chatting with family
+T> was how I killed time between builds.  Make sure you have a distraction or two lined up as you go through this process.  Once you have your recipe
+T> set up the way you like it, regenerating base boxes will be much simpler in the future.
+
+D> ## How much should I bake into my base boxes?
+D>
+D> The answer lies in how different the various virtual machines will be that are based of your base boxes.  If you know that only minor customizations
+D> are required in your VMs then it might make sense to put all of the common parts into the base box.  That could add up to huge time savings later on
+D> because creating your VMs will be quicker due to the small amount of provisioning that is required.  If your projects are like mine, which vary to a
+D> fairly wide degree, it might be safer to keep the base box to a bare minimum and have longer provision times.  There is no law that says you can only
+D> have one or two base boxes.  Once you get the hang of Packer you might find it to your advantage to have base boxes for family of solutions.
+
+**Using Vagrant To Build Our Development Environment**
+**Using Ansible To Provision Our Development Environment**
 
 ## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
 
