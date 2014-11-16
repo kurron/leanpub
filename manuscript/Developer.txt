@@ -3,8 +3,8 @@
 ## As a Developer I need to manage multiple development environments.
 
 > *Dear JVM Guy, at my company people wear many hats and work on a variety of projects.  I find myself constantly struggling to modify 
-> modify my laptop to suit the needs of my current project.  Its a nightmare to get the right JDK versions of
-> JDK, Ruby, Python and MySQL.  Please help!*
+> my Windows laptop to suit the needs of my current project.  Its a nightmare to get the right versions of
+> Java, Ruby, Python and MySQL.  Please help!*
 >
 > *Constantly Switching in Cairo*
 
@@ -38,7 +38,7 @@ A> is.
 **Using Packer To Create Custom Vagrant Base Boxes**
 
 To recap, the goal is to create a tuned development environment using as much automation as possible.  The first step is to create 
-a base box that can be used as the base for our development environments.  The base box I like to use is built upon Xubuntu 14.04 and Docker.
+a base box that can be used as the foundation for our development environments.  The base box I like to use is built upon Xubuntu 14.04 and Docker.
 
 The Packer documentation does a good job explaining how to set things up so I'll concentrate on the major pieces. First up is the Packer
 template file.  It is a JSON file that tells Packer where to grab the OS image to boot up and what provisioners to run against the 
@@ -56,11 +56,10 @@ is what a human would have to type in order to get the installer to perform an a
 
 Another interesting section of the Packer template file is the `provisioners` section.  Here we are running a few shell scripts using the `sudo` command
 to make the box Vagrant friendly.  The contents of the scripts are uninteresting and can be viewed on the website so look there if you are curious about
-the details. The takeaway is that we're installing Ansible into the image.   Next, notice the second block in the `provisioners` section alaunches the Ansible  
-provisioning tool.  In a nutshell, Ansible
-allows you to script your provisioning commands and execute them over SSH.  Very easy to set up and extremely useful. Normally, you run Ansible on a single machine 
-on the network and have it SSH out to any boxes
-that need provisioning.  Since we are using Vagrant, we want everything to be self-contained which is why Ansible is installed into the image.
+the details. The takeaway is that we're installing Ansible into the image.   Next, notice the second block in the `provisioners` section launches the Ansible  
+provisioning tool.  In a nutshell, Ansible allows you to script your provisioning commands and execute them over SSH.  Very easy to set up and extremely useful. 
+Normally, you run Ansible on a single machine on the network and have it SSH out to any boxes that need provisioning.  Since we are using Vagrant, we want everything 
+to be self-contained which is why Ansible is installed into the image.
 
 {title="Ansible Installation Script: install-ansible.sh", lang="Bash"} 
 <<(packer/ansible/scripts/install-ansible.sh)
@@ -77,20 +76,20 @@ file!
 
 This playbook is very simple and installs a handful of packages suitable for a desktop.  Depending on what you decide to install, provisioning can take several
 minutes and is typically dictated by your network connection speeds.  Ansible is an extremely powerful tool and we will be using
-much more of in when build our custom environments.  To be complete, here is the playbook for our headless boxes.  You'll notice that it is almost identical
+much more of it when build our custom environments.  To be complete, here is the playbook for our headless boxes.  You'll notice that it is almost identical
 to the desktop playbook but installs a slightly different set of packages.
 
 {title="Ansible Playbook (server): ansible-server.yml", lang="YAML"} 
 <<(packer/ansible/ansible-server.yml)
 
-Before we can use our base boxes we must have Packer build them and then install them into Vagrant's cache of boxes.  I normally script this
+Before we can use our base boxes we must have Packer build them and then install them into Vagrant's cache.  I normally script this
 process so I don't fat finger something.
 
 {title="Desktop Build Script: build-trusty-desktop.sh", lang="Bash"} 
 <<(packer/build-trusty-desktop.sh)
 
 {title="Server Build Script: packer/build-trusty-server.sh", lang="Bash"} 
-<<(packer/packer/build-trusty-server.sh)
+<<(packer/build-trusty-server.sh)
 
 T> ## Testing configurations can take lots of time
 T>
@@ -104,10 +103,12 @@ D>
 D> It depends on how varied the environments you will be building are.  If you know that only minor customizations
 D> are required in your VMs then it might make sense to put all of the common parts into the base box.  That could add up to huge time savings later on
 D> because creating your VMs will be quicker due to the small amount of provisioning required.  If your projects are like mine, which vary to a
-D> fairly wide degree, it might be safer to keep the base box to a bare minimum and tolerate provision times.  There is no law that says you can only
-D> have one or two base boxes.  Once you get the hang of Packer you might find it to your advantage to have base boxes for family of solutions.
+D> fairly wide degree, it might be safer to keep the base box to a bare minimum and tolerate longer provision times.  There is no law that says you can only
+D> have one or two base boxes.  Once you get the hang of Packer you might find it to your advantage to have base boxes for family of environments.
 
 **Using Vagrant To Build Our Development Environment**
+
+Once we have our base boxes built and installed, the next step is to use Vagrant and create our environments.  
 **Using Ansible To Provision Our Development Environment**
 
 ## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
