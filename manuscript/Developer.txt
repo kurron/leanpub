@@ -106,9 +106,21 @@ D> because creating your VMs will be quicker due to the small amount of provisio
 D> fairly wide degree, it might be safer to keep the base box to a bare minimum and tolerate longer provision times.  There is no law that says you can only
 D> have one or two base boxes.  Once you get the hang of Packer you might find it to your advantage to have base boxes for family of environments.
 
+Once we have our base boxes built and installed, the next step is to use Vagrant and create our environments.  
+
 **Using Vagrant To Build Our Development Environment**
 
-Once we have our base boxes built and installed, the next step is to use Vagrant and create our environments.  
+Now that we have base boxes installed, lets use them.  As with Packer, the documentation for Vagrant is very detailed so I'll only hit the highlights.  
+Vagrant is controlled through a Ruby file normally named `vagrantfile`.  It defines the virtual machines to be created and orchestrates their provisioning.
+I like to have Ansible do the provisioning.  Here is an example `vagrantfile` file.
+
+{title="Vagrant Control File: vagrantfile", lang="Ruby"} 
+<<(vagrant/vagrantfile)
+
+I like to set up my boxes so that they are on their own private network.  Each box can see each other but machines on my network can't see them.  I find
+this keeps things nice and neat in terms of networking.  You don't have to fiddle with forwarding ports and other nonesense.
+
+
 **Using Ansible To Provision Our Development Environment**
 
 ## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
