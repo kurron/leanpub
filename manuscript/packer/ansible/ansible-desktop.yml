@@ -1,9 +1,10 @@
 ---
 # The playbook will configure the bare minimum needed for an Ubuntu desktop.
 
-- hosts: localhost
+- name: Install Desktop software
+  hosts: localhost
   sudo: yes
-  gather_facts: yes
+  gather_facts: no
   tasks:
       - name: Install desired packages
         apt: "name={{ item }} state=present update_cache=true cache_valid_time=600"
