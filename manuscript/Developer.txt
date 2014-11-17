@@ -118,8 +118,34 @@ I like to have Ansible do the provisioning.  Here is an example `vagrantfile` fi
 <<(vagrant/vagrantfile)
 
 I like to set up my boxes so that they are on their own private network.  Each box can see each other but machines on my network can't see them.  I find
-this keeps things nice and neat in terms of networking.  You don't have to fiddle with forwarding ports and other nonesense.
+this keeps things nice and neat and you don't have to fiddle with forwarding ports like you do in some of the other configurations.  The Vagrant descriptor 
+defines 3 virtual machines: desktop, mysql and rabbitmq.  Having individual machines instead putting everything inside the desktop makes the environment look
+similar to what will be seen in test and production.  I've worked on projects where somebody inevitably assumes `localhost` on some configuration and causes
+issues with deployment.  This configuration helps to avoid that scenario.  Once the boxes are spun up, Vagrant delegates to Ansible for the actual provisioning
+of the machines.  You'll find that this playbook is much richer than the one we used for Packer.
 
+{title="Ansible Playbook: playbook.yml", lang="YAML"} 
+<<(vagrant/ansible/playbook.yml)
+
+In the playbook, we try and seperate provisions, called `plays` by Ansible, into logical groups, eg `all` or `groovy-developer`.  This makes it easier to share 
+provisions between machines.  For example, if I wanted Java 8 installed on both the `desktop` and `mysql`, I would specify something similar to this in 
+my `inventory.ini` file.
+
+~~~~~~~~ 
+[java-8-box]
+desktop
+mysql
+
+In the actual `inventory.ini` file that I use you'll notice that some of the plays refer to a machines named `nobody`.  I do this so that I can keep all my plays
+in a single file but disable certain ones for this particular project.  For instance, one project might use a Groovy, MongoDB stack while another project uses
+JRuby and PostgreSQL.  I can maintain one template file and improve my plays overtime and only activate the ones I need right now.
+
+{title="Ansible Inventory: inventory.ini"} 
+<<(vagrant/ansible/inventory.ini)
+
+One trick that I picked along the way and would like to share is that you should copy any scripts that Ansible uses from its location in the shared Vagrant
+folder to somewhere inside the Linux guest. If you don't Windows will screw up your file attributes and permission bits and cause problems.  Copying the files
+to a Linux file system and setting the permissions the way you need them will allow your Vagrant setup to be portable between different host operating systems.
 
 **Using Ansible To Provision Our Development Environment**
 
