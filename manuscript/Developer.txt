@@ -106,6 +106,12 @@ D> because creating your VMs will be quicker due to the small amount of provisio
 D> fairly wide degree, it might be safer to keep the base box to a bare minimum and tolerate longer provision times.  There is no law that says you can only
 D> have one or two base boxes.  Once you get the hang of Packer you might find it to your advantage to have base boxes for family of environments.
 
+D> ## Do I have to build a custom base box?
+D>
+D> Not at all.  You use the standard base boxes provided by Vagrant itself and provision them from scratch.  It really depends on personal taste
+D> and how much provisioning you'll be doing downstream.
+D>
+
 Once we have our base boxes built and installed, the next step is to use Vagrant and create our environments.  
 
 **Using Vagrant To Build Our Development Environment**
@@ -149,14 +155,57 @@ to a Linux file system and setting the permissions the way you need them will al
 
 **Using Ansible To Provision Our Development Environment**
 
-## As a Developer I want to be able to quickly create a skeleton for my new micro-service project
+## As a Developer I want to be able to quickly create a skeleton for my new project
 
-> *Dear JVM Guy, ...*
+> *Dear JVM Guy, whenever I start a new project I usually end up copying files from an existing project just to get things bootstrapped.  It is pain because there
+> is so much trial and error figuring out what files I forgot to copy.  Any suggestions?*
 >
-> Sleepless in Seattle
+> *Constantly Copying in Cambridge*
+
 
 **The JVM Guy Recommends: lazybones**
 
+Dear Constantly Copying, I think I have a solution for you: lazybones.  This Groovy-based tool allows you to define a customized template, store it in the
+cloud, and share it with your peers.  The mechanics are very simple and can be used to template almost any project type. The steps go something like this:
+
+* create a template directory structure
+* provide a version file
+* publish the template to the cloud
+* tell all of your friends
+
+It really is that simple. I'll give you an extremely simple example to get you started but can expand this into a much richer template specific to your needs.
+
+The first thing we need to do is create simple directory structure which the key folder being the one named `templates`.
+
+~~~~~~~~
+├── lazybones-example
+│   ├── build.gradle
+│   ├── gradle.properties
+│   └── templates
+│       └── simple-groovy-project
+│           ├── build.gradle
+│           ├── gradle.properties
+│           ├── settings.gradle
+│           └── src
+│               ├── main
+│               │   ├── groovy
+│               │   └── resources
+│               └── test
+│                   ├── groovy
+│                   └── resources
+
+As you can see the layout is a basic Gradle layout devoid of any source files.  In the templates I create, I typically populate them with example source
+files, such as example Spock tests, Spring context files and a Gradle file with all my typical dependencies already defined.  Like I've said before, you
+can pretty much do whatever you want in the template. Once you have your template laid out, you'll need a place to publish it.  Although it is possible
+to use the template locally and never publish it, I find it much more useful to have access to my templates from any machine that has an internet connection.
+
+A friendly place to host your templates is Bintray.  Like most web based services, they have a Freemium model but hosting templates all we need is the free
+version of the service.  Once you have an account created, you'll need to create repository.  If you want lazybones to handle the details of publishing your
+template you'll need to make your repository of type `Generic`.  Other than that, you can fill in the other details anyway you want.  For this example,
+I'll be publishing to a repository named `lazybones`.
+
+
+     
 ## As a Developer I want to quickly bootstrap my new micro-service project
 
 > *Dear JVM Guy, ...*
