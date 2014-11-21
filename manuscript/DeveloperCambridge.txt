@@ -1,0 +1,50 @@
+**Using Ansible To Provision Our Development Environment**
+## As a Developer I want to be able to quickly create a skeleton for my new project
+
+> *Dear JVM Guy, whenever I start a new project I usually end up copying files from an existing project just to get things bootstrapped.  It is pain because there
+> is so much trial and error figuring out what files I forgot to copy.  Any suggestions?*
+>
+> *Constantly Copying in Cambridge*
+
+
+**The JVM Guy Recommends: lazybones**
+
+Dear Constantly Copying, I think I have a solution for you: lazybones.  This Groovy-based tool allows you to define a customized template, store it in the
+cloud, and share it with your peers.  The mechanics are very simple and can be used to template almost any project type. The steps go something like this:
+
+* create a template directory structure
+* provide a version file
+* publish the template to the cloud
+* tell all of your friends
+
+It really is that simple. I'll give you an extremely simple example to get you started but can expand this into a much richer template specific to your needs.
+
+The first thing we need to do is create simple directory structure which the key folder being the one named `templates`.
+
+~~~~~~~~
+├── lazybones-example
+│   ├── build.gradle
+│   ├── gradle.properties
+│   └── templates
+│       └── simple-groovy-project
+│           ├── build.gradle
+│           ├── gradle.properties
+│           ├── settings.gradle
+│           └── src
+│               ├── main
+│               │   ├── groovy
+│               │   └── resources
+│               └── test
+│                   ├── groovy
+│                   └── resources
+~~~~~~~~
+
+As you can see the layout is a basic Gradle layout devoid of any source files.  In the templates I create, I typically populate them with example source
+files, such as example Spock tests, Spring context files and a Gradle file with all my typical dependencies already defined.  Like I've said before, you
+can pretty much do whatever you want in the template. Once you have your template laid out, you'll need a place to publish it.  Although it is possible
+to use the template locally and never publish it, I find it much more useful to have access to my templates from any machine that has an internet connection.
+
+A friendly place to host your templates is Bintray.  Like most web based services, they have a Freemium model but hosting templates all we need is the free
+version of the service.  Once you have an account created, you'll need to create repository.  If you want lazybones to handle the details of publishing your
+template you'll need to make your repository of type `Generic`.  Other than that, you can fill in the other details anyway you want.  For this example,
+I'll be publishing to a repository named `lazybones`.

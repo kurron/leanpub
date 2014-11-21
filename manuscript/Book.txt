@@ -2,7 +2,12 @@ FrontMatter.txt
 Introduction.txt
 MainMatter.txt
 Architect.txt
+
+DeveloperPreamble.txt
+DeveloperCairo.txt
+DeveloperCambridge.txt
 Developer.txt
+
 Tester.txt
 Operations.txt
 BackMatter.txt
