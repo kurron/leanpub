@@ -8,7 +8,7 @@
 > *Constantly Copying in Cambridge*
 
 
-**The JVM Guy Recommends: lazybones**
+**The JVM Guy Recommends: GVM and lazybones**
 
 Dear Constantly Copying, I think I have a solution for you: lazybones.  This Groovy-based tool allows you to define a customized template, store it in the
 cloud, and share it with your peers.  The mechanics are very simple and can be used to template almost any project type. The steps go something like this:
@@ -18,9 +18,14 @@ cloud, and share it with your peers.  The mechanics are very simple and can be u
 * publish the template to the cloud
 * tell all of your friends
 
-It really is that simple. I'll give you an extremely simple example to get you started but can expand this into a much richer template specific to your needs.
+It really is that simple. Before we can create our template, we need to get lazybones installed and that is where `GVM` comes into play.  The
+Groovy enVironment Manager is a nice utility that helps ease the pain of installing some of the commonly use JVM tools, such as Gradle, Vert.x,
+Spring Boot and, of course, lazybones.  Installing GVM is trivial. 
 
-The first thing we need to do is create simple directory structure which the key folder being the one named `templates`.
+I'll give you an extremely simple example to get you started but you easily can expand this into a much richer template specific to your needs.
+
+The first thing we need to do is create simple directory structure.  The key folder in the structure is the one named `templates`.  The `templates` is where
+lazybones looks for the templates to publish.  In the example, beloce we are creating a template called `simple-groovy-project`. 
 
 ~~~~~~~~
 ├── lazybones-example
@@ -42,10 +47,12 @@ The first thing we need to do is create simple directory structure which the key
 
 As you can see the layout is a basic Gradle layout devoid of any source files.  In the templates I create, I typically populate them with example source
 files, such as example Spock tests, Spring context files and a Gradle file with all my typical dependencies already defined.  Like I've said before, you
-can pretty much do whatever you want in the template. Once you have your template laid out, you'll need a place to publish it.  Although it is possible
+can pretty much do whatever you wan. Once you have your template laid out, you'll need a place to publish it.  Although it is possible
 to use the template locally and never publish it, I find it much more useful to have access to my templates from any machine that has an internet connection.
 
-A friendly place to host your templates is Bintray.  Like most web based services, they have a Freemium model but hosting templates all we need is the free
+A friendly place to host your templates is Bintray.  Like most web based services, they have a Freemium model but for hosting our templates all we need is the free
 version of the service.  Once you have an account created, you'll need to create repository.  If you want lazybones to handle the details of publishing your
 template you'll need to make your repository of type `Generic`.  Other than that, you can fill in the other details anyway you want.  For this example,
 I'll be publishing to a repository named `lazybones`.
+
+The Gradle files at the top of the tree are special.  The Gradle file comes from the lazybones project and contains the logic lazybones uses for publishing.
