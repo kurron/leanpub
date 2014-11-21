@@ -141,6 +141,7 @@ my `inventory.ini` file.
 [java-8-box]
 desktop
 mysql
+~~~~~~~~ 
 
 In the actual `inventory.ini` file that I use you'll notice that some of the plays refer to a machines named `nobody`.  I do this so that I can keep all my plays
 in a single file but disable certain ones for this particular project.  For instance, one project might use a Groovy, MongoDB stack while another project uses
