@@ -224,20 +224,77 @@ Once we have our base boxes built and installed, the next step is to use Vagrant
 
 Now that we have base boxes installed, lets use them.  As with Packer, the documentation for Vagrant is very detailed so I'll only hit the highlights.  
 Vagrant is controlled through a Ruby file normally named `vagrantfile`.  It defines the virtual machines to be created and orchestrates their provisioning.
-I like to have Ansible do the provisioning.  Here is an example `vagrantfile` file.
+Here is an example `vagrantfile` file.
 
 {title="Vagrant Control File: vagrantfile", lang="Ruby"} 
-<<(vagrant/vagrantfile)
+~~~~~~~~ 
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.require_version ">= 1.6.5"
+
+Vagrant.configure("2") do |config|
+    config.vagrant.host = :detect
+
+    config.vm.boot_timeout = 300
+    config.vm.box = "packer/trusty-x64-server"
+    config.vm.box_check_update = true
+    config.vm.hostname = "blackbox"
+    config.vm.graceful_halt_timeout = 60
+    config.vm.post_up_message = "Login credentials are vagrant/vagrant"
+    config.vm.usable_port_range = 2200..2250
+
+    config.vm.provider "virtualbox" do |v|
+        v.gui = false
+        v.customize ["modifyvm", :id, "--rtcuseutc", "on"]
+        v.customize ["modifyvm", :id, "--hwvirtex", "on"]
+        v.customize ["modifyvm", :id, "--nestedpaging", "on"]
+        v.customize ["modifyvm", :id, "--vtxvpid", "on"]
+        v.customize ["modifyvm", :id, "--largepages", "on"]
+        v.customize ["modifyvm", :id, "--acpi", "on"]
+        v.customize ["modifyvm", :id, "--groups", "/Ansible"]
+    end
+
+    config.vm.provision "shell", path: "ansible/scripts/run-ansible.sh"
+	config.vm.define "rabbitmq" do |rabbitmq|
+        rabbitmq.vm.hostname = "rabbitmq"
+        rabbitmq.vm.network :private_network, ip: "192.168.44.10"
+        rabbitmq.vm.provider "virtualbox" do |v|
+            v.name = "example.rabbitmq"
+        end
+    end
+	
+    config.vm.define "mysql" do |mysql|
+        mysql.vm.hostname = "mysql"
+        mysql.vm.network :private_network, ip: "192.168.44.20"
+        mysql.vm.provider "virtualbox" do |v|
+            v.name = "example.mysql"
+        end
+    end
+	
+    config.vm.define "desktop" do |desktop|
+        desktop.vm.box = "packer/trusty-x64-desktop"
+        desktop.vm.hostname = "desktop"
+        desktop.vm.network :private_network, ip: "192.168.44.30"
+        desktop.vm.provider "virtualbox" do |v|
+            v.gui = true
+            v.name = "example.desktop"
+            v.customize ["modifyvm", :id, "--memory", "4096"]
+            v.customize ["modifyvm", :id, "--vram", "24"]
+            v.customize ["modifyvm", :id, "--cpus", "2"]
+        end
+    end
+end
+~~~~~~~~ 
 
 I like to set up my boxes so that they are on their own private network.  Each box can see each other but machines on my network can't see them.  I find
-this keeps things nice and neat and you don't have to fiddle with forwarding ports like you do in some of the other configurations.  The Vagrant descriptor 
-defines 3 virtual machines: desktop, mysql and rabbitmq.  Having individual machines instead putting everything inside the desktop makes the environment look
+this to be cleanest of the possible network setups.  The Vagrant descriptor 
+defines 3 virtual machines: `desktop`, `mysql` and `rabbitmq`.  Having individual machines instead putting everything inside the desktop makes the environment look
 similar to what will be seen in test and production.  I've worked on projects where somebody inevitably assumes `localhost` on some configuration and causes
 issues with deployment.  This configuration helps to avoid that scenario.  Once the boxes are spun up, Vagrant delegates to Ansible for the actual provisioning
-of the machines.  You'll find that this playbook is much richer than the one we used for Packer.
+of the machines.  You'll find that this playbook is much richer than the one we used for Packer and does not read well.  As always, [visit the website for current
+file](http://nowhere.com/).
 
-{title="Ansible Playbook: playbook.yml", lang="YAML"} 
-<<(vagrant/ansible/playbook.yml)
 
 In the playbook, we try and seperate provisions, called `plays` by Ansible, into logical groups, eg `all` or `groovy-developer`.  This makes it easier to share 
 provisions between machines.  For example, if I wanted Java 8 installed on both the `desktop` and `mysql`, I would specify something similar to this in 
