@@ -1,37 +1,37 @@
 ## As a Developer I need to manage multiple development environments.
 
-> *Dear JVM Guy, at my company people wear many hats and work on a variety of projects.  I find myself constantly struggling to modify 
+> *Dear JVM Guy, at my company people wear many hats and work on multiple projects.  I find myself constantly struggling to modify 
 > my Windows laptop to suit the needs of my current project.  Its a nightmare to get the right versions of
-> Java, Ruby, Python and MySQL.  Please help!*
+> Java, Ruby, Python and MySQL correctly installed.  Please help!*
 >
 > *Constantly Switching in Cairo*
 
-**The JVM Guy Recommends: VirtualBox, Linux, Packer, Vagrant, Ansible**
+**The JVM Guy Recommends: [VirtualBox](https://www.virtualbox.org/), Linux, [Packer](https://packer.io/), [Vagrant](https://www.vagrantup.com/), [Ansible](http://www.ansible.com)**
 
 Dear Constantly Switching, I've been where you are and I think I can help. All you need to do is stop using your real
-box for development and switch to a virtualized environment.  The free hypervisor VirtualBox is an excellent tool that I have been successfully 
-using for many years.  Using virtualization allows you to quickly switch between project setups without having to modify your real machine.  Howevever,
-before you can switch to a virtualized environment you'll have to pick up a few technologies. 
+box for development and switch to a virtualized environment.  Using virtualization allows you to quickly switch between project setups without having to modify 
+your real machine.  Howevever, before you can switch to a virtualized environment you'll have to get a basic understanding of a few technologies. 
 
-A> ## Using Linux as your development OS
-A>
-A> Do I have to ditch Windows for Linux?  In a word -- yes.  It's not that Windows is bad, its just that tooling works so much better
-A> with Linux than Windows.  In addition, it has been my experience that many applications are deployed to virtualized Linux 
-A> environments in production so why not develop the skills to work with those servers by experiencing Linux as you develop?
+Q> ## Using Linux as your development OS
+Q>
+Q> Do I have to ditch Windows for Linux?  In a word -- yes.  It's not that Windows is bad, its just that tooling works so much better
+Q> with Linux than Windows.  In addition, it has been my experience that many applications are deployed to virtualized Linux 
+Q> environments in production so why not develop the skills to work with those servers by experiencing Linux as you develop?
 
-VirtualBox allows you to run almost any operating system you want but somebody still has to install the OS and applications.  That is where 
+The free hypervisor VirtualBox is an excellent tool that I have been successfully using for many years and  
+allows you to run almost any operating system you want.  Somebody, however, still has to install the OS and applications.  That is where 
 Vagrant comes in.  Vagrant understands VirtualBox's command-line tools and orchestrates the installation of the OS and applications.  It does so
-by loading what Vagrant calls a base box. A base box is an image of a pre-configured OS usually pulled down from Vagrant's registry in
-the cloud.  I, however, prefer to create my own base box configured just the way I want.  Luckily, that process can be automated as well using
-Packer.  Tweaking the base box for particular environments, such as installing IntelliJ or a JDK can also be automated using the Ansible
-provisioner.  Let's put all these tools to work.
+by loading what Vagrant calls a `base box`. A base box is an image of a pre-configured OS, usually pulled down from Vagrant's registry in
+the cloud.  I, however, prefer to create my own base box configured just the way I want.  Luckily, that process can also be automated using
+Packer.  Tweaking the base box for particular environments, such as installing IntelliJ or a JDK is automated using the Ansible
+provisioner. Once you set up the descriptors for these you'll be able to generate virtual environments quickly and reliably.   Let's put all these tools to work.
 
-A> ## Using VirtualBox as the hypervisor
-A>
-A> Is VirtualBox my only option? Absolutely not.  You can use any hypervisor you have access to, such as VMWare, but you probably want to 
-A> check the Vagrant documentation and verify that your hypervisor is supported.  The same can be said for Ansible.  If you are more
-A> comfortable with Salt, Puppet or Chef then use one of those tools.  The tool chain isn't what is important -- the use of virtualization
-A> is.
+Q> ## Using VirtualBox as the hypervisor
+Q>
+Q> Is VirtualBox my only option? Absolutely not.  You can use any hypervisor you have access to, such as VMWare, but you probably want to 
+Q> check the Vagrant documentation and verify that your hypervisor is supported.  The same can be said for Ansible.  If you are more
+Q> comfortable with Salt, Puppet or Chef then use one of those tools.  The tool chain isn't what is important -- *the use of virtualization
+Q> is*.
 
 **Using Packer To Create Custom Vagrant Base Boxes**
 
@@ -40,10 +40,7 @@ a base box that can be used as the foundation for our development environments. 
 
 The Packer documentation does a good job explaining how to set things up so I'll concentrate on the major pieces. First up is the Packer
 template file.  It is a JSON file that tells Packer where to grab the OS image to boot up and what provisioners to run against the 
-running machine.
-
-{title="Packer Template File: trusty-x64-desktop.json", lang="JavaScript"} 
-<<(packer/trusty-x64-desktop.json)
+running machine.  The template is difficult to view in book form so I suggest you visit the website and [view the Packet template there](http://nowhere.com/).
 
 The Packer documentation is well written so I won't go into great detail here about the file format but I will highlight items that took me some
 research to figure out how to do.  First order of business -- how to actually get Ubuntu installed in automated fashion?  Typically, the Ubuntu installation process
@@ -52,15 +49,41 @@ interaction.  Fortunately, Ubuntu supports the notion of a `preseed` file which 
 do is to get Packer to tell the installer to use the preseed file.  That is what all of that odd looking text in the `boot_command` section is.  That text
 is what a human would have to type in order to get the installer to perform an automated installation.
 
-Another interesting section of the Packer template file is the `provisioners` section.  Here we are running a few shell scripts using the `sudo` command
-to make the box Vagrant friendly.  The contents of the scripts are uninteresting and can be viewed on the website so look there if you are curious about
-the details. The takeaway is that we're installing Ansible into the image.   Next, notice the second block in the `provisioners` section launches the Ansible  
-provisioning tool.  In a nutshell, Ansible allows you to script your provisioning commands and execute them over SSH.  Very easy to set up and extremely useful. 
-Normally, you run Ansible on a single machine on the network and have it SSH out to any boxes that need provisioning.  Since we are using Vagrant, we want everything 
-to be self-contained which is why Ansible is installed into the image.
+{title="Packer Boot Command Snippet", lang="JavaScript"}
+~~~~~~~~
+"boot_command" : [
+    "<esc><esc><enter><wait>",
+    "/install/vmlinuz noapic ",
+    ...
+]
+~~~~~~~~ 
 
-{title="Ansible Installation Script: install-ansible.sh", lang="Bash"} 
-<<(packer/ansible/scripts/install-ansible.sh)
+Another interesting section of the Packer template file is the `provisioners` section.  Here we are running a few shell scripts using the `sudo` command
+to make the box Vagrant friendly and bootstrap Ansible.  
+
+{title="passwordless-sudo.sh", lang="Bash"} 
+~~~~~~~~ 
+#!/bin/bash
+
+echo '%sudo    ALL=(ALL)  NOPASSWD:ALL' >> /etc/sudoers.d/passowrdless
+echo 'Defaults !requiretty' >> /etc/sudoers.d/passwordless
+chmod 0400 /etc/sudoers.d/passwordless
+~~~~~~~~ 
+
+{title="install-ansible.sh", lang="Bash"} 
+~~~~~~~~ 
+#!/bin/bash
+
+apt-get install -y software-properties-common
+apt-add-repository -y ppa:ansible/ansible
+apt-get update
+apt-get -y install ansible
+~~~~~~~~ 
+
+Once we Ansible added to the box, we can use Ansible to handle the remaining provisioning. In a nutshell, Ansible allows you to script your provisioning commands 
+and execute them over SSH.  Very easy to set up and extremely useful. Normally, you run Ansible on a single neworked machine and have it SSH out to any boxes 
+that need provisioning. A current limitation of Ansible is that it does not support Windows.  To work around this, we install Ansible into the box and have 
+Ansible do a local provision.
 
 You dictate to Ansible what the desired state of the machine should be and let Ansible figure out how to make that happen.  The desired state is described in
 what is known as a `playbook` which is a YAML file that references the numerous Ansible modules available to it.  Custom logic can be
@@ -70,7 +93,40 @@ state is already in place.  Your logic should follow the same pattern.  I didn't
 file!
 
 {title="Ansible Playbook (desktop): ansible-desktop.yml", lang="YAML"} 
-<<(packer/ansible/ansible-desktop.yml)
+~~~~~~~~ 
+---
+# The playbook will configure the bare minimum needed for an Ubuntu desktop.
+
+- name: Install Desktop software
+  hosts: localhost
+  sudo: yes
+  gather_facts: no
+  tasks:
+      - name: Install desired packages
+        apt: "name={{ item }} state=present update_cache=true"
+        with_items:
+            - aptitude
+            - iftop
+            - tree
+            - wget
+            - xubuntu-desktop
+
+      - name: Configure Vagrant .ssh directory
+        file: path=/home/vagrant/.ssh state=directory owner=vagrant group=vagrant mode=0700
+
+      - name: Get Vagrant's public key
+        get_url: url=https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub
+                 dest=/home/vagrant/.ssh/authorized_keys
+                 owner=vagrant
+                 group=vagrant
+                 mode=0600
+
+      - name: Disable DNS lookup for SSH 
+        shell: "echo 'UseDNS no' >> /etc/ssh/sshd_config"
+
+      - name: Prepare disk for compression
+        script: /tmp/packer-provisioner-ansible-local/scripts/zero-out-disk.sh
+~~~~~~~~ 
 
 This playbook is very simple and installs a handful of packages suitable for a desktop.  Depending on what you decide to install, provisioning can take several
 minutes and is typically dictated by your network connection speeds.  Ansible is an extremely powerful tool and we will be using
@@ -78,20 +134,72 @@ much more of it when build our custom environments.  To be complete, here is the
 to the desktop playbook but installs a slightly different set of packages.
 
 {title="Ansible Playbook (server): ansible-server.yml", lang="YAML"} 
-<<(packer/ansible/ansible-server.yml)
+~~~~~~~~ 
+---
+# The playbook will configure the bare minimum needed for an Ubuntu server.
+
+- name: Install software suitable for a headless server
+  hosts: localhost
+  sudo: yes
+  gather_facts: no
+  tasks:
+      - name: Install desired packages
+        apt: "name={{ item }} state=present update_cache=true cache_valid_time=600"
+        with_items:
+            - aptitude
+            - iftop
+            - tree
+            - wget
+
+      - name: Configure Vagrant .ssh directory
+        file: path=/home/vagrant/.ssh state=directory owner=vagrant group=vagrant mode=0700
+
+      - name: Get Vagrant's public key
+        get_url: url=https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub
+                 dest=/home/vagrant/.ssh/authorized_keys
+                 owner=vagrant
+                 group=vagrant
+                 mode=0600
+
+      - name: Disable DNS lookup for SSH 
+        shell: "echo 'UseDNS no' >> /etc/ssh/sshd_config"
+
+      - name: Prepare disk for compression
+        script: /tmp/packer-provisioner-ansible-local/scripts/zero-out-disk.sh
+~~~~~~~~ 
 
 Before we can use our base boxes we must have Packer build them and then install them into Vagrant's cache.  I normally script this
 process so I don't fat finger something.
 
 {title="Desktop Build Script: build-trusty-desktop.sh", lang="Bash"} 
-<<(packer/build-trusty-desktop.sh)
+~~~~~~~~ 
+#!/bin/bash
+
+export PACKER_LOG=activate
+#export PACKER_LOG_PATH=/tmp
+
+packer validate trusty-x64-desktop.json
+packer build trusty-x64-desktop.json
+vagrant box add --force --name packer/trusty-x64-desktop vagrant/trusty-x64-desktop.box
+vagrant box list
+~~~~~~~~ 
 
 {title="Server Build Script: packer/build-trusty-server.sh", lang="Bash"} 
-<<(packer/build-trusty-server.sh)
+~~~~~~~~ 
+#!/bin/bash
+
+export PACKER_LOG=activate
+#export PACKER_LOG_PATH=/tmp
+
+packer validate trusty-x64-server.json
+packer build trusty-x64-server.json
+vagrant box add --force --name packer/trusty-x64-server vagrant/trusty-x64-server.box
+vagrant box list
+~~~~~~~~ 
 
 T> ## Testing configurations can take lots of time
 T>
-T> Developing the recipe for your particular base boxes involves a lot of trial and error which means executing lots of failed builds.  Each build
+T> Developing the recipe for your particular base boxes involves trial and error which means executing lots of failed builds.  Each build
 T> can take quite a while as you wait for ISOs to be downloaded and spun up.  Doing this on a laptop while sitting on the couch chatting with family
 T> was how I killed time between builds.  Make sure you have a distraction or two lined up as you go through this process.  Once you have your recipe
 T> set up the way you like it, regenerating base boxes will be much simpler and more predictable.
@@ -101,7 +209,7 @@ D>
 D> It depends on how varied the environments you will be building are.  If you know that only minor customizations
 D> are required in your VMs then it might make sense to put all of the common parts into the base box.  That could add up to huge time savings later on
 D> because creating your VMs will be quicker due to the small amount of provisioning required.  If your projects are like mine, which vary to a
-D> fairly wide degree, it might be safer to keep the base box to a bare minimum and tolerate longer provision times.  There is no law that says you can only
+D> fairly wide degree, it might be safer to keep the base box fairly generic and tolerate longer provision times.  There is no law that says you can only
 D> have one or two base boxes.  Once you get the hang of Packer you might find it to your advantage to have base boxes for family of environments.
 
 D> ## Do I have to build a custom base box?
