@@ -131,7 +131,7 @@ file!
 This playbook is very simple and installs a handful of packages suitable for a desktop.  Depending on what you decide to install, provisioning can take several
 minutes and is typically dictated by your network connection speeds.  Ansible is an extremely powerful tool and we will be using
 much more of it when build our custom environments.  To be complete, here is the playbook for our headless boxes.  You'll notice that it is almost identical
-to the desktop playbook but installs a slightly different set of packages.
+to the desktop playbook, installing a slightly different set of packages.
 
 {title="Ansible Playbook (server): ansible-server.yml", lang="YAML"} 
 ~~~~~~~~ 
@@ -168,6 +168,16 @@ to the desktop playbook but installs a slightly different set of packages.
         script: /tmp/packer-provisioner-ansible-local/scripts/zero-out-disk.sh
 ~~~~~~~~ 
 
+{title="Place zeros on the disk to make compresion better: zero-out-disk.sh", lang="Bash"} 
+~~~~~~~~ 
+#!/bin/bash
+
+echo 'Zeroing device to make space...'
+dd if=/dev/zero of=/EMPTY bs=1M
+rm -f /EMPTY
+sync
+~~~~~~~~ 
+
 Before we can use our base boxes we must have Packer build them and then install them into Vagrant's cache.  I normally script this
 process so I don't fat finger something.
 
@@ -176,7 +186,6 @@ process so I don't fat finger something.
 #!/bin/bash
 
 export PACKER_LOG=activate
-#export PACKER_LOG_PATH=/tmp
 
 packer validate trusty-x64-desktop.json
 packer build trusty-x64-desktop.json
@@ -189,7 +198,6 @@ vagrant box list
 #!/bin/bash
 
 export PACKER_LOG=activate
-#export PACKER_LOG_PATH=/tmp
 
 packer validate trusty-x64-server.json
 packer build trusty-x64-server.json
@@ -217,6 +225,12 @@ D>
 D> Not at all.  You use the standard base boxes provided by Vagrant itself and provision them from scratch.  It really depends on personal taste
 D> and how much provisioning you'll be doing downstream.
 D>
+
+Q> ## Should I ever refresh my base boxes?
+Q>
+Q> I like to refresh my base boxes anytime VirtualBox issues a new release.  This allows Packer to install the most current VirtualBox Guest Additions
+Q> into the boxes, saving the downstream provisioners from having to do it.
+Q>
 
 Once we have our base boxes built and installed, the next step is to use Vagrant and create our environments.  
 
@@ -288,16 +302,15 @@ end
 ~~~~~~~~ 
 
 I like to set up my boxes so that they are on their own private network.  Each box can see each other but machines on my network can't see them.  I find
-this to be cleanest of the possible network setups.  The Vagrant descriptor 
+this to be cleanest of the possible network setups but you should explore all networking options and see what works best for you.  This Vagrant descriptor 
 defines 3 virtual machines: `desktop`, `mysql` and `rabbitmq`.  Having individual machines instead putting everything inside the desktop makes the environment look
 similar to what will be seen in test and production.  I've worked on projects where somebody inevitably assumes `localhost` on some configuration and causes
 issues with deployment.  This configuration helps to avoid that scenario.  Once the boxes are spun up, Vagrant delegates to Ansible for the actual provisioning
-of the machines.  You'll find that this playbook is much richer than the one we used for Packer and does not read well.  As always, [visit the website for current
+of the machines.  This playbook is much richer than the one we used for Packer and does not read well so I recommend that you [visit the website for current
 file](http://nowhere.com/).
 
-
 In the playbook, we try and seperate provisions, called `plays` by Ansible, into logical groups, eg `all` or `groovy-developer`.  This makes it easier to share 
-provisions between machines.  For example, if I wanted Java 8 installed on both the `desktop` and `mysql`, I would specify something similar to this in 
+provisions between machines.  For example, if I wanted Java 8 installed on both the `desktop` and `mysql` boxes, I would specify something similar to this in 
 my `inventory.ini` file.
 
 ~~~~~~~~ 
@@ -310,10 +323,24 @@ In the actual `inventory.ini` file that I use you'll notice that some of the pla
 in a single file but disable certain ones for this particular project.  For instance, one project might use a Groovy, MongoDB stack while another project uses
 JRuby and PostgreSQL.  I can maintain one template file and improve my plays over time and only activate the ones I need right now.
 
-{title="Ansible Inventory: inventory.ini"} 
-<<(vagrant/ansible/inventory.ini)
+{title="Example of a disabled play"} 
+~~~~~~~~ 
+[tomcat-7-boxes]
+nobody
+
+[tomcat-8-boxes]
+desktop
+~~~~~~~~ 
 
 One trick that I picked along the way and would like to share is that you should copy any scripts that Ansible uses from its location in the shared Vagrant
 folder to somewhere inside the Linux guest. If you don't Windows will screw up your file attributes and permission bits and cause problems.  Copying the files
 to a Linux file system and setting the permissions the way you need them will allow your Vagrant setup to be portable between different host operating systems.
+
+T> ## Mixing Ansible with Windows
+T>
+T> I like to copy any scripts that Ansible uses from its location in the shared Vagrant older to somewhere inside the Linux guest. If you don't, Windows will screw up 
+T> your file attributes and permission bits and cause problems.
+T> Copying the files to the Linux file system and setting the permissions the way you need them will allow your Vagrant setup to be portable between 
+T> different host operating systems.
+T>
 
