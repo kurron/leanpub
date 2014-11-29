@@ -8,7 +8,7 @@
 > *Constantly Copying in Cambridge*
 
 
-**The JVM Guy Recommends: GVM and lazybones**
+**The JVM Guy Recommends: [GVM](http://gvmtool.net/) and [lazybones](https://github.com/pledbrook/lazybones)**
 
 Dear Constantly Copying, I think I have a solution for you: lazybones.  This Groovy-based tool allows you to define a customized template, store it in the
 cloud, and share it with your peers.  The mechanics are very simple and can be used to template almost any project type. The steps go something like this:
@@ -20,39 +20,91 @@ cloud, and share it with your peers.  The mechanics are very simple and can be u
 
 It really is that simple. Before we can create our template, we need to get lazybones installed and that is where `GVM` comes into play.  The
 Groovy enVironment Manager is a nice utility that helps ease the pain of installing some of the commonly use JVM tools, such as Gradle, Vert.x,
-Spring Boot and, of course, lazybones.  Installing GVM is trivial. 
+Spring Boot and, of course, lazybones.  Installing GVM is trivial on a Linux box. 
 
-I'll give you an extremely simple example to get you started but you easily can expand this into a much richer template specific to your needs.
+{title="Installing GVM on Linux"} 
+~~~~~~~~ 
+curl -s get.gvmtool.net | bash
+~~~~~~~~ 
 
-The first thing we need to do is create simple directory structure.  The key folder in the structure is the one named `templates`.  The `templates` is where
-lazybones looks for the templates to publish.  In the example, beloce we are creating a template called `simple-groovy-project`. 
+The shell script will modify your `.bashrc` file, making gvm and all its goodness available to you.  Try `gvm install` to see a list of all programs that
+gvm can manage.  To install lazybones type `gvm install lazybones` and follow the prompts.  If things are successful you should be able to type `lazybones --version`
+and see something like `Lazybones version 0.7.1`.
+
+T> ## Customize GVM
+T>
+T> I like to allow GVM to do as much as it can on its own and not wait for my permission.  I'll create a `.gvm/etc/config` file with the following
+T> contents  so that GVM will automically stay current.
+T> ~~~~~~~~
+T> # make gvm non-interactive, great for CI environments
+T> gvm_auto_answer=true
+T> 
+T> # prompt user to selfupdate on new shell
+T> gvm_suggestive_selfupdate=true
+T> 
+T> # perform automatic selfupdates
+T> gvm_auto_selfupdate=true
+T> ~~~~~~~~
+  
+Once we have lazybones available to us, we'll use it to bootstrap our custom template by issuing the command `lazybones create lazybones-project 1.1 my-templates`.
+In this command, I'm specifying a template version to use.  If the version is omitted, the most current version is used.  The command leaves us with the following 
+directory structure:
 
 ~~~~~~~~
-├── lazybones-example
-│   ├── build.gradle
-│   ├── gradle.properties
-│   └── templates
-│       └── simple-groovy-project
-│           ├── build.gradle
-│           ├── gradle.properties
-│           ├── settings.gradle
-│           └── src
-│               ├── main
-│               │   ├── groovy
-│               │   └── resources
-│               └── test
-│                   ├── groovy
-│                   └── resources
+my-templates/
+├── build.gradle
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+├── README.md
+└── templates
+~~~~~~~~
+
+The template we are creating must go into the `templates` directory and be name using a hyphenated naming structure.
+Here we will use an extremely simple example to get you started but this easily can expand this into a much richer template specific to your needs.
+Our template will be named `simple-groovy-project` and contains just a few files and folders.
+
+~~~~~~~~
+my-templates/
+├── build.gradle
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+├── README.md
+└── templates
+    └── simple-groovy-project
+        ├── build.gradle
+        ├── gradle.properties
+        ├── README
+        ├── settings.gradle
+        ├── src
+        │   ├── main
+        │   │   ├── groovy
+        │   │   │   └── .retain
+        │   │   └── resources
+        │   │       └── .retain
+        │   └── test
+        │       ├── groovy
+        │       │   └── .retain
+        │       └── resources
+        │           └── .retain
+        └── VERSION
 ~~~~~~~~
 
 As you can see the layout is a basic Gradle layout devoid of any source files.  In the templates I create, I typically populate them with example source
-files, such as example Spock tests, Spring context files and a Gradle file with all my typical dependencies already defined.  Like I've said before, you
-can pretty much do whatever you wan. Once you have your template laid out, you'll need a place to publish it.  Although it is possible
-to use the template locally and never publish it, I find it much more useful to have access to my templates from any machine that has an internet connection.
+files, such as Spock tests, Spring context files and a Gradle file with all my typical dependencies already defined.  Once you have your template laid out, you'll 
+need a place to publish it.  Although it is possible to use the template locally and never publish it, I find it much more useful to have access to my 
+templates from any machine that has an internet connection.
 
 A friendly place to host your templates is Bintray.  Like most web based services, they have a Freemium model but for hosting our templates all we need is the free
 version of the service.  Once you have an account created, you'll need to create repository.  If you want lazybones to handle the details of publishing your
 template you'll need to make your repository of type `Generic`.  Other than that, you can fill in the other details anyway you want.  For this example,
 I'll be publishing to a repository named `lazybones`.
 
-The Gradle files at the top of the tree are special.  The Gradle file comes from the lazybones project and contains the logic lazybones uses for publishing.
+The Gradle files at the top of the tree are special because they are generated from the lazybones template and contains the logic lazybones uses for publishing.

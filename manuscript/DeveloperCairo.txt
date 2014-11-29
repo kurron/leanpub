@@ -313,6 +313,7 @@ In the playbook, we try and seperate provisions, called `plays` by Ansible, into
 provisions between machines.  For example, if I wanted Java 8 installed on both the `desktop` and `mysql` boxes, I would specify something similar to this in 
 my `inventory.ini` file.
 
+{title="Example of installing Java 8 on two boxes"} 
 ~~~~~~~~ 
 [java-8-box]
 desktop
