@@ -1,6 +1,8 @@
 FrontMatter.txt
 Introduction.txt
 MainMatter.txt
+ArchitectPreamble.txt
+ArchitectDublin.txt
 Architect.txt
 
 DeveloperPreamble.txt

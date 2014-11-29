@@ -1,5 +1,3 @@
-# As an Architect...
-
 ## As an Architect I want to be able to coordinate my micro-services 
 
 > *Dear JVM Guy, ...*
@@ -87,3 +85,4 @@
 > Sleepless in Seattle
 
 **The JVM Guy Recommends: ckjm**
+
