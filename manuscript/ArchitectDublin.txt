@@ -13,7 +13,7 @@ Dear Desperate, you didn't mention the programming languages that your project i
 assuming that Java, Groovy and Scala might be in play.  First off, I think your primary issue is a people problem, not a technology problem.
 Somehow you are going to have get your teams to agree on a common level of quality for all the cooperating pieces -- which is not an easy task.
 Assuming that you can get the teams all reading from the same page, then you can move on to some technological solutions.  My first recommendation
-is a no brainer and is common in many projects: Gradle.  If you haven't already replaced you Ant and Maven builds with Gradle, then work towards
+is a no brainer and is common in many projects: Gradle.  If you haven't already replaced your Ant and Maven builds with Gradle, then work towards
 doing that straight away.  Gradle has matured over the past couple of years and you can find some very well written books describing the ins and outs
 of the tool.  The heart of Gradle is its plugin mechanism that allows for you to declare the type of project you are building and let Gradle figure
 out all the details of where to insert the logic into the build.  For production systems, I recommend that builds perform at least the following steps:
@@ -195,7 +195,8 @@ T> {title="war.gradle", lang="Groovy"}
 T> ~~~~~~~~ 
 T> apply plugin: 'war'
 T> 
-T> war.manifest.attributes( "Implementation-Title": project.name, "Implementation-Version": project.version )
+T> war.manifest.attributes( "Implementation-Title": project.name, 
+T>                          "Implementation-Version": project.version )
 T> ~~~~~~~~ 
 T> 
 T> {title="service/build.gradle", lang="Groovy"} 
@@ -214,17 +215,17 @@ T> ## Use [SonarQube](http://www.sonarqube.org/) to track trends
 T> One solution to the governance problem is to mandate that each project publish data to SonarQube.  You can then use SonarQube to guage how each project 
 T> is doing in relation to the others.  Requiring SonarQube be continually updated gives you the data you need to get a feel for the quaility of 
 T> each project and decide if any corrective actions need to be taken. If you decide to go this route **make sure you look at the data on a consistent basis.**
-T> I've worked on projects that published data that nobody looked at with the exception of the occassional glance by a curious developer.  This is a waste
+T> I've worked on projects that published data nobody looked at.  This is a waste
 T> of resources and can be diheartening to teams that are already suspect of corporate mandates and polcies.
 T> 
 
 ### Use A Custom Gradle Distribution
-A Gradle best practise is not to require Gradle be installed on a machine before it can execute a build.  Instead, use a bootstrap script that downloads the
+A Gradle best practice is not to require Gradle be installed on a machine before it can execute a build.  Instead, use a bootstrap script that downloads the
 required Gradle distribution from the network.  This bootstrap script can point to a custom distribution on the corporate network.  The blog post
 [Gradle Goodness: Distribute Custom Gradle in Our Company](http://mrhaki.blogspot.com/2012/10/gradle-goodness-distribute-custom.html) does a good job of explaining
 how to wire that up. What it doesn't explain is how to take advantage of the custom packaging.  What I've done in the past is to create an `init.gradle` file
 that contains all the custom logic that we wanted to share between projects. Placing this file into the `init.d` folder of the distribution ensures that the
-custom logic get automatically applied.  As in the above example, conditional logic is applied based on plugins that project's build file applies on its own.
+custom logic gets automatically applied.  As in the above example, conditional logic is applied based on plugins that project's build file applies on its own.
 
 {title="Snippet of an init.d/init.gradle file", lang="Groovy"} 
 ~~~~~~~~ 
@@ -254,12 +255,12 @@ distributionUrl=https\://my.corporation.com/distributions/gradle-2.2.0-all.zip
 
 Setting up a custom distribution isn't hard but it isn't without its drawbacks. First, whenever Gradle releases a new version, you are going to have to
 publish an updated custom distribution.  Once the distribution is updated, each project will have to be updated to point to the new distribution.  This is a
-minor inconvenience at worst and is what would have to be done when upgrading to a newer version of a standard distribution.  Typically, moving from Gradle
+minor inconvenience at worst and is what would have to be done when upgrading to a newer version of a standard distribution anyways.  Moving from Gradle
 1.2 to 1.3 isn't a big deal and normally just works.  What can happen in a custom distribution is that thresholds and requirements can change between 
 releases and things break. For example, if it decided that the new policy is to have 60% unit test coverage instead of the old 50%, builds will break until 
 the new tests are written.  Some changes can have a huge impact on existing code bases as well.  For example, if the old policy was to not run Checkstyle on 
 test code but the new policy is to have test code inspected, builds will be broken until the violations are corrected.  In short, if the thresholds and policies 
-don't change that often a custom distribution is a reasonable way to go.
+don't change that often a custom distribution is a reasonable way to go but can cause pain if things change often.
 
 ### Abstracting Away Build Details Using Docker
 So far, we've been focusing on the build from the perspective of the developer.  If we switch focus to that of the build server, we can see that several pieces
@@ -267,28 +268,28 @@ have to bee in place in order for a CI server to successfully produce a build.  
 technology being used, the proper versions of Ant, Maven or Gradle must also be installed.  There are a fair amount of ducks to get into a row before a build
 can be produced.  What if we could keep our CI servers "dumb" and move the smarts to the build itself?  What if the CI service didn't know, or care, if Gradle,
 Maven or Ant was being used to drive the build?  At the very least, that would greatly lessen the burden of configuring the CI cluster when a new project
-came online.  More likely, your build server could "go back in time" and recreate an exact environment, including build tooling, of a build months or years
-in the past so you could make the emergency build for your most important customer.  How, you ask?  The answer is Docker.
+came online.  More impactful, your build server could "go back in time" and recreate an exact environment, including build tooling, of a build months or years
+in the past allowing you could make the emergency patch for your most important customer.  How, you ask?  The answer is Docker.
 
 Docker is the new hotness and is being used in a variety of ways.  Its primary capabilitiy is that it allows you to bundle up an entire environment into a package
 and run it isolated from other containers.  Consider it a very lightweight form of virtualization.  Typically, the Docker community focuses on how to use
 Docker in production settings.  Here, we will focus on using it in a CI pipeline.  The best way to discuss the process is via example.  Let us assume we have
-two projects.  One is build using Ant and one using Gradle.  Further, let's assume both projects are using our Docker based build process.  On the CI server,
+two projects.  One is built using Ant and one using Gradle.  Further, let's assume both projects are using our Docker based build process.  On the CI server,
 the following command is used to build the Ant project:
 
-{title="Command to launch an Ant-based project", lang="Bash"} 
+{title="Command to build an Ant-based project", lang="Bash"} 
 ~~~~~~~~ 
 ./assemble-artifacts.sh
 ~~~~~~~~ 
 
 For our Gradle based project, the CI server runs this command:
 
-{title="Command to launch a Gradle-based project", lang="Bash"} 
+{title="Command to build a Gradle-based project", lang="Bash"} 
 ~~~~~~~~ 
 ./assemble-artifacts.sh
 ~~~~~~~~ 
 
-You are probably thinking to yourself that the shell script holds all the installation and build logic and isn't really doing anything useful. Let's take
+You are probably thinking to yourself that the shell script holds all the installation and build magic and Docker isn't really necessary. Let's take
 a look at the two project's assemble script and see if you are right:
 
 {title="Ant-based project's assemble-artifacts.sh", lang="Bash"} 
@@ -324,24 +325,26 @@ references to particular versions of Docker images available on the network.
 I> ## What is a Docker image?
 I>
 I> An image is a binary artifact that contains all the software and environmental settings needed to run one or more programs in an isolated environment.
-I> For example, the jvm-guy/gradle-build:1.0.0 image might have the following installed and configured:
+I> For example, the `jvm-guy/gradle-build:1.0.0` image might have the following installed and configured:
+I>
 I> * Oracle JDK 1.8.25
 I> * Gradle version 2.2.1
 I> * JAVA_HOME set to the location of the JDK
 I> * GRADLE_HOME set to the location of the Gradle installation
 I>
-I> The jvm-guy/ant-build:1.0.0 might have the following installed and configured:
+I> The `jvm-guy/ant-build:1.0.0` might have the following installed and configured:
+I>
 I> * Open JDK 1.7.45
 I> * Apache Ant version 1.9.4
 I> * JAVA_HOME set to the location of the JDK
 I> * ANT_HOME set to the location of the Ant installation
 I>
-I> Docker images, once built, can be versioned and shared on the network.
+I> Docker images, once built, can be versioned and shared over the network.
 I>
 
 Another important part of the Docker command is the `--volume` switch.   What this is saying is that the current working directory should be visible
 inside the container as `/src`.  This gives the container the ability to read and write files on the local file system.  In a nutshell, the Ant script is
-saying "Hey, Docker.  Run Ant against the files in the current directory and write the output in the current working directory as well".  The Gradle
+saying "Hey, Docker.  Run Ant against the files in the current directory and write the output to there as well".  The Gradle
 script is saying something similar, just substituting Gradle for Ant.  What is nice about using Docker to manage builds is that the machine doing
 the build can be "bare" meaning that none of the usual software has to be installed on the machine.  No JDKs.  No Ant. No Maven. No Gradle.  No Ruby runtimes.
 No Python.  Only the CI sofware.  
@@ -349,7 +352,7 @@ No Python.  Only the CI sofware.
 I> ## Docker images are 'layered'
 I>
 I> Docker images are built upon other images, encouraging reuse.  You will typically find that images are built on refinements of a  series of upstream images.
-I> For example, I might built an image that installs JDK 8 and nothing else.  I might then build another image, based on the JDK 8 image, that installs
+I> For example, I might build an image that installs JDK 8 and nothing else.  I might then build another image, based on the JDK 8 image, that installs
 I> Gradle.  A third image, based on the Gradle image, might install a generic  Gradle build file.
 I>
 
