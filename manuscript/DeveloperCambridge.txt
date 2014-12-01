@@ -101,13 +101,13 @@ my-templates/
 ~~~~~~~~
 
 As you can see the layout is a basic Gradle layout devoid of any source files. The `.retain` files are special marker files that indicate an empty directory
-that is part of the template.  Just like Git, lazybones only respects files and not directories.  Once you have your template laid out, you'll 
+is part of the template.  Just like Git, lazybones only respects files and not directories.  Once you have your template laid out, you'll 
 need a place to publish it.  Although it is possible to use the template locally and never publish it, I find it much more useful to have access to my 
 templates from any machine that has an internet connection.
 
 T> ## Richer Templates
 T>
-T> Although this simple example only contains a couple Gradle file, a template typically contains a richer variety of files.  Personally, I try to include
+T> Although this simple example only contains a couple Gradle files, a template typically contains a richer variety of files.  Personally, I try to include
 T> anything that will help make me productive on a new project. That includes:
 T>
 T> * example unit test
@@ -119,9 +119,67 @@ T>
 T> You can also take advantage of lazybones' templating engine to replace tokens with values provided at project creation time, such as package names.
 T>
 
-A friendly place to host your templates is Bintray.  Like most web based services, they have a Freemium model but for hosting our templates all we need is the free
+A friendly place to host your templates is Bintray.  Bintray uses a freemium model but, for hosting our templates, all we need is the free
 version of the service.  Once you have an account created, you'll need to create repository.  If you want lazybones to handle the details of publishing your
 template you'll need to make your repository of type `Generic`.  Other than that, you can fill in the other details anyway you want.  For this example,
 I'll be publishing to a repository named `lazybones`.
 
-The Gradle files at the top of the tree are special because they are generated from the lazybones template and contains the logic lazybones uses for publishing.
+The Gradle files at the top of the tree are special because they are generated from the lazybones template and contain the publishing logic. Before you
+can publish to Binray you need to tell Gradle about your Bintray account.  The simplest way is to modify the `build.gradle` file so that is has your
+infomration.
+
+{title="Modified build.gradle", lang="Groovy"} 
+~~~~~~~~ 
+lazybones {
+    repositoryUrl = 'https://api.bintray.com/content/jvmguy/lazybones'
+    repositoryUsername = 'jvmguy'
+    repositoryApiKey = 'jvm guy API key'
+}
+~~~~~~~~ 
+
+The information contained in the modified section of the build file is obtained from your Bintray account.
+
+T> ## Externalize your Bintray credentials.
+T>
+T> A good idea is to modify your `build.gradle` files so that it looks up your credentials from a properties file that **is not stored under source control**.
+T> That way, you can safely store your build file under source control and don't have to worry about accidentally checking in your Bintray credentials.
+T> 
+T> {title="Modified build.gradle using properties", lang="Groovy"} 
+T> ~~~~~~~~ 
+T> lazybones {
+T>     repositoryUrl = 'https://api.bintray.com/content/jvmguy/lazybones'
+T>     repositoryUsername = bintrayUsername
+T>     repositoryApiKey = bintrayApiKey
+T> }
+T> ~~~~~~~~ 
+T> 
+T> {title="gradle.properties", lang="Groovy"} 
+T> ~~~~~~~~ 
+T> bintrayUsername = jvmguy
+T> bintrayApiKey = jvmguyapikey
+T> ~~~~~~~~ 
+T> 
+
+Ensure that you have a `VERSION` file in your template.  Without it, lazybones will refuse to publish your template.  The contents do not appear to
+matter to lazybones other than it must be different from any previously published templates.  Mine is very simple:
+
+{title="VERSION"} 
+~~~~~~~~ 
+0.0.1
+~~~~~~~~ 
+
+One final step is to go to the Bintray web site and create a new Bintray package.  The only pieces of information that are required are the package
+name and the license.  The package name must match the name of the template being published with a `-template` suffix added to the end.  For example,
+to publish our template named `simple-groovy-project` I need to create a Bintray packaged named `simple-groovy-project-template'.  Once the pakcage
+is created, we should be able to publish our template. Using the following command-line:
+
+{title="The lazybones command to publish the simple-groovy-project template"} 
+~~~~~~~~ 
+./gradlew publishTemplateSimpleGroovyProject
+~~~~~~~~ 
+
+Notice that we have convert the hyphen casing of the template name into camel case.  Once the publish is completed, there is one final step to perform
+before your template can be used in the wild.  You need to go back to the Bintray website and confirm that you want the lazybones artifact published.
+
+
+
