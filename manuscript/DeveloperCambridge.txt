@@ -170,7 +170,7 @@ matter to lazybones other than it must be different from any previously publishe
 
 One final step is to go to the Bintray web site and create a new Bintray package.  The only pieces of information that are required are the package
 name and the license.  The package name must match the name of the template being published with a `-template` suffix added to the end.  For example,
-to publish our template named `simple-groovy-project` I need to create a Bintray packaged named `simple-groovy-project-template'.  Once the pakcage
+to publish our template named `simple-groovy-project` I need to create a Bintray packaged named `simple-groovy-project-template'.  Once the package
 is created, we should be able to publish our template. Using the following command-line:
 
 {title="The lazybones command to publish the simple-groovy-project template"} 
@@ -181,5 +181,78 @@ is created, we should be able to publish our template. Using the following comma
 Notice that we have convert the hyphen casing of the template name into camel case.  Once the publish is completed, there is one final step to perform
 before your template can be used in the wild.  You need to go back to the Bintray website and confirm that you want the lazybones artifact published.
 
+T> ## Test Your Template Locally
+T>
+T> You'll want to test your template locally before publishing.  The easiest way to do that it to use the `installAllTemplates` target.
+T> 
+T> {title="Package and install the simple-groovy-project template} 
+T> ~~~~~~~~ 
+T> ./gradlew installAllTemplates
+T> 
+T> :packageTemplateSimpleGroovyProject
+T> :installTemplateSimpleGroovyProject
+T> :installAllTemplates
+T> 
+T> BUILD SUCCESSFUL
+T> 
+T> Total time: 5.791 secs
+T> 
+T> ~~~~~~~~ 
+T> 
+T> {title="Testing the new template} 
+T> ~~~~~~~~ 
+T> lazybones create simple-groovy-project 0.0.1 template-test
+T> Creating project from template simple-groovy-project 0.0.1 in 'template-test'
+T> 
+T> This is the contents of the README file.
+T> 
+T> 
+T> Project created in template-test!
+T> ~~~~~~~~ 
+T> 
 
+Once your template is published and available for the world to see your users will have to tell lazybones about your repository, which is very
+simple to do.  Have them create a file called `config.groovy` in the `~/.lazybones` directory and have it point to your repository:
 
+{title="~/.lazybones/config.groovy", lang="Groovy"} 
+~~~~~~~~ 
+bintrayRepositories = [ "jvmguy/lazybones", "kyleboon/lazybones", "pledbrook/lazybones-templates" ]
+~~~~~~~~ 
+
+Once this is done, they should see your template in lazybones' list:
+
+{title="List available templates" 
+~~~~~~~~ 
+lazybones list
+
+Available templates in jvmguy/lazybones
+
+    simple-groovy-project
+
+Available templates in kyleboon/lazybones
+
+    dropwizard
+    groovy-app
+    java-basic
+    jbake
+
+Available templates in pledbrook/lazybones-templates
+
+    aem-multimodule-project
+    afterburnerfx
+    afterburnergfx
+    angular-grails
+    asciidoctor-gradle
+    dropwizard
+    gaelyk
+    gradle-plugin
+    gradle-quickstart
+    groovy-app
+    groovy-lib
+    java-basic
+    lazybones-project
+    nebula-plugin
+    ratpack
+    ratpack-lite
+    spring-boot-actuator
+~~~~~~~~ 
