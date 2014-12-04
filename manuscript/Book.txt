@@ -8,6 +8,7 @@ Architect.txt
 DeveloperPreamble.txt
 DeveloperCairo.txt
 DeveloperCambridge.txt
+DeveloperWarsaw.txt
 Developer.txt
 
 Tester.txt

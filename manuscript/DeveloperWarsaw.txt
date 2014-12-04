@@ -1,0 +1,11 @@
+## As a Developer I want speed up my integration tests and reduce false negatives
+
+> *Dear JVM Guy, I'm strongly believe in automated testing but sometimes I get frustrated by my integration tests.  Sometimes the service I'm testing
+> against gets a little weird causing my test to fail.  Even when the tests are successful they can take a long time to complete.  Sometimes the length
+> of the test is a function of how much work the endpoint I'm testing against at that time.   I'm afraid that if this trend continues my team will 
+> begin to reject automated testing and we'll be back to where we were a few years ago. Is there anything I can do to improve my situation?*
+>
+> Worried in Warsaw
+
+**The JVM Guy Recommends: Spring Beans and Stubs **
+
