@@ -2,13 +2,13 @@
 
 > *Dear JVM Guy, I strongly believe in automated testing but sometimes I get frustrated by my integration tests.  Sometimes the service I'm testing
 > against gets a little weird causing my test to fail for no fault of its own.  Even when the tests are successful they can take a long time to 
-> complete.  Sometimes the length of the test is a function of how much work the endpoint I'm testing against has at that time.   I'm afraid that if 
-> this trend continues my team will begin to reject automated testing and we'll be back to where we were a few years ago. Is there anything I can do 
-> to improve my situation?*
+> complete.  Some of the endpoints I test against are metered and have a dollar costs associated to them.   I'm afraid that 
+> my team will begin to reject automated testing and we'll be back to where we were a few years ago. Is there anything I can do 
+> to improve my situation and prevent a slide backwards?*
 >
-> Worried in Warsaw
+> *Worried in Warsaw*
 
-**The JVM Guy Recommends: Spring Beans and Test Doubles **
+**The JVM Guy Recommends: Spring Beans and Test Doubles**
 
 Dear Worried, I think I have just the answer: test doubles.  The idea is a simple one -- have a single integration test that verifies the API contract
 between your system and an endpoint.  All other tests in your system use a test double in place of the real integration point.  Even if the actual
@@ -18,7 +18,6 @@ couple of pieces in place.
 The first is proper layering.  I'm a fan of [Hexagonal](http://alistair.cockburn.us/Hexagonal+architecture) aka the Ports and Adapters architecture.
 I've also seen refinements of the architecture called the Lifepreserver architecture.  Regardless of the name, the intent is the same:
 
-> **Intent**
 >
 > "Allow an application to equally be driven by users, programs, automated test or batch scripts, and to be developed and tested in 
 > isolation from its eventual run-time devices and databases.
@@ -62,9 +61,8 @@ class StubbedTranslationAdapter implements TranslationPort {
 }
 ~~~~~~~~ 
 
-The stubbed version is dumb and always returns `Bonjour` as its translation but typical stubs will have more intelligence and react differently on a very
-small set of expected input data.  To allow Spring to conditionally inject the proper adapter, we'll have to only **use the port interface in our system and 
-never reference any concrete adapter implementations**.
+The stubbed version is dumb and always returns `Bonjour` as its translation but typical stubs will have more intelligence and react differently to a
+small set of expected input data.
 
 {title="SomeCoreComponent.groovy", lang="Groovy"} 
 ~~~~~~~~ 
@@ -83,9 +81,12 @@ class SomeCoreComponent {
 }
 ~~~~~~~~ 
 
-In the above example we are using construction injection but any injection form will work.  
+The next part of the recipe is to have Spring conditionally wire the proper adapter based on current Spring profile.
 
-The final step is to wire everything up in Spring.
+T>
+T> In order for Spring to work correctly, we have to **only use the port interface in our system and never reference any concrete adapter implementations**.
+T> Failure to follow this rule will, in essence, hard code the adapter that is used and negate the expected test-time improvements.
+T>
 
 {title="ExampleSpringContext.groovy", lang="Groovy"} 
 ~~~~~~~~ 
@@ -110,18 +111,37 @@ class ExampleSpringContext {
 }
 ~~~~~~~~ 
 
-The above context may contain annotations that you might not be familiar with so let's break it down piece by piece.  The `@Bean`
-annotation tells Spring to create three beans of the given type.  The `@Profile` annotation tells Spring to only create the stub adapter when the Spring
+The above context might look a little strange so let's break it down piece by piece.  The `@Bean`
+annotation tells Spring to create three beans: one component and two adapters.  The `@Profile` annotation tells Spring to only create the stub adapter when the Spring
 profile named `integration-testing` is active.  Any beans not annotated with `@Profile` will always be created regardless of the specified profile.  Finally, 
 the `@Primary` annotation tells Spring that if two beans can fulfill a particular autowiring, use the annotated bean.  So, when running with the default 
 profile only two beans will be created: `googleTranslationAdapter` and `someCoreComponent`.  Further, `someCoreComponent` will get autowired with 
 `googlTranslationAdapter`. When the `integration-testing` profile is active, the `stubbedTranslationAdapter` also gets created.  In this case, Spring has 
 two possible beans it could wire into the `someCoreComponentBean` and will select `stubbedTranslationAdapter` because of the `@Primary` annotation.  In 
-summary, when running in production Spring will wire in the Google adapter but when we're running during integration testing, Spring will wire in the 
+summary, when running in production Spring will wire in the Google adapter but when running during integration testing, Spring will wire in the 
 stubbed adapter.  This gives us a stable, controlled endpoint to use during our automated tests allowing for faster and more predictable builds.
 
 Before you can declare victory and move onto the next problem you **must write an integration test to exercise the real endpoint**.  Failing to write
-this test will mean that the endpoint will only get exercised during production and only bad things can come from that.  Here is an example Spock
-test that exercises our Google endpoint.
+this test will mean that the endpoint will only get exercised during production and only bad things can come from that.
 
-TODO: put in Spock code
+{title="Example Spock Integration Test", lang="Groovy"} 
+~~~~~~~~ 
+@ContextConfiguration( classes = Application, loader = SpringApplicationContextLoader )
+class GoogleTranslationAdapterIntegrationTest extends BaseSpecification {
+
+    @Autowired
+    GoogleTranslationAdapter sut
+
+    def 'verify toFrench'() {
+
+        given: 'subject under test'
+        assert sut
+
+        when: 'toFrench is called'
+        def results = sut.toFrench( 'hello' )
+
+        then: 'the proper translation is returned'
+        'bonjour' == results
+    }
+}
+~~~~~~~~ 
