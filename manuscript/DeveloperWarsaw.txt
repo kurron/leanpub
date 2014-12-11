@@ -1,0 +1,127 @@
+## As a Developer I want speed up my integration tests and reduce false negatives
+
+> *Dear JVM Guy, I strongly believe in automated testing but sometimes I get frustrated by my integration tests.  Sometimes the service I'm testing
+> against gets a little weird causing my test to fail for no fault of its own.  Even when the tests are successful they can take a long time to 
+> complete.  Sometimes the length of the test is a function of how much work the endpoint I'm testing against has at that time.   I'm afraid that if 
+> this trend continues my team will begin to reject automated testing and we'll be back to where we were a few years ago. Is there anything I can do 
+> to improve my situation?*
+>
+> Worried in Warsaw
+
+**The JVM Guy Recommends: Spring Beans and Test Doubles **
+
+Dear Worried, I think I have just the answer: test doubles.  The idea is a simple one -- have a single integration test that verifies the API contract
+between your system and an endpoint.  All other tests in your system use a test double in place of the real integration point.  Even if the actual
+endpoint is down, the only test that is affected is the contract test.  All other tests will continue to work.  In order to make this work, we need a
+couple of pieces in place.
+
+The first is proper layering.  I'm a fan of [Hexagonal](http://alistair.cockburn.us/Hexagonal+architecture) aka the Ports and Adapters architecture.
+I've also seen refinements of the architecture called the Lifepreserver architecture.  Regardless of the name, the intent is the same:
+
+> **Intent**
+>
+> "Allow an application to equally be driven by users, programs, automated test or batch scripts, and to be developed and tested in 
+> isolation from its eventual run-time devices and databases.
+>
+> As events arrive from the outside world at a port, a technology-specific adapter converts it into a usable procedure call or message and passes 
+> it to the application. The application is blissfully ignorant of the nature of the input device. When the application has something to send out, it 
+> sends it out through a port to an adapter, which creates the appropriate signals needed by the receiving technology (human or automated). The 
+> application has a semantically sound interaction with the adapters on all sides of it, without actually knowing the nature of the things on the other 
+> side of the adapters."
+>
+
+In order to conditionally replace a slow and/or unstable endpoint, we need to encapsulate all communication logic inside a single outbound adapter.
+Typically, the adapter will be responsible for making any data transformations, such as serializing an internal model into a JSON structure, as well
+as the managing networking APIs and protocols.  For this solution we will be using Groovy and Spring to manage our adapters.
+
+{title="TranslationPort.groovy", lang="Groovy"} 
+~~~~~~~~ 
+interface TranslationPort {
+    String toFrench( String textToTranslate )
+}
+~~~~~~~~ 
+
+As you can see, we have an extremely simple port that will take a bit of text and return a French translation of that text.  We will have two implementations
+of that port: one that talks to Google and one that returns fake translations.
+
+{title="GoogleTranslationAdapter.groovy", lang="Groovy"} 
+~~~~~~~~ 
+class GoogleTranslationAdapter implements TranslationPort {
+    String toFrench( String textToTranslate ) {
+        // whatever Google API calls we need to perform the translation
+    }
+}
+~~~~~~~~ 
+
+{title="StubbedTranslationAdapter.groovy", lang="Groovy"} 
+~~~~~~~~ 
+class StubbedTranslationAdapter implements TranslationPort {
+    String toFrench( String textToTranslate ) {
+        'Bonjour'
+    }
+}
+~~~~~~~~ 
+
+The stubbed version is dumb and always returns `Bonjour` as its translation but typical stubs will have more intelligence and react differently on a very
+small set of expected input data.  To allow Spring to conditionally inject the proper adapter, we'll have to only **use the port interface in our system and 
+never reference any concrete adapter implementations**.
+
+{title="SomeCoreComponent.groovy", lang="Groovy"} 
+~~~~~~~~ 
+class SomeCoreComponent {
+
+    private final TranslationPort thePort
+
+    SomeCoreComponent( TranslationPort aPort ) {
+        thePort = aPort
+    }
+
+    String doSomeWork() {
+        // do some work that uses the translation adapter
+        thePort.toFrench( "foo" )
+    }
+}
+~~~~~~~~ 
+
+In the above example we are using construction injection but any injection form will work.  
+
+The final step is to wire everything up in Spring.
+
+{title="ExampleSpringContext.groovy", lang="Groovy"} 
+~~~~~~~~ 
+class ExampleSpringContext {
+
+    @Bean
+    GoogleTranslationAdapter googleTranslationAdapter() {
+        new GoogleTranslationAdapter()
+    }
+
+    @Bean
+    @Profile( { "integration-testing" } )
+    @Primary
+    StubbedTranslationAdapter stubbedTranslationAdapter() {
+        new StubbedTranslationAdapter()
+    }
+
+    @Bean
+    SomeCoreComponent someCoreComponent( TranslationPort port ) {
+        new SomeCoreComponent( port )
+    }
+}
+~~~~~~~~ 
+
+The above context may contain annotations that you might not be familiar with so let's break it down piece by piece.  The `@Bean`
+annotation tells Spring to create three beans of the given type.  The `@Profile` annotation tells Spring to only create the stub adapter when the Spring
+profile named `integration-testing` is active.  Any beans not annotated with `@Profile` will always be created regardless of the specified profile.  Finally, 
+the `@Primary` annotation tells Spring that if two beans can fulfill a particular autowiring, use the annotated bean.  So, when running with the default 
+profile only two beans will be created: `googleTranslationAdapter` and `someCoreComponent`.  Further, `someCoreComponent` will get autowired with 
+`googlTranslationAdapter`. When the `integration-testing` profile is active, the `stubbedTranslationAdapter` also gets created.  In this case, Spring has 
+two possible beans it could wire into the `someCoreComponentBean` and will select `stubbedTranslationAdapter` because of the `@Primary` annotation.  In 
+summary, when running in production Spring will wire in the Google adapter but when we're running during integration testing, Spring will wire in the 
+stubbed adapter.  This gives us a stable, controlled endpoint to use during our automated tests allowing for faster and more predictable builds.
+
+Before you can declare victory and move onto the next problem you **must write an integration test to exercise the real endpoint**.  Failing to write
+this test will mean that the endpoint will only get exercised during production and only bad things can come from that.  Here is an example Spock
+test that exercises our Google endpoint.
+
+TODO: put in Spock code
