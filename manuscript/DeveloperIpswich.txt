@@ -1,0 +1,20 @@
+## As a Developer I want to reduce the boilerplate code in my Spring projects
+
+> *Dear JVM Guy, we're a Spring shop and we are slowing migrating to a micro-services based solution.  What I've noticed is that each project has a certain
+> amount of 'plumbing' code that has to get written before any domain-specifc logic gets put in place.  We've thought about creating our own set of libraries
+> but we're afraid of having to maintain it as versions of the Spring libraries release.  Is there something you can recommend that allows our shop to
+> focus on writing solution-specific code and avoid some of the infratructure code we know we need to have?*
+>
+> *Interested in Ipswich*
+
+**The JVM Guy Solution: [Spring Boot](http://projects.spring.io/spring-boot/)**
+
+Dear Interested, I've written my fair share of Spring applications and ran into the exact situation you've decribed.  My solution took the form of Spring Boot.
+
+> "Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that can you can "just run". We take an opinionated view 
+> of the Spring platform and third-party libraries so you can get started with minimum fuss. Most Spring Boot applications need very little Spring 
+> configuration."
+
+
+
+

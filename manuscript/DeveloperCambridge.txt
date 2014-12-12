@@ -258,3 +258,10 @@ Available templates in pledbrook/lazybones-templates
     ratpack-lite
     spring-boot-actuator
 ~~~~~~~~ 
+
+T> ## Spring Initializr
+T>
+T> The folks over at Pivitol have created a handy web application, called (Spring Initializer)[http://start.spring.io/], that will generate either build 
+T> files or an entire folder structure for your Spring projects.  All you do is specify a few parameters and click the button and you are handed a 
+T> skeleton for your project.  It really doesn't get much easier than that.
+T>

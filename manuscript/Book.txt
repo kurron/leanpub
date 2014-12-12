@@ -9,6 +9,7 @@ DeveloperPreamble.txt
 DeveloperCairo.txt
 DeveloperCambridge.txt
 DeveloperWarsaw.txt
+DeveloperIpswich.txt
 Developer.txt
 
 Tester.txt
