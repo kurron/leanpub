@@ -1,51 +1,51 @@
 ## As a Developer I want speed up my integration tests and reduce false negatives
 
-> *Dear JVM Guy, I strongly believe in automated testing but sometimes I get frustrated by my integration tests.  Sometimes the service I'm testing
+> *Dear JVM Guy, I strongly believe in automated testing but sometimes I get frustrated by my integration tests.  Periodically the service I'm testing
 > against gets a little weird causing my test to fail for no fault of its own.  Even when the tests are successful they can take a long time to 
-> complete.  Some of the endpoints I test against are metered and have a dollar costs associated to them.   I'm afraid that 
-> my team will begin to reject automated testing and we'll be back to where we were a few years ago. Is there anything I can do 
-> to improve my situation and prevent a slide backwards?*
+> complete.  Some of the endpoints I test against are metered and have a dollar costs associated to them forcing us to restrict the amount of testing
+> we can do.   I'm afraid that my team will begin to reject automated testing and we'll be back to where we were a few years ago -- constantly putting
+> fires out in production. Is there anything I can do to improve my situation and prevent a slide backwards?*
 >
 > *Worried in Warsaw*
 
-**The JVM Guy Recommends: Spring Beans and Test Doubles**
+**The JVM Guy Recommends: Spring Beans, [Gateways](http://martinfowler.com/eaaCatalog/gateway.html), 
+[Service Stubs](http://martinfowler.com/eaaCatalog/serviceStub.html)**
 
-Dear Worried, I think I have just the answer: test doubles.  The idea is a simple one -- have a single integration test that verifies the API contract
+Dear Worried, I think I have just the answer: Service Stubs.  The idea is a simple one -- have a single integration test that verifies the API contract
 between your system and an endpoint.  All other tests in your system use a test double in place of the real integration point.  Even if the actual
 endpoint is down, the only test that is affected is the contract test.  All other tests will continue to work.  In order to make this work, we need a
 couple of pieces in place.
 
-The first is proper layering.  I'm a fan of [Hexagonal](http://alistair.cockburn.us/Hexagonal+architecture) aka the Ports and Adapters architecture.
-I've also seen refinements of the architecture called the Lifepreserver architecture.  Regardless of the name, the intent is the same:
+The first is proper layering.  Martin Fowler has coined some terms that many people are comfortable with and support our goals:
 
+> *Gateway*
 >
-> "Allow an application to equally be driven by users, programs, automated test or batch scripts, and to be developed and tested in 
-> isolation from its eventual run-time devices and databases.
->
-> As events arrive from the outside world at a port, a technology-specific adapter converts it into a usable procedure call or message and passes 
-> it to the application. The application is blissfully ignorant of the nature of the input device. When the application has something to send out, it 
-> sends it out through a port to an adapter, which creates the appropriate signals needed by the receiving technology (human or automated). The 
-> application has a semantically sound interaction with the adapters on all sides of it, without actually knowing the nature of the things on the other 
-> side of the adapters."
+> "An object that encapsulates access to an external system or resource."
 >
 
-In order to conditionally replace a slow and/or unstable endpoint, we need to encapsulate all communication logic inside a single outbound adapter.
-Typically, the adapter will be responsible for making any data transformations, such as serializing an internal model into a JSON structure, as well
-as the managing networking APIs and protocols.  For this solution we will be using Groovy and Spring to manage our adapters.
+> *Service Stub*
+>
+> "Removes dependence upon problematic services during testing."
+>
 
-{title="TranslationPort.groovy", lang="Groovy"} 
+These patterns will allow us to conditionally replace slow and/or unstable endpoints during testing.  First, we need to encapsulate all communication 
+logic inside a single object -- the Gateway.  Typically, the Gateway will be responsible for making any data transformations, such as serializing an 
+internal model into a JSON structure, as well as the managing networking APIs and protocols.  For this solution we will be using Groovy and Spring to manage 
+our Gateway.
+
+{title="TranslationService.groovy", lang="Groovy"} 
 ~~~~~~~~ 
-interface TranslationPort {
+interface TranslationService {
     String toFrench( String textToTranslate )
 }
 ~~~~~~~~ 
 
-As you can see, we have an extremely simple port that will take a bit of text and return a French translation of that text.  We will have two implementations
-of that port: one that talks to Google and one that returns fake translations.
+As you can see, we have an extremely simple interface that will take a bit of text and return a French translation of that text.  We will have two implementations
+of that service: one that talks to Google and one that returns fake translations.
 
 {title="GoogleTranslationAdapter.groovy", lang="Groovy"} 
 ~~~~~~~~ 
-class GoogleTranslationAdapter implements TranslationPort {
+class GoogleTranslationAdapter implements TranslationService {
     String toFrench( String textToTranslate ) {
         // whatever Google API calls we need to perform the translation
     }
@@ -54,7 +54,7 @@ class GoogleTranslationAdapter implements TranslationPort {
 
 {title="StubbedTranslationAdapter.groovy", lang="Groovy"} 
 ~~~~~~~~ 
-class StubbedTranslationAdapter implements TranslationPort {
+class StubbedTranslationAdapter implements TranslationService {
     String toFrench( String textToTranslate ) {
         'Bonjour'
     }
@@ -68,15 +68,15 @@ small set of expected input data.
 ~~~~~~~~ 
 class SomeCoreComponent {
 
-    private final TranslationPort thePort
+    private final TranslationService theService
 
-    SomeCoreComponent( TranslationPort aPort ) {
-        thePort = aPort
+    SomeCoreComponent( TranslationPort aService ) {
+        theService = aService
     }
 
     String doSomeWork() {
         // do some work that uses the translation adapter
-        thePort.toFrench( "foo" )
+        theService.toFrench( "foo" )
     }
 }
 ~~~~~~~~ 
@@ -84,7 +84,7 @@ class SomeCoreComponent {
 The next part of the recipe is to have Spring conditionally wire the proper adapter based on current Spring profile.
 
 T>
-T> In order for Spring to work correctly, we have to **only use the port interface in our system and never reference any concrete adapter implementations**.
+T> In order for Spring to work correctly, we have to **only use the service interface in our system and never reference any concrete adapter implementations**.
 T> Failure to follow this rule will, in essence, hard code the adapter that is used and negate the expected test-time improvements.
 T>
 
@@ -105,8 +105,8 @@ class ExampleSpringContext {
     }
 
     @Bean
-    SomeCoreComponent someCoreComponent( TranslationPort port ) {
-        new SomeCoreComponent( port )
+    SomeCoreComponent someCoreComponent( TranslationService service ) {
+        new SomeCoreComponent( service )
     }
 }
 ~~~~~~~~ 
@@ -145,3 +145,12 @@ class GoogleTranslationAdapterIntegrationTest extends BaseSpecification {
     }
 }
 ~~~~~~~~ 
+
+T> ## Make Your Own Annotation
+T>
+T> Sping has the notion of stereotypes which are annotations that indicate a particular role a bean plays in the implementation.  The `@RestController`
+T> and `@Repository` annotations are examples of stereotypes.  Many people don't know that you can create your own custom stereotypes.  Instead of always
+T> specifying the `@Profile( { "integration-testing" } )` and `@Primary` annotations on your test doubles, you could save yourself some typing and make
+T> your intentions clearer by creating your own `@ServiceStub` annotation.  Look at the `@RestController` or `@Repository` source to see how simple it
+T> is to create your own stereotype.
+T>
