@@ -18,8 +18,8 @@ Q> Do I have to ditch Windows for Linux?  In a word -- yes.  It's not that Windo
 Q> with Linux than Windows.  In addition, it has been my experience that many applications are deployed to virtualized Linux 
 Q> environments in production so why not develop the skills to work with those servers by experiencing Linux as you develop?
 
-The free hypervisor VirtualBox is an excellent tool that I have been successfully using for many years and  
-allows you to run almost any operating system you want.  Somebody, however, still has to install the OS and applications.  That is where 
+The free hypervisor VirtualBox is an excellent tool that I have been successfully using for many years and allows you to run almost any operating system you 
+want.  Somebody, however, still has to install the OS and applications.  That is where 
 Vagrant comes in.  Vagrant understands VirtualBox's command-line tools and orchestrates the installation of the OS and applications.  It does so
 by loading what Vagrant calls a `base box`. A base box is an image of a pre-configured OS, usually pulled down from Vagrant's registry in
 the cloud.  I, however, prefer to create my own base box configured just the way I want.  Luckily, that process can also be automated using
@@ -80,7 +80,7 @@ apt-get update
 apt-get -y install ansible
 ~~~~~~~~ 
 
-Once we Ansible added to the box, we can use Ansible to handle the remaining provisioning. In a nutshell, Ansible allows you to script your provisioning commands 
+Once Ansible added to the box, we can use Ansible to handle the remaining provisioning. In a nutshell, Ansible allows you to script your provisioning commands 
 and execute them over SSH.  Very easy to set up and extremely useful. Normally, you run Ansible on a single neworked machine and have it SSH out to any boxes 
 that need provisioning. A current limitation of Ansible is that it does not support Windows.  To work around this, we install Ansible into the box and have 
 Ansible do a local provision.

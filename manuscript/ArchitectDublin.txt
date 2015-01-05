@@ -26,9 +26,9 @@ out all the details and manage the sequence of steps.  For production systems, I
 * execute integration-level tests (the entire application stood up and tested in quasi-production environment)
 * publishes artifacts that have passed the testing phase to a repository on the network
 
-All of these steps are well documented in the Gradle literature and do not need any discussion here.  What isn't commonly discussed, however, is how to get each team
-to use Gradle in the same manner, using the same plugins, adhering to the same thresholds and applying the same corporate logic and settings.  For discussion, let 
-us assume that our only goal is to get each project to apply the same set of plugins:
+All of these steps are well documented in the Gradle literature and do not need any discussion here.  What isn't commonly discussed, however, is how to get 
+each team to use Gradle in the same manner, using the same plugins, adhering to the same thresholds and applying the same corporate logic and settings.  For 
+discussion, let us assume that our only goal is to get each project to apply the same set of plugins:
 
 {title="Desired Gradle Plugins", lang="Groovy"} 
 ~~~~~~~~ 
@@ -257,7 +257,7 @@ Setting up a custom distribution isn't hard but it isn't without its drawbacks. 
 publish an updated custom distribution.  Once the distribution is updated, each project will have to be updated to point to the new distribution.  This is a
 minor inconvenience at worst and is what would have to be done when upgrading to a newer version of Gradle anyways.  Moving from Gradle
 1.2 to 1.3 isn't a big deal and not very risky.  What can happen, however, in a custom distribution is that thresholds and requirements can change between 
-releases and break builds. For example, if it decided that the new policy is to have 60% unit test coverage instead of the old 50%, builds will break until 
+releases and break builds. For example, if it is mandated that the new policy is to have 60% unit test coverage instead of the old 50%, builds will break until 
 the new tests are written.  Some changes can have a huge impact on existing code bases as well.  For example, if the old policy was to not run Checkstyle on 
 test code but the new policy is to have test code inspected, builds will be broken until the violations are corrected.  In short, if the thresholds and policies 
 don't change that often a custom distribution is a reasonable way to go.  If things change often, however, then teams are likely to get frustrated and either 
@@ -422,7 +422,7 @@ the developer's perspective, the burden of writing and maintaining a build syste
 expected places and runs the version of the build tool needed for that particular project.  Obviously, the developer has to know something about the build tool,
 such as how to indicate that a particular file should be excluded from code coverage analysis, but the majority of the build logic is encapsulated away inside
 the Docker container.  I haven't seen this technique used in many places but I expect it to become more common place because the benefit is too great to ignore.
-A project becomes a lot less build logic and a lot more code than ever before.  People specializing in the current build tools can maintain the containers and
+A project becomes a lot less build logic and a lot more code.  People specializing in the current build tools can maintain the containers and
 advertise them to the teams as new containers are released.  Projects become more standardized and predictable without having to sacrifice developer time each
-month when a new version of some build tools comes out.  I wish I could say that I know this will work for everybody but I can't.  What I can recommend, however,
+month when a new version of some build tool comes out.  I wish I could say that I know this will work for everybody but I can't.  What I can recommend, however,
 is that you take a hard look at using Docker to separate your build logic away from your development team. 

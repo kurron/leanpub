@@ -84,7 +84,7 @@
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: Jenkins, Bamboo**
+**The JVM Guy Recommends: Jenkins, Bamboo, Go**
 
 ## As a Developer I want my artifacts automatically made available
 
@@ -92,5 +92,5 @@
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: Artifactory, bintray**
+**The JVM Guy Recommends: Artifactory, Bintray**
 

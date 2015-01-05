@@ -1,7 +1,14 @@
 # Acknowledgments
 
 # Preface
-This book exists to scratch my own itch.  I've been writing software since 1986 and have always keep my skills sharp by applying techniques I've gotten from books, articles and conferences into small examples programs stored under source control.  Although this has worked well for me in the past, I've often found myself struggling to find the one nugget of information I need to solve a problem.  I've got GitHub projects I can search, a personal wiki where I put notes and a blog where I post solutions in the hope that is might save somebody some frustration.  Ultimately, having knowledge scattered about doesn't work very well so I've decided to combine my knowledge into this book.  It contains the best practices I've acquired over the years as well as some of the gotchas I've run into.  My hope is that this body of knowledge can help others as well as provide a feedback loop where readers can help me improve my techniques.  After all, today's best practice is tomorrow's anti-pattern.  Things change at an alarming pace in the software industry and it is impossible to keep up on everything.
+This book exists to scratch my own itch.  I've been writing software since 1986 and have always kept my skills sharp by applying techniques I've gotten from 
+books, articles and conferences into small example programs stored under source control.  Although this has worked well for me in the past, I've often found 
+myself struggling to find the one nugget of information I need to solve a problem.  I've got GitHub projects I can search, a personal wiki where I put notes 
+and a blog where I post solutions in the hope that is might save somebody, including myself, some frustration.  Ultimately, having knowledge scattered about 
+doesn't work very well so I've decided to combine my knowledge into this book.  It contains the best practices I've acquired over the years as well as some of 
+the gotchas I've run into.  My hope is that this body of knowledge can help others as well as provide a feedback loop where readers can help me improve my 
+techniques.  After all, today's best practice is tomorrow's anti-pattern.  Things change at an alarming pace in the software industry and it is impossible 
+to keep up on everything.
  
 # Who Should Read This Book?
 
@@ -17,7 +24,10 @@ If you find these topics of interest to you, keep reading.  Otherwise, good luck
 
 # What's In This Book?
 
-This book contains everything I know about creating micro-services from beginning to end.  As such, the topics will range from using automation to provision virtual development environments to monitoring deployed micro-services.  You will find build files running automated tests, working source code and architectural diagrams.  The structure of the book is designed so that you don't have to read it from cover to cover.  You should be able to skip between chapters and feel confident that you will be able to understand almost all of the discussion.  Where appropriate, we'll refer to other chapters for details on mentioned concepts.
+This book contains everything I know about creating software solutions from beginning to end.  As such, the topics will range from using automation to provision 
+virtual development environments to monitoring deployed micro-services.  You will find build files running automated tests, working source code and architectural 
+diagrams.  The structure of the book is designed so that you don't have to read it from cover to cover.  You should be able to skip between chapters and feel 
+confident that you will be able to understand almost all of the discussion.  Where appropriate, we'll refer to other chapters for details on mentioned concepts.
  
 # What Do You Need to Use This Book?
 
