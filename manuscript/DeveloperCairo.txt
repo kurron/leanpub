@@ -333,15 +333,10 @@ nobody
 desktop
 ~~~~~~~~ 
 
-One trick that I picked along the way and would like to share is that you should copy any scripts that Ansible uses from its location in the shared Vagrant
-folder to somewhere inside the Linux guest. If you don't Windows will screw up your file attributes and permission bits and cause problems.  Copying the files
-to a Linux file system and setting the permissions the way you need them will allow your Vagrant setup to be portable between different host operating systems.
-
 T> ## Mixing Ansible with Windows
 T>
-T> I like to copy any scripts that Ansible uses from its location in the shared Vagrant older to somewhere inside the Linux guest. If you don't, Windows will screw up 
-T> your file attributes and permission bits and cause problems.
-T> Copying the files to the Linux file system and setting the permissions the way you need them will allow your Vagrant setup to be portable between 
-T> different host operating systems.
+T> I like to copy any scripts that Ansible uses from its location in the shared Vagrant older to somewhere inside the Linux guest. If you don't, Windows 
+T> will screw up your file attributes and permission bits and cause problems. Copying the files to the Linux file system and setting the permissions the 
+T> way you need them will allow your Vagrant setup to be portable between different host operating systems.
 T>
 

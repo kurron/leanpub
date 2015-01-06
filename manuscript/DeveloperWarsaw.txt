@@ -33,9 +33,9 @@ logic inside a single object -- the Gateway.  Typically, the Gateway will be res
 internal model into a JSON structure, as well as the managing networking APIs and protocols.  For this solution we will be using Groovy and Spring to manage 
 our Gateway.
 
-{title="TranslationService.groovy", lang="Groovy"} 
+{title="TranslationGateway.groovy", lang="Groovy"} 
 ~~~~~~~~ 
-interface TranslationService {
+interface TranslationGateway {
     String toFrench( String textToTranslate )
 }
 ~~~~~~~~ 
@@ -45,16 +45,16 @@ of that service: one that talks to Google and one that returns fake translations
 
 {title="GoogleTranslationAdapter.groovy", lang="Groovy"} 
 ~~~~~~~~ 
-class GoogleTranslationAdapter implements TranslationService {
+class GoogleTranslationGateway implements TranslationGateway {
     String toFrench( String textToTranslate ) {
         // whatever Google API calls we need to perform the translation
     }
 }
 ~~~~~~~~ 
 
-{title="StubbedTranslationAdapter.groovy", lang="Groovy"} 
+{title="GoogleTranslationServiceStub.groovy", lang="Groovy"} 
 ~~~~~~~~ 
-class StubbedTranslationAdapter implements TranslationService {
+class GoogleTranslationServiceStub implements TranslationGateway {
     String toFrench( String textToTranslate ) {
         'Bonjour'
     }
@@ -68,15 +68,15 @@ small set of expected input data.
 ~~~~~~~~ 
 class SomeCoreComponent {
 
-    private final TranslationService theService
+    private final TranslationGateway theGateway
 
-    SomeCoreComponent( TranslationPort aService ) {
-        theService = aService
+    SomeCoreComponent( TranslationGateway aGateway ) {
+        theGateway = aGateway
     }
 
     String doSomeWork() {
-        // do some work that uses the translation adapter
-        theService.toFrench( "foo" )
+        // do some work that uses the translation gateway
+        theGateway.toFrench( "foo" )
     }
 }
 ~~~~~~~~ 
@@ -84,8 +84,8 @@ class SomeCoreComponent {
 The next part of the recipe is to have Spring conditionally wire the proper adapter based on current Spring profile.
 
 T>
-T> In order for Spring to work correctly, we have to **only use the service interface in our system and never reference any concrete adapter implementations**.
-T> Failure to follow this rule will, in essence, hard code the adapter that is used and negate the expected test-time improvements.
+T> In order for Spring to work correctly, we have to **only use the gateway interface in our system and never reference any concrete implementations**.
+T> Failure to follow this rule will, in essence, hard code the gateway that is used and negate the expected test-time improvements.
 T>
 
 {title="ExampleSpringContext.groovy", lang="Groovy"} 
@@ -93,33 +93,33 @@ T>
 class ExampleSpringContext {
 
     @Bean
-    GoogleTranslationAdapter googleTranslationAdapter() {
-        new GoogleTranslationAdapter()
+     TranslationGateway googleTranslationGateway() {
+        new GoogleTranslationGateway()
     }
 
     @Bean
     @Profile( { "integration-testing" } )
     @Primary
-    StubbedTranslationAdapter stubbedTranslationAdapter() {
-        new StubbedTranslationAdapter()
+    TranslationGateway googleTranslationServiceStub() {
+        new GoogleTranslationServiceStub()
     }
 
     @Bean
-    SomeCoreComponent someCoreComponent( TranslationService service ) {
-        new SomeCoreComponent( service )
+    SomeCoreComponent someCoreComponent( TranslationGateway gateway ) {
+        new SomeCoreComponent( gateway )
     }
 }
 ~~~~~~~~ 
 
-The above context might look a little strange so let's break it down piece by piece.  The `@Bean`
-annotation tells Spring to create three beans: one component and two adapters.  The `@Profile` annotation tells Spring to only create the stub adapter when the Spring
+The above context might look a little strange so let's break it down piece by piece.  The `@Bean` annotation tells Spring to create three beans: one 
+component and two gateways.  The `@Profile` annotation tells Spring to only create the stub gateway when the Spring
 profile named `integration-testing` is active.  Any beans not annotated with `@Profile` will always be created regardless of the specified profile.  Finally, 
 the `@Primary` annotation tells Spring that if two beans can fulfill a particular autowiring, use the annotated bean.  So, when running with the default 
-profile only two beans will be created: `googleTranslationAdapter` and `someCoreComponent`.  Further, `someCoreComponent` will get autowired with 
-`googlTranslationAdapter`. When the `integration-testing` profile is active, the `stubbedTranslationAdapter` also gets created.  In this case, Spring has 
-two possible beans it could wire into the `someCoreComponentBean` and will select `stubbedTranslationAdapter` because of the `@Primary` annotation.  In 
-summary, when running in production Spring will wire in the Google adapter but when running during integration testing, Spring will wire in the 
-stubbed adapter.  This gives us a stable, controlled endpoint to use during our automated tests allowing for faster and more predictable builds.
+profile only two beans will be created: `googleTranslationGateway` and `someCoreComponent`.  Further, `someCoreComponent` will get autowired with 
+`googleTranslationGateway`. When the `integration-testing` profile is active, the `googleTranslationServiceStub` also gets created.  In this case, Spring has 
+two possible beans it could wire into the `someCoreComponentBean` and will select `googleTranslationServiceStub` because of the `@Primary` annotation.  In 
+summary, when running in production Spring will wire in the Google gateway but when running during integration testing, Spring will wire in the 
+service stub.  This gives us a stable, controlled endpoint to use during our automated tests allowing for faster and more predictable builds.
 
 Before you can declare victory and move onto the next problem you **must write an integration test to exercise the real endpoint**.  Failing to write
 this test will mean that the endpoint will only get exercised during production and only bad things can come from that.
@@ -130,7 +130,7 @@ this test will mean that the endpoint will only get exercised during production 
 class GoogleTranslationAdapterIntegrationTest extends BaseSpecification {
 
     @Autowired
-    GoogleTranslationAdapter sut
+    GoogleTranslationGateway sut
 
     def 'verify toFrench'() {
 

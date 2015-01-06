@@ -66,7 +66,7 @@ my-templates/
 └── templates
 ~~~~~~~~
 
-The template we are creating must go into the `templates` directory and be name using a hyphenated naming structure.
+The template we are creating must go into the `templates` directory and be named using a hyphenated naming structure.
 Here we will use an extremely simple example to get you started but this is easily expanded into a much richer template specific to your needs.
 Our template will be named `simple-groovy-project` and contains just a few files and folders.
 
@@ -261,7 +261,7 @@ Available templates in pledbrook/lazybones-templates
 
 T> ## Spring Initializr
 T>
-T> The folks over at Pivitol have created a handy web application, called (Spring Initializer)[http://start.spring.io/], that will generate either build 
-T> files or an entire folder structure for your Spring projects.  All you do is specify a few parameters and click the button and you are handed a 
+T> The folks over at Pivitol have created a handy web application, called [Spring Initializer](http://start.spring.io/), that will generate either build 
+T> files or an entire folder structure for your Spring projects.  All you do is specify a few parameters, click the button and you are handed a 
 T> skeleton for your project.  It really doesn't get much easier than that.
 T>
