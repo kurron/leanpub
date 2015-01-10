@@ -1,0 +1,90 @@
+## As a Developer I want to select the proper layering for my projects 
+
+> *Dear JVM Guy, I constantly debate with my colleagues how to best organize 
+> our software.  Some argue that a simple translation from the database into 
+> the remoting format is all we need. Others argue for complete independence 
+> from the outside worlds and advocate a transformation layer.  I was 
+> wondering what your thoughts were on the matter?*
+>
+> Debating in Darjeeling
+
+**The JVM Guy Recommends: Hexagonal Architecture, Service Layer**
+
+Wow, Debating, that is a pretty open ended question. The typical, and expected,
+consulting answer is "it depends" but I suppose I can offer up one of my 
+favorite structures that makes sense in a fairly large number of scenarios.  
+I value the freedom to write good tests as well as the freedom to make changes 
+without fearing the ripple effect throughout the solution.  Despite the recent 
+trend towards micro-services and near-disposable solutions, I still assume 
+that my software will maintained for many years and plan accordingly.  The 
+layering I first consider is my version of
+Alistair Cockburn's [Hexagonal Architecture]
+(http://alistair.cockburn.us/Hexagonal+architecture/v/slim) and Martin Fowler's 
+[Service Layer](http://martinfowler.com/eaaCatalog/serviceLayer.html).
+
+![Standard Layering](images/layering.png)
+
+The Core comprises 90% of the system and represents the logic specific to 
+the domain and problem at hand.  Here you will find your proprietary 
+algorithms and other company secrets.  The Core are the crown jewels and is
+what we are trying to give the most longevity and support.  The ring 
+around the Core is the Gateway layer, split up into two halves: the Inbound 
+and the Outbound.  The Gateway layer is where you put in your typical service
+infrastructure, REST endpoints, AMQP message listeners, FTP drop watchers. 
+Any message wishing to enter your process goes through the Gateway layer. 
+The same can be said for messages wishing to leave the process, including 
+database interactions, calls to REST endpoints or AMQP messaging.  This 
+layering supports my two primary concerns: testing and orthogonal change. 
+
+Unit-tests can be applied to all 3 layers and require no further discussion 
+other than a friendly reminder that unit-tests are fast and test only one 
+object at a time, often using mocks and stubs to preserve the object's 
+isolation from the rest of the system.  
+
+Component-tests are tests within the Core system that involve multiple 
+objects.  Typically, these tests are quick since the Core operates in-process, 
+but do take a bit more work to set up because multiple objects need to 
+properly wired up.  Here, you are focusing on sub-system tests, such as 
+auditing or discount pricing logic.
+
+Integration-tests are tests that focus on verifying that data properly 
+enters and leaves the system.  Tests of the Inbound Gateway layer verify 
+any API contracts that the system fulfills, including the handling of 
+error condtions.  Tests of the Outbound Gateway layer verify that the 
+downstream integration points continue to honor their published APIs and
+SLAs.  One important benefit of having an Outbound Gateway layer is that 
+your integrations can be replaced with Service Stubs to deal with slow or
+flickering end points.  The use of Service Stubs can also greatly improve 
+the speed of your tests because Service Stubs are typically implemented 
+in-process, avoiding network latency.
+
+The data structures in the Gateway layers are normally different from the 
+data structures in the Core.  I have found that the way the UI needs data is
+often quite different from the domain model that makes sense for the Core.  
+In order to accomodate the differening views of the data between the 
+UI and the service, we'll have the Gateway layer do some sort of 
+transformation.  Obviously, there is some cost to doing this but this extra 
+step saved me from having to implement dramatic refactorings to the logic 
+just because the UX team decided to rework some screens.  On the outbound 
+side you get similar benefits when the downstream integration point decided 
+to end-of-life one of its APIs and forces you to use another one.  I'll be
+honest and say that I've experienced far less downstream changes than I have 
+upstream ones but the Core's data model almost never matches anything that
+the downstream endpoints needs so you need that translation to happen anyways.
+
+I've implemented this layering structure in at least two ways.  One way is
+to do it by hand and rely on team discipline to maintain the layering.  Peer 
+reviews and automated 'package checking' tools, like [jdepend]
+(http://clarkware.com/software/JDepend.html) are a must for such 
+implementations.  Another way to accomplish this layering is to rely on a
+framework like Spring Integration.  SI is probably a bit heavier than 
+something you might write by hand but it has everything you need to keep 
+your solutions loosely coupled.  When I first looked into SI, I couldn't
+understand why an implemention of the [Enterprise Integration Patterns]
+(http://www.enterpriseintegrationpatterns.com/) could help me with my 
+in-process issues.  Eventually, I realized that patterns are a way to 
+keep your logic decoupled and whether the logic pipeline was in-proces, 
+out-of-process or a combination was irrlevant.  I've found when changes 
+in requirements occur, and they will, the use of SI greatly simplified 
+the changes.  Usually, it was a matter of adding a "filter at the front 
+door" or a "transformer between step A and step B".

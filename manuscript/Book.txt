@@ -10,6 +10,7 @@ DeveloperCairo.txt
 DeveloperCambridge.txt
 DeveloperWarsaw.txt
 DeveloperIpswich.txt
+DeveloperDarjeeling.txt
 Developer.txt
 
 Tester.txt
