@@ -1,0 +1,32 @@
+## As a Developer I want to be able to easily create automated tests
+
+> *Dear JVM Guy, I'm trying to cultivate a test-first mindset but I'm having 
+> difficulties getting into a rhythm.  I think it is because I'm struggling 
+> with my tools.  I'm using JUnit, which isn't hard to grasp, but I am having 
+> issues with dealing with inter-object collaborations.  All the text books 
+> say I should be mocking and stubbing so I've tried a couple libraries 
+> including EasyMock and Mockito, but found the syntax for setup and replay 
+> to be cumbersome.  Do you have any suggestions on libraries
+> that might make my struggle a bit easier?*
+>
+> Testing in Tokyo
+
+**The JVM Guy Recommends: [Spock](https://code.google.com/p/spock/)**
+
+Dear Testing, I feel your pain.  I too struggled with writing automated 
+tests.  Some tests were super simple to write and others were more complex 
+than the object I was testing!  My breakthrough came when I realized it
+was ok to be a polyglot programmer.  At the time I was working on a Java 
+project and *assumed* that I had to use Java in my tests as well. Once I
+decided that it was okay to look to other JVM languages for my testing needs,
+my world opened up.  I looked at JRuby but eventually settled on Groovy,
+mainly because of its small learning curve for Java developers.  In the
+Groovy space I found an excellent testing tool name Spock.  I can't recommend 
+it enough.  It has allowed the teams I've worked on to breeze through most 
+testing tasks. In fact, we cringe when we have to revisit tests written in
+Java.  My only complaint about Spock is that its documentation could use some
+work but Mr. Haki has filled that void with his 
+book [Spocklinght Notebook](https://leanpub.com/spockframeworknotebook).
+The book describes everything you need to know so I'll just restrict this
+discussion to an example or two of my favorite recipes.
+
