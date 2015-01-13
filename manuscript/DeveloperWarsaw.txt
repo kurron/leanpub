@@ -16,7 +16,8 @@ between your system and an endpoint.  All other tests in your system use a test 
 endpoint is down, the only test that is affected is the contract test.  All other tests will continue to work.  In order to make this work, we need a
 couple of pieces in place.
 
-The first is proper layering.  Martin Fowler has coined some terms that many people are comfortable with and support our goals:
+The first is [proper layering](#darjeeling), which we have already discussed.  For this discussion, we'll continue to use Martin Fowler's terms but 
+focus on individual objects in the Gateway layer:
 
 > *Gateway*
 >
