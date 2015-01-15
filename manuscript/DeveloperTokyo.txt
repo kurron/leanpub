@@ -13,15 +13,15 @@
 
 **The JVM Guy Recommends: [Spock](https://code.google.com/p/spock/)**
 
-Dear Testing, I feel your pain.  I too struggled with writing automated 
+Dear Testing, I feel your pain.  I too have struggled with writing automated 
 tests.  Some tests were super simple to write and others were more complex 
 than the object I was testing!  My breakthrough came when I realized it
 was ok to be a polyglot programmer.  At the time I was working on a Java 
 project and *assumed* that I had to use Java in my tests as well. Once I
 decided that it was okay to look to other JVM languages for my testing needs,
-my world opened up.  I looked at JRuby but eventually settled on Groovy,
-mainly because of its small learning curve for Java developers.  In the
-Groovy space I found an excellent testing tool name Spock.  I can't recommend 
+my world opened up.  I looked at JRuby and others but eventually settled on 
+Groovy, mainly because of its small learning curve for Java developers.  In the
+Groovy space I found an excellent testing tool named Spock and can't recommend 
 it enough.  It has allowed the teams I've worked on to breeze through most 
 testing tasks. In fact, we cringe when we have to revisit tests written in
 Java.  My only complaint about Spock is that its documentation could use some
@@ -30,3 +30,33 @@ book [Spocklinght Notebook](https://leanpub.com/spockframeworknotebook).
 The book describes everything you need to know so I'll just restrict this
 discussion to an example or two of my favorite recipes.
 
+### Data Driven Testing
+
+Sometimes you need to test an algorithm using different data sets.  The 
+naive way to accomplish this would be to create multiple tests that differ 
+only in the data.  Spock, of course, has a more elegant solution to the
+problem.
+
+{title="Data Driven Test", lang=groovy}
+~~~~~~~
+    @Unroll( 'verify addition where #description' )
+    def 'verify addition scenarios'() {
+
+        given: 'valid subject under test'
+        def sut = new Adder()
+
+        when: 'two numbers are added'
+        def result = sut.add( x, y )
+
+        then: 'expected results are returned'
+        result == expected
+
+        where: 
+         x  | y || expected
+         0  | 0 || 0
+         1  | 0 || 1
+        -1  | 1 || 0
+
+        description = "x is ${x} and ${y}" )
+    }
+~~~~~~~
