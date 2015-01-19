@@ -39,24 +39,60 @@ problem.
 
 {title="Data Driven Test", lang=groovy}
 ~~~~~~~
-    @Unroll( 'verify addition where #description' )
-    def 'verify addition scenarios'() {
+@Unroll( 'verify addition where #description' )
+def 'verify addition scenarios'() {
 
-        given: 'valid subject under test'
-        def sut = new Adder()
+    given: 'valid subject under test'
+    def sut = new Adder()
 
-        when: 'two numbers are added'
-        def result = sut.add( x, y )
+    when: 'two numbers are added'
+    def result = sut.add( x, y )
 
-        then: 'expected results are returned'
-        result == expected
+    then: 'expected results are returned'
+    result == expected
 
-        where: 
-         x  | y || expected
-         0  | 0 || 0
-         1  | 0 || 1
-        -1  | 1 || 0
+    where: 
+     x  | y || expected
+     0  | 0 || 0
+     1  | 0 || 1
+    -1  | 1 || 0
 
-        description = "x is ${x} and ${y}" )
-    }
+    description = "x is ${x} and ${y}" )
+}
 ~~~~~~~
+
+One thing to notice that I'm using the given/when/then format in test but Spock allows
+you to use other forms as well.  Spock will loop through the data in the `where` clause
+and run an instance of the test replacing the variables with the data in the table.
+For example, the first run will have `x` replaced with 0, `y` with 0 and `expected` with 0.
+The `description` variable is also replaced with evaluated GString and printed in the
+`@Unroll` statement.  Enriching the `@Unroll` annotation makes it easier to see exactly why data
+is being used when a test case fails.
+
+{title="Mocking A Network Failure", lang=groovy}
+~~~~~~~
+def 'verify exception is wrapped'() {
+
+    def uri = generateRandomURI()
+
+    given: 'valid subject under test'
+    def sut = new SomeIntegrationPoint()
+
+    and: 'trained test double'
+    def restTemplate = Stub( RestOperation )
+    sut.restTemplate = restTemplate
+    restTemplate.headForHeaders( uri ) >> throw new IOException( 'Forced to fail' )
+
+    when: 'the connection fails'
+    sut.fetchResourceHeaders( uri )
+
+    then: 'a domain exception is returned'
+    def thrown = thrown( IntegrationFailure )
+    thrown.statusCode == 0xDEAD     
+}
+~~~~~~~
+
+In this test, we are using a test double to replace the actual REST template we would normally use.  In this
+case the test dboule has been instructed to thrown an IOException when `headForHeaders` is called with a 
+particular value.  The check uses the `thrown` clause to verify that an execption of type `IntegrationFailure` 
+was thrown.  We also verify that the correct status code was filled in.
