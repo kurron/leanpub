@@ -1,9 +1,20 @@
 ## As a Developer I want to be able to easily create integration tests
 
-> *Dear JVM Guy, ...*
+> *Dear JVM Guy, I understand the importance of automating the testing of my REST endpoints
+> but I am finding it difficult to do.  I can easily create a JUnit test to generate the REST 
+> calls but I find it difficult to consistently stand up the server to accept the requests.  Right
+> now I've got some bash scripts using SSH to copy files around and start Tomcat but more times than
+> not, we'll have a problem getting the deployment right.  Sometimes it is as simple as the test not
+> waiting long enough to begin testing and other times it is an issue shutting down cleanly.  Have 
+> found any techniques that help simplify integration testing?*
 >
 > Pondering in Paris
 
-**The JVM Guy Recommends: Spock, Spring Test**
+**The JVM Guy Recommends: Spock, Spring Test, Spring Boot**
 
-
+Pondering, the Spring community must've read your mind because they have built a 
+testing facility that addresses many of your concerns.  If you use Spring Boot in its
+embedded server mode, which I recommend, then your tests can trigger your application to 
+start in such a way that your integration test will know exactly when to begin testing.
+With a little Gradle logic, you can have your application shutdown after the testing is
+complete.
