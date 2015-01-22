@@ -1,11 +1,3 @@
-## As a Developer I want to be able to easily create components tests
-
-> *Dear JVM Guy, ...*
->
-> Sleepless in Seattle
-
-**The JVM Guy Recommends: Spock, Spring Test**
-
 ## As a Developer I want to my code automatically inspected for style violations and bad practices
 
 > *Dear JVM Guy, ...*

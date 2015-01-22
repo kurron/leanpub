@@ -12,6 +12,7 @@ DeveloperWarsaw.txt
 DeveloperIpswich.txt
 DeveloperDarjeeling.txt
 DeveloperTokyo.txt
+DeveloperParis.txt
 Developer.txt
 
 Tester.txt

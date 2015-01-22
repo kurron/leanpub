@@ -1,0 +1,9 @@
+## As a Developer I want to be able to easily create integration tests
+
+> *Dear JVM Guy, ...*
+>
+> Pondering in Paris
+
+**The JVM Guy Recommends: Spock, Spring Test**
+
+
