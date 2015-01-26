@@ -18,3 +18,49 @@ embedded server mode, which I recommend, then your tests can trigger your applic
 start in such a way that your integration test will know exactly when to begin testing.
 With a little Gradle logic, you can have your application shutdown after the testing is
 complete.
+
+This simple little Spock tests a couple of interesting things.  First, it will stand up
+the entire Spring Boot application and bind it to a randomly selected, open port.  Second,
+the selected port is injected into the test so that the URI used for testing will point to
+the test instance.  Lastly, the test itself will not run until the server is completely 
+up and available to handle requests.  Once the test completes, the application automatically 
+shut down.  As you can see, with the exception of a few annotations, this test isn't too
+different from a unit-level Spock test.
+
+{title="Integration Test Example", lang=groovy}
+~~~~~~~
+@WebIntegrationTest( randomPort = true )
+@ContextConfiguration( loader = SpringApplicationContextLoader, classes = Application )
+class SomeIntegrationTest extends Specification {
+
+    // gets filled by Spring, holding the value of the randomly selected port
+    @Value( '${local.server.port}' )
+    int port
+
+    def 'verify a REST endpoint'() {
+
+        given: 'a valid REST client'
+        def template = new TestRestTemplate()
+
+        when: 'I invoke the endpoint'
+        // build out the URI using the injected port value
+        def result = template.getForEntity( "http://localhost:${port}/endpoint", String )
+
+        then: 'I get a 200 status code'
+        result.statusCode == HttpStatus.OK
+
+        and: 'a non-null payload'
+        result.body
+    }
+}
+~~~~~~~
+
+T>## Application Context Caching
+T>Spring’s test framework will cache application contexts between tests. Therefore, as long as your 
+T>tests share the same configuration, the time consuming process of starting and stopping the server 
+T>will only happen once, regardless of the number of tests that actually run.  We can take advantage
+T>of this behavior by creating a base class for all of our integration tests.  Done correctly, only
+T>one instance of the context will be started for all of your integration tests, cutting down on the
+T>amount of time it takes to run your tests.
+
+
