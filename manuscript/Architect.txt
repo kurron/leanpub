@@ -1,11 +1,3 @@
-## As an Architect I want to be able to coordinate my micro-services 
-
-> *Dear JVM Guy, ...*
->
-> Sleepless in Seattle
-
-**The JVM Guy Recommends: etcd or Eureka**
-
 ## As an Architect I want to be able to easily load balance my micro-services 
 
 > *Dear JVM Guy, ...*

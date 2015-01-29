@@ -1,0 +1,22 @@
+## As an Architect I want to be able to coordinate my micro-services
+
+> *Dear JVM Guy, I've recently been given the responsability of guiding
+> our software team down the micro-services path.  This is our first
+> attempt at using lots of coordinated services and I realize that one
+> the issues we have to address is how the services know about each other.
+> We drew some point-to-point connections on the whiteboard and quickly
+> realized that managing such a configuration is intractable, especially if
+> add in the idea that services continually come and go.  Do you have any
+> recommendations for a Spring shop like ours?*
+>
+> Lost in London
+
+**The JVM Guy Recommends: etcd or [Spring Cloud](http://projects.spring.io/spring-cloud/)**
+
+Dear Lost, welcome to the club.  Many of us are still trying to figure what best practices
+are in the micro-services but I can point you to a tool that looks very promising: Spring Cloud.
+It is an umbrella project that houses many components, one of which is responsible for 
+service discovery.  The Spring Cloud Netflix project provides a nice abstraction above existing
+discovery technologies, including Netflix's Eureka and Hashicorp's Consul.  If you are a Spring
+Boot user you will find it very easy to register your application as well as discover what other
+applications are currently available.
