@@ -4,19 +4,82 @@
 > our software team down the micro-services path.  This is our first
 > attempt at using lots of coordinated services and I realize that one
 > the issues we have to address is how the services know about each other.
-> We drew some point-to-point connections on the whiteboard and quickly
-> realized that managing such a configuration is intractable, especially if
-> add in the idea that services continually come and go.  Do you have any
-> recommendations for a Spring shop like ours?*
+> We drew some point-to-point connections on the whiteboard thinking that
+> we could hand configure resources and realized that managing such a setup 
+> is intractable, especially if add in the idea that services continually come 
+> and go.  Do you have any recommendations for a Spring shop like ours?*
 >
 > Lost in London
 
-**The JVM Guy Recommends: etcd or [Spring Cloud](http://projects.spring.io/spring-cloud/)**
+**The JVM Guy Recommends: [Spring Cloud](http://projects.spring.io/spring-cloud/)**
 
 Dear Lost, welcome to the club.  Many of us are still trying to figure what best practices
-are in the micro-services but I can point you to a tool that looks very promising: Spring Cloud.
+are in the micro-services world but I can point you to a tool that looks very promising: Spring Cloud.
 It is an umbrella project that houses many components, one of which is responsible for 
 service discovery.  The Spring Cloud Netflix project provides a nice abstraction above existing
 discovery technologies, including Netflix's Eureka and Hashicorp's Consul.  If you are a Spring
 Boot user you will find it very easy to register your application as well as discover what other
-applications are currently available.
+applications are currently available. Let's look a simple example.
+
+{title="Example Service Registration and Discovery", lang="Groovy"} 
+~~~~~~~~ 
+@SpringBootApplication
+@EnableDiscoveryClient
+class Application {
+
+    static void main( String[] args ) {
+        SpringApplication.run( Application, args )
+    }
+}
+~~~~~~~~ 
+
+The above code automatically registers your software with service discovery as well as
+enabling service lookups.  Seriosly.  That is all there is to it.  There are, however,
+a couple of configuration files to put in place, but the steps are very simple.
+
+{title="src/main/resources/config/bootstrap.yml", lang="YML} 
+~~~~~~~~ 
+spring:
+    application:
+        name: my-cool-service
+~~~~~~~~ 
+
+The `bootstrap.yml` is the first configuration file that Spring Cloud looks for during the startup
+process and contains the service identifier we want to register our application as.  Other processes
+using the discovery service will locate your coordinates using the name `my-cool-service`.
+
+{title="src/main/resources/config/application.yml", lang="YML} 
+~~~~~~~~ 
+spring:
+    cloud:
+        config:
+            discovery:
+                enabled: true
+
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: http://localhost:8761/eureka/
+    instance:
+        preferIpAddress: true
+~~~~~~~~ 
+
+The `application.yml` is your typical Spring Boot configuration file and is examined after `bootstrap.yml`.
+It is here that we specify the location to the discovery service.  In this configuration we are running
+in what is known as `Eureka First Bootstap` mode, which means that we want to contact the discovery server first
+and use it to locate all other services, including the configuration server.  This allows you to move the
+configuration server around on your network without having to reconfigure clients by hand.  Obviously,
+if the change the coordinates of the discovery server, all the application files will have to be adjusted.
+
+T> ## Using Machines Not Registered in DNS
+T>
+T> Projects I've worked on use VMs that are not in DNS which means that you cannot
+T> connect to them via a hostname.  By default, Spring Cloud will register your service
+T> using coordinates based on the hostname.  You can, as we have done in the above example,
+T> tell Spring Cloud via the `eureka.instance.preferIpAddress` property that you want to 
+T> register using the ip address instead.  If you see your service getting registered vy
+T> the loopback address (127.0.01), take a look at the `/etc/hosts` file on the box running
+T> your service.   My guess is that it isn't configured properly. That one has bitten me once
+T> or twice.
+
+Setting up the client is pretty simple.  Standing up the server is a bit more involved, but not by much.
