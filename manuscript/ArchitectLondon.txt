@@ -6,7 +6,7 @@
 > the issues we have to address is how the services know about each other.
 > We drew some point-to-point connections on the whiteboard thinking that
 > we could hand configure resources and realized that managing such a setup 
-> is intractable, especially if add in the idea that services continually come 
+> is intractable, especially if you add in the idea that services continually come 
 > and go.  Do you have any recommendations for a Spring shop like ours?*
 >
 > Lost in London
@@ -34,7 +34,7 @@ class Application {
 ~~~~~~~~ 
 
 The above code automatically registers your software with service discovery as well as
-enabling service lookups.  Seriosly.  That is all there is to it.  There are, however,
+enabling service lookups.  Seriously, that is all there is to it.  There are, however,
 a couple of configuration files to put in place, but the steps are very simple.
 
 {title="src/main/resources/config/bootstrap.yml", lang="YML} 
@@ -69,7 +69,7 @@ It is here that we specify the location to the discovery service.  In this confi
 in what is known as `Eureka First Bootstap` mode, which means that we want to contact the discovery server first
 and use it to locate all other services, including the configuration server.  This allows you to move the
 configuration server around on your network without having to reconfigure clients by hand.  Obviously,
-if the change the coordinates of the discovery server, all the application files will have to be adjusted.
+if you the change the coordinates of the discovery server, all the application files will have to be adjusted.
 
 T> ## Using Machines Not Registered in DNS
 T>
@@ -77,9 +77,80 @@ T> Projects I've worked on use VMs that are not in DNS which means that you cann
 T> connect to them via a hostname.  By default, Spring Cloud will register your service
 T> using coordinates based on the hostname.  You can, as we have done in the above example,
 T> tell Spring Cloud via the `eureka.instance.preferIpAddress` property that you want to 
-T> register using the ip address instead.  If you see your service getting registered vy
+T> register using the ip address instead.  If you see your service getting registered by
 T> the loopback address (127.0.01), take a look at the `/etc/hosts` file on the box running
 T> your service.   My guess is that it isn't configured properly. That one has bitten me once
 T> or twice.
 
 Setting up the client is pretty simple.  Standing up the server is a bit more involved, but not by much.
+
+{title="Standalone Discovery Service", lang="Groovy"} 
+~~~~~~~~ 
+@SpringBootApplication
+@EnableEurekaServer
+class Application {
+
+    static void main( String[] args ) {
+        new SpringApplicationBuilder( Application ).web( true ).run( args )
+    }
+}
+~~~~~~~~ 
+
+You'll notice that the only difference between the client and server are the annotations.  The client
+uses `@EnableDiscoveryClient` while the server uses `@EnableEurekaServer`.  The configuration files 
+are very different, however.
+
+{title="src/main/resources/config/bootstrap.yml", lang="YML} 
+~~~~~~~~ 
+spring:
+    application:
+        name: my-discovery-service
+    cloud:
+        config:
+            enabled: false
+~~~~~~~~ 
+
+In the bootstrap file, we are telling the service not to attempt to load its configuration from the
+configuration service.
+
+{title="src/main/resources/config/application.yml", lang="YML} 
+~~~~~~~~ 
+server:
+    port: 8761
+
+# set up the server in standalone mode -- do not require a peer server
+eureka:
+    instance:
+        hostname: localhost
+    client:
+        registerWithEureka: false
+        fetchRegistry: false
+        serviceUrl:
+          defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+    server:
+        enableSelfPreservation: false
+~~~~~~~~ 
+
+In the above configuration, we are setting up the server in standalone mode.  Normally, you 
+run multiple Eureka servers for availability reasons but if you just want to experiment with
+Eureka, standalone mode is fine.
+
+T> ## Do not try and use custom ports or contexts
+T>
+T> I've had very little luck in taking advantage of Spring Boot's ability to bind the
+T> service to custom ports and contexts.  Although the server will stand up fine, I have
+T> had issues with other parts of the Netflix stack integrating with Eureka when non-default
+T> ports and contexts are in play.  I'd advise you to use the default port of `8761` and context of `/`
+T> until you become comfortable with how the various pieces in the Netflix stack interact with 
+T> each other.
+
+Our final stop on this tour of service discovery will be how the clients lookup and use services.
+
+I> ## [Consul](https://www.consul.io/)
+I> The Consul project is built by the same folks that gave us Vagrant and Packer.  It is an interesting
+I> alternative to Eureka that is currently being integrated into Spring Cloud.  Consul provides
+I> DNS facilities allowing applications to find each other using standard hostname resolution techniques.
+I> Consul also provides a key-value store allowing applications to store their configurations in it
+I> as well.  At the time of this writing, Consul integration was still in beta but pay attention to it.
+
+
