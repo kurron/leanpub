@@ -369,7 +369,12 @@ FROM ubuntu:14.04
 RUN apt-get --quiet update && 
                     apt-get --quiet --yes install wget && 
                     apt-get clean && 
-                    wget --quiet --output-document=/jdk-8.tar.gz --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.tar.gz  && 
+                    wget --quiet 
+                         --output-document=/jdk-8.tar.gz 
+                         --no-check-certificate 
+                         --no-cookies 
+                         --header "Cookie: oraclelicense=accept-securebackup-cookie" 
+                         http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.tar.gz  && 
                     mkdir -p /usr/lib/jvm && 
                     tar --gunzip --extract --verbose --file /jdk-8.tar.gz --directory /usr/lib/jvm && 
                     rm -f /jdk-8.tar.gz && 
@@ -389,7 +394,8 @@ FROM jvmguy/java:1.8.0.25
 # install Gradle 
 RUN apt-get --quiet --yes install unzip && 
                                   apt-get clean && 
-                                  wget --quiet --output-document=/gradle.zip https://services.gradle.org/distributions/gradle-2.2-all.zip && 
+                                  wget --quiet 
+                                       --output-document=/gradle.zip https://services.gradle.org/distributions/gradle-2.2-all.zip && 
                                   mkdir -p /usr/lib/jvm && 
                                   unzip /gradle.zip -d /usr/lib/jvm && 
                                   rm -f /gradle.zip && 

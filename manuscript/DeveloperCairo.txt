@@ -112,7 +112,11 @@ file!
             - xubuntu-desktop
 
       - name: Configure Vagrant .ssh directory
-        file: path=/home/vagrant/.ssh state=directory owner=vagrant group=vagrant mode=0700
+        file: path=/home/vagrant/.ssh 
+              state=directory 
+              owner=vagrant 
+              group=vagrant 
+              mode=0700
 
       - name: Get Vagrant's public key
         get_url: url=https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub

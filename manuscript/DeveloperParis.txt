@@ -24,7 +24,7 @@ the entire Spring Boot application and bind it to a randomly selected, open port
 the selected port is injected into the test so that the URI used for testing will point to
 the test instance.  Lastly, the test itself will not run until the server is completely 
 up and available to handle requests.  Once the test completes, the application automatically 
-shut down.  As you can see, with the exception of a few annotations, this test isn't too
+shuts down.  As you can see, with the exception of a few annotations, this test isn't too
 different from a unit-level Spock test.
 
 {title="Integration Test Example", lang=groovy}
@@ -33,7 +33,7 @@ different from a unit-level Spock test.
 @ContextConfiguration( loader = SpringApplicationContextLoader, classes = Application )
 class SomeIntegrationTest extends Specification {
 
-    // gets filled by Spring, holding the value of the randomly selected port
+    // gets filled in by Spring, holding the value of the randomly selected port
     @Value( '${local.server.port}' )
     int port
 
@@ -44,7 +44,8 @@ class SomeIntegrationTest extends Specification {
 
         when: 'I invoke the endpoint'
         // build out the URI using the injected port value
-        def result = template.getForEntity( "http://localhost:${port}/endpoint", String )
+        def uri = "http://localhost:${port}/endpoint"
+        def result = template.getForEntity( uri, String )
 
         then: 'I get a 200 status code'
         result.statusCode == HttpStatus.OK

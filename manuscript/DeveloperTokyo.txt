@@ -81,7 +81,7 @@ def 'verify exception is wrapped'() {
     and: 'trained test double'
     def restTemplate = Stub( RestOperation )
     sut.restTemplate = restTemplate
-    restTemplate.headForHeaders( uri ) >> throw new IOException( 'Forced to fail' )
+    restTemplate.headForHeaders( uri ) >> throw new IOException( 'Oops!' )
 
     when: 'the connection fails'
     sut.fetchResourceHeaders( uri )
