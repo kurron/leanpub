@@ -108,6 +108,7 @@ spring:
     cloud:
         config:
             enabled: false
+            failFast: true
 ~~~~~~~~ 
 
 In the bootstrap file, we are telling the service not to attempt to load its configuration from the
@@ -153,4 +154,71 @@ I> DNS facilities allowing applications to find each other using standard hostna
 I> Consul also provides a key-value store allowing applications to store their configurations in it
 I> as well.  At the time of this writing, Consul integration was still in beta but pay attention to it.
 
+{title="Discovery Client", lang="Groovy"} 
+~~~~~~~~ 
+@SpringBootApplication
+@EnableEurekaClient
+class Application {
+
+    static void main( String[] args ) {
+        new SpringApplicationBuilder( Application ).web( true ).run( args )
+    }
+}
+~~~~~~~~ 
+
+{title="src/main/resources/config/bootstrap.yml", lang="YML} 
+~~~~~~~~ 
+spring:
+    application:
+        name: my-discovery-client
+    cloud:
+        config:
+            enabled: false
+            failFast: true
+~~~~~~~~ 
+
+{title="src/main/resources/config/application.yml", lang="YML} 
+~~~~~~~~ 
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: http://localhost:8761/eureka/
+    instance:
+        preferIpAddress: true
+        metadataMap:
+            zone: production
+~~~~~~~~ 
+
+As you can see, very similar to the server configuration with the primary difference is the use of the `@EnableEurekaClient`
+annotation. The specification of a `zone` is interesting in that allows you to partition your registrations into
+namespaces.  That way, a single discovery server can contain information for a variety of runtime contexts.
+ Let's see some examples of using the discovery server to locate services.
+
+{title="Discovery Client Example", lang=groovy}
+~~~~~~~
+@WebIntegrationTest( randomPort = true )
+@ContextConfiguration( loader = SpringApplicationContextLoader, classes = Application )
+class DiscoveryClientIntegrationTest extends Specification {
+
+    @Autowired
+    private LookupService discoveryClient
+
+    def 'locate a service endpoint by name'() {
+
+        given: 'a valid discovery client'
+        assert discoveryClient
+
+        when: 'I ask for an available service instance'
+        def instance = discoveryClient.getNextServerFromEureka( 'my-discovery-service', false )
+
+        then: 'I get an object containing all the connection information'
+        instance.hostName
+        instance.IPaddr
+        instance.port
+    }
+}
+~~~~~~~
+
+This mechansim is very simple and can be used to talk to services that use non-HTTP protocols.  If you are
+collaborating with a REST client, then Spring provides a simpler form for you to use.
 
