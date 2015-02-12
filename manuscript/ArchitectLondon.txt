@@ -1,6 +1,6 @@
 ## As an Architect I want to be able to coordinate my micro-services
 
-> *Dear JVM Guy, I've recently been given the responsability of guiding
+> *Dear JVM Guy, I've recently been given the responsibility of guiding
 > our software team down the micro-services path.  This is our first
 > attempt at using lots of coordinated services and I realize that one
 > the issues we have to address is how the services know about each other.
@@ -209,7 +209,7 @@ class DiscoveryClientIntegrationTest extends Specification {
         assert discoveryClient
 
         when: 'I ask for an available service instance'
-        def instance = discoveryClient.getNextServerFromEureka( 'my-discovery-service', false )
+        def instance = discoveryClient.getNextServerFromEureka( 'my-cool-service', false )
 
         then: 'I get an object containing all the connection information'
         instance.hostName
@@ -219,6 +219,37 @@ class DiscoveryClientIntegrationTest extends Specification {
 }
 ~~~~~~~
 
-This mechansim is very simple and can be used to talk to services that use non-HTTP protocols.  If you are
-collaborating with a REST client, then Spring provides a simpler form for you to use.
+This mechansim is very simple and can be used to talk to services that use non-HTTP protocols because it gives
+you access to the host and port of the desired service.  If you are collaborating with a REST client, then Spring 
+provides a simpler form for you to use.
 
+{title="REST Teamplate Example", lang=groovy}
+~~~~~~~
+@WebIntegrationTest( randomPort = true )
+@ContextConfiguration( loader = SpringApplicationContextLoader, classes = Application )
+class DiscoveryClientIntegrationTest extends Specification {
+
+    @Autowired
+    private RestOperations restTemplate
+
+    def 'locate a service endpoint by name'() {
+
+        given: 'a valid REST template'
+        assert restTemplate
+
+        when: 'I contact a service via a virtual host name'
+        def results = restTemplate.getForObject( 'http://my-cool-service/some-endpoint', String )
+
+        then: 'I get the expected results'
+        results
+    }
+}
+~~~~~~~
+
+The above example isn't too different from standard REST template usage.  The only real difference is that we
+are using a virtual hostname that matches whatever name the service used to register with the discovery 
+server.  Under the covers, the template is using Netflix's Ribbon and Eureka libraries to do client-side 
+service look up and load balancing.  The virtual hostname is transformed into a hostname and port automatically 
+for you,  greatly simplifying your client's configuration. As instances of `my-cool-service` come and go, your
+client will always route itself to the next available instance, providing greater fault tolerance to your
+application.
