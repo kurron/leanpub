@@ -12,7 +12,7 @@
 > itself.  Have you come across a tool or technique that might help us with
 > our documentation woes?*
 >
-> Momentarily Stuck in Moscow
+> Momentarily Mind-Boggled in Moscow
 
 **The JVM Guy Recommends: Spring REST Docs**
 
