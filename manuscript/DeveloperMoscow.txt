@@ -1,0 +1,19 @@
+## As a Developer I want to document my micro-service's REST APIs
+
+> *Dear JVM Guy, we're a Spring house and we use REST for most of our APIs.  
+> While the quality of our APIs has steadily improved over time, the 
+> documentation hasn't.  Inevitably the documentation gets out of sync 
+> with the actual implementation causing lost hours of development time tracking 
+> down integration failures.  I don't think that a RESTifarian would give 
+> our APIs high marks but we do incorporate some hypermedia concepts, such
+> as providing links to the next state in the workflow.  I've looked at 
+> Swagger to help with our documentation but it doesn't support hypermedia 
+> and seemed to be really focused on documenting URIs and not the resource 
+> itself.  Have you come across a tool or technique that might help us with
+> our documentation woes?*
+>
+> Momentarily Stuck in Moscow
+
+**The JVM Guy Recommends: Spring REST Docs**
+
+

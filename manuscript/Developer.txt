@@ -20,16 +20,6 @@
 >
 > Sleepless in Seattle
 
-**The JVM Guy Recommends: feature toggles, branch by abstraction, Spring Profiles**
-
-## As a Developer I want to document my micro-service's REST APIs
-
-> *Dear JVM Guy, ...*
->
-> Sleepless in Seattle
-
-**The JVM Guy Recommends: Swagger**
-
 ## As a Developer I want to document my micro-service's relational database schema
 
 > *Dear JVM Guy, ...*
