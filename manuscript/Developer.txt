@@ -14,14 +14,6 @@
 
 **The JVM Guy Recommends: JaCoCo**
 
-## As a Developer I want to run component test against fake services
-
-> *Dear JVM Guy, ...*
->
-> Sleepless in Seattle
-
-**The JVM Guy Recommends: betamax, Spring Profiles**
-
 ## As a Developer I want to add features to the main branch without breaking the system
 
 > *Dear JVM Guy, ...*

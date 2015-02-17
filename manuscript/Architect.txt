@@ -14,7 +14,7 @@
 
 **The JVM Guy Recommends: Archaius or etcd**
 
-## As an Architect I want to manage interface between the public API and my micro-services 
+## As an Architect I want to manage the interface between the public API and my micro-services 
 
 > *Dear JVM Guy, ...*
 >
