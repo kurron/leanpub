@@ -6,14 +6,65 @@
 > with the actual implementation causing lost hours of development time tracking 
 > down integration failures.  I don't think that a RESTifarian would give 
 > our APIs high marks but we do incorporate some hypermedia concepts, such
-> as providing links to the next state in the workflow.  I've looked at 
-> Swagger to help with our documentation but it doesn't support hypermedia 
-> and seemed to be really focused on documenting URIs and not the resource 
-> itself.  Have you come across a tool or technique that might help us with
-> our documentation woes?*
+> as providing links to resources and discouraging the UI from hard coding
+> them into their code.  I've looked at  Swagger to help with our documentation 
+> but it doesn't support hypermedia and seemed to be really focused on 
+> documenting URIs and not the resource itself.  Have you come across a tool or 
+> technique that might help us with our documentation woes?*
 >
 > Momentarily Mind-Boggled in Moscow
 
-**The JVM Guy Recommends: Spring REST Docs**
+**The JVM Guy Recommends: [Spring REST Docs](https://github.com/spring-projects/spring-restdocs)**
+
+Dear Mind-Boggled, I'm right there with you.  I have personally lost time 
+debugging my integration code trying to figure out why the integration is 
+failing only to later find out that the API has subtly changed.  I don't
+need to tell you how frustrating it can be.  Like most teams, we looked 
+at the Swagger specification and a handful of other tools and thought that 
+using Swagger was the best solution at the time.  Just recently, we've 
+started using Spring REST Docs which does something that Swagger doesn't:
+it leverages our controller tests to generate sample conversations between 
+client and server.  It also provides a nice delineation between human written
+text and computer generated samples.  Unlike annotation-based solutions,
+like Swagger, which force you to sprinkle documentation hints throughout 
+the code, SRD leverages something you do already: test.  
+
+Most of us would agree that the Spring team does a wonderful job of providing
+us with very good Spring MVC testing tools making our testing lives a little 
+bit easier.  What SRD does is insinuate itself into the testing stack and
+captures the dialog between the test client and controller.  The captured
+HTTP traffic is stored on disk and made available to the documentation
+generator.  The generator combines the samples are combined with the 
+human generated [asciidoctor](http://asciidoctor.org/) text into a very
+nice looking HTML 5 document.  The best part is that if you make the
+generation step part of your build, your samples will remain synchronized 
+with the actual, working code.
+
+The hardest part of using SRD is not creating the test but creating the
+static content itself.  Teams will have different opinions about what 
+constitutes a good REST API document but an example that I like is
+[GitHub's REST API documentation](https://developer.github.com/v3/).  It
+gives cURL examples, descriptions of HTTP verbs and status codes that 
+are relevant in the context.  It also discusses authentication, pagination,
+rate limiting and its hypermedia controls. I especially like the fact that
+the documentation references RFCs as appropriate which can help to solidify
+a client's understanding of what is expected of them.  Everybody has a
+different notion of what is important to document but here are a few
+ideas on what to include in your documentation:
+
+* a description of what the resource represents
+* a description of what the resource will accept as input
+* a description of what the resource will produce as output, including failure
+scenarios
+* a description of what links will be returned and their meanings, if you 
+are using hypermedia
+* a description of aspects of your API that pertain to several resources and
+contexts, such as authentication and rate limiting
+* a description of relevant HTTP verbs and status codes for the resource
+* example conversations are very useful and should be included
+
+Once you have your written your static text, you can move on and write 
+your tests that will provide the example conversations for your assembled
+document.
 
 
