@@ -33,8 +33,8 @@ and see something like `Lazybones version 0.7.1`.
 
 T> ## Customize GVM
 T>
-T> I like to allow GVM to do as much as it can on its own and not wait for my permission.  I'll create a `.gvm/etc/config` file with the following
-T> contents  so that GVM will automically stay current.
+T> I like to allow GVM to do as much as it can on its own and not wait for my permission.  I usually create a `.gvm/etc/config` file with the following
+T> contents so that GVM will automically stay current.
 T>
 T> {lang="Bash"}
 T> ~~~~~~~~
@@ -119,7 +119,7 @@ T>
 T> You can also take advantage of lazybones' templating engine to replace tokens with values provided at project creation time, such as package names.
 T>
 
-A friendly place to host your templates is Bintray.  Bintray uses a freemium model but, for hosting our templates, all we need is the free
+A friendly place to host your templates is [Bintray](https://bintray.com/).  Bintray uses a freemium model but, for hosting our templates, all we need is the free
 version of the service.  Once you have an account created, you'll need to create repository.  If you want lazybones to handle the details of publishing your
 template you'll need to make your repository of type `Generic`.  Other than that, you can fill in the other details anyway you want.  For this example,
 I'll be publishing to a repository named `lazybones`.
