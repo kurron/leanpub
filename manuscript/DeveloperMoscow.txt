@@ -17,11 +17,11 @@
 **The JVM Guy Recommends: [Spring REST Docs](https://github.com/spring-projects/spring-restdocs)**
 
 Dear Mind-Boggled, I'm right there with you.  I have personally lost time 
-debugging my integration code trying to figure out why the integration is 
+debugging my code trying to figure out why the integration is 
 failing only to later find out that the API has subtly changed.  I don't
 need to tell you how frustrating it can be.  Like most teams, we looked 
 at the Swagger specification and a handful of other tools and thought that 
-using Swagger was the best solution at the time.  Just recently, we've 
+using Swagger was the best solution at the time.  Just recently, however, we've 
 started using Spring REST Docs which does something that Swagger doesn't:
 it leverages our controller tests to generate sample conversations between 
 client and server.  It also provides a nice delineation between human written
@@ -30,11 +30,11 @@ like Swagger, which force you to sprinkle documentation hints throughout
 the code, SRD leverages something you do already: test.  
 
 Most of us would agree that the Spring team does a wonderful job of providing
-us with very good Spring MVC testing tools making our testing lives a little 
-bit easier.  What SRD does is insinuate itself into the testing stack and
+us with very good Spring MVC testing tools making our coding lives a little 
+bit easier.  SRD does insinuates itself into the testing stack and
 captures the dialog between the test client and controller.  The captured
 HTTP traffic is stored on disk and made available to the documentation
-generator.  The generator combines the samples are combined with the 
+generator.  The generator combines the samples with the 
 human generated [asciidoctor](http://asciidoctor.org/) text into a very
 nice looking HTML 5 document.  The best part is that if you make the
 generation step part of your build, your samples will remain synchronized 
@@ -45,7 +45,7 @@ static content itself.  Teams will have different opinions about what
 constitutes a good REST API document but an example that I like is
 [GitHub's REST API documentation](https://developer.github.com/v3/).  It
 gives cURL examples, descriptions of HTTP verbs and status codes that 
-are relevant in the context.  It also discusses authentication, pagination,
+are relevant in the context being discussed.  It also discusses authentication, pagination,
 rate limiting and its hypermedia controls. I especially like the fact that
 the documentation references RFCs as appropriate which can help to solidify
 a client's understanding of what is expected of them.  Everybody has a
@@ -70,8 +70,8 @@ T> such as the supported methods or returned status codes.  Try not to
 T> discuss those portions in the "normal" text portion of the document.
 T> Instead, keep them in tables.  The thinking is that when things
 T> do change you want to make it simpler for a human to make the necessary
-T> adjustments to the document.  It is simpler for a person to scan 
-T> through tables than it is to search through lots of normal text.
+T> adjustments to the document.  It is far easier for a person to scan 
+T> through tables than it is to search through lots of text.
 T>
 T> | Method  | Supported |
 T> | OPTIONS | No        | 
@@ -93,4 +93,61 @@ Once you have your written your static text, you can move on and write
 your tests that will provide the example conversations for your assembled
 document.
 
+
+{title="Documentation Test Example", lang=groovy}
+~~~~~~~
+class DocumentationGenerationTest extends BaseInboundIntegrationTest {
+
+    @Autowired
+    private WebApplicationContext context
+
+    MockMvc mockMvc
+
+    def setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup( this.context ).apply( new RestDocumentationConfiguration() ).build()
+    }
+
+    def 'demonstrate failure scenario'() {
+
+        given: 'a valid request'
+        def requestBuilder = get( '/{id}', randomUUID() ).accept( 'image/png;width=1024;height=768', HypermediaControl.MIME_TYPE )
+
+        when: 'the GET request is made'
+        mockMvc.perform( requestBuilder ).andExpect( status().isNotFound() ).andDo( document( 'failure-scenario' ) )
+
+        then: 'examples are generated'
+    }
+}
+
+class RestDocumentationConfiguration extends MockMvcConfigurerAdapter {
+
+    @Override
+    RequestPostProcessor beforeMockMvcCreated( ConfigurableMockMvcBuilder<?> builder, WebApplicationContext context) {
+        new RequestPostProcessor() {
+
+            @Override
+            @SuppressWarnings( 'DuplicateNumberLiteral' )
+            MockHttpServletRequest postProcessRequest( MockHttpServletRequest request) {
+                request.setScheme( 'http' )
+                request.setRemotePort( 8080 )
+                request.setServerPort( 8080 )
+                request.setRemoteHost( 'localhost' )
+                request
+            }
+        }
+    }
+}
+~~~~~~~
+
+The key difference to this test as compared to a standard Spring MVC test is the addition of the `andDo()` call.
+This is triggers the capture of the HTTP traffic and its storage is files on disk.  In this case, the converations will be
+stored in a folder named `failure-scenario` and can be referenced from your static documentation.
+
+{title="Static API Documentation Sample", lang=asciidoctor}
+~~~~~~~
+For example, a request that attempts to fetch a non-existent asset will produce a
+`400 Bad Request` response:
+
+include::{generated}/failure-scenario/response.asciidoc[]
+~~~~~~~
 
