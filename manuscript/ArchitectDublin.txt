@@ -1,4 +1,4 @@
-## As an Architect I want all of my JVM projects to use the same build logic
+## I want all of my JVM projects to use the same build logic
 
 > *Dear JVM Guy, I'm an architect supporting a solution based on multiple cooperating JVM projects and have noticed that each
 > team builds their software in a unique fashion.  One team's build will run automated tests and detect a lack of code coverage but

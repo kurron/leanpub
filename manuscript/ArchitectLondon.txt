@@ -1,4 +1,4 @@
-## As an Architect I want to be able to coordinate my micro-services
+## I want to be able to coordinate my micro-services
 
 > *Dear JVM Guy, I've recently been given the responsibility of guiding
 > our software team down the micro-services path.  This is our first

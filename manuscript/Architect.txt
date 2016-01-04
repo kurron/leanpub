@@ -1,4 +1,4 @@
-## As an Architect I want to be able to easily load balance my micro-services 
+## I want to be able to easily load balance my micro-services 
 
 > *Dear JVM Guy, ...*
 >
@@ -6,7 +6,7 @@
 
 **The JVM Guy Recommends: HAProxy or Ribbon**
 
-## As an Architect I want to be able to manage the configurations of my micro-services 
+## I want to be able to manage the configurations of my micro-services 
 
 > *Dear JVM Guy, ...*
 >
@@ -14,7 +14,7 @@
 
 **The JVM Guy Recommends: Archaius or etcd**
 
-## As an Architect I want to manage the interface between the public API and my micro-services 
+## I want to manage the interface between the public API and my micro-services 
 
 > *Dear JVM Guy, ...*
 >
@@ -22,7 +22,7 @@
 
 **The JVM Guy Recommends: Zuul**
 
-## As an Architect I want to be able to detect layering violations in my projects
+## I want to be able to detect layering violations in my projects
 
 > *Dear JVM Guy, ...*
 >
@@ -30,7 +30,7 @@
 
 **The JVM Guy Recommends: JDepend**
 
-## As an Architect I want to be able to "see" a project's code base
+## I want to be able to "see" a project's code base
 
 > *Dear JVM Guy, ...*
 >
@@ -38,7 +38,7 @@
 
 **The JVM Guy Recommends: CodeCity**
 
-## As an Architect I want projects to guard against cascading failures
+## I want projects to guard against cascading failures
 
 > *Dear JVM Guy, ...*
 >
@@ -46,7 +46,7 @@
 
 **The JVM Guy Recommends: Hystrix**
 
-## As an Architect I want a view of the inter-system dependencies
+## I want a view of the inter-system dependencies
 
 > *Dear JVM Guy, ...*
 >
@@ -54,7 +54,7 @@
 
 **The JVM Guy Recommends: ???**
 
-## As an Architect I want high-level functional tests that the business can understand
+## I want high-level functional tests that the business can understand
 
 > *Dear JVM Guy, ...*
 >
@@ -62,7 +62,7 @@
 
 **The JVM Guy Recommends: Cucumber**
 
-## As an Architect I want to see trends of code metrics over time
+## I want to see trends of code metrics over time
 
 > *Dear JVM Guy, ...*
 >
@@ -70,7 +70,7 @@
 
 **The JVM Guy Recommends: Sonar**
 
-## As an Architect I want to discover the 'brain' classes of my projects
+## I want to discover the 'brain' classes of my projects
 
 > *Dear JVM Guy, ...*
 >
