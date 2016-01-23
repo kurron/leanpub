@@ -17,7 +17,7 @@ developer/DeveloperParis.txt
 developer/DeveloperMoscow.txt
 developer/Developer.txt
 
-Tester.txt
+tester/Tester.txt
 Operations.txt
 BackMatter.txt
 Appendix01.txt
