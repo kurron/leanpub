@@ -6,16 +6,16 @@ architect/ArchitectDublin.txt
 architect/ArchitectLondon.txt
 architect/Architect.txt
 
-DeveloperPreamble.txt
-DeveloperCairo.txt
-DeveloperCambridge.txt
-DeveloperWarsaw.txt
-DeveloperIpswich.txt
-DeveloperDarjeeling.txt
-DeveloperTokyo.txt
-DeveloperParis.txt
-DeveloperMoscow.txt
-Developer.txt
+developer/DeveloperPreamble.txt
+developer/DeveloperCairo.txt
+developer/DeveloperCambridge.txt
+developer/DeveloperWarsaw.txt
+developer/DeveloperIpswich.txt
+developer/DeveloperDarjeeling.txt
+developer/DeveloperTokyo.txt
+developer/DeveloperParis.txt
+developer/DeveloperMoscow.txt
+developer/Developer.txt
 
 Tester.txt
 Operations.txt
