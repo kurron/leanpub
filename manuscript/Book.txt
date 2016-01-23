@@ -1,10 +1,10 @@
 FrontMatter.txt
 Introduction.txt
 MainMatter.txt
-ArchitectPreamble.txt
-ArchitectDublin.txt
-ArchitectLondon.txt
-Architect.txt
+architect/ArchitectPreamble.txt
+architect/ArchitectDublin.txt
+architect/ArchitectLondon.txt
+architect/Architect.txt
 
 DeveloperPreamble.txt
 DeveloperCairo.txt
