@@ -18,6 +18,6 @@ developer/DeveloperMoscow.txt
 developer/Developer.txt
 
 tester/Tester.txt
-Operations.txt
+operations/Operations.txt
 BackMatter.txt
 Appendix01.txt
