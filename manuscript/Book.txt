@@ -1,8 +1,8 @@
 FrontMatter.txt
 Introduction.txt
 MainMatter.txt
-architect/ArchitectPreamble.txt
-architect/ArchitectDublin.txt
+architect/Preamble.txt
+architect/GradleDocker.txt
 architect/ArchitectLondon.txt
 architect/Architect.txt
 
