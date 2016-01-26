@@ -3,7 +3,7 @@ Introduction.txt
 MainMatter.txt
 architect/Preamble.txt
 architect/GradleDocker.txt
-architect/ArchitectLondon.txt
+architect/SpringCloud.txt
 architect/Architect.txt
 
 developer/DeveloperPreamble.txt
