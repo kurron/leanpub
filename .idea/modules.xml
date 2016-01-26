@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/leanpub.iml" filepath="$PROJECT_DIR$/leanpub.iml" />
-      <module fileurl="file://$PROJECT_DIR$/manuscript/pipeline/pipeline.iml" filepath="$PROJECT_DIR$/manuscript/pipeline/pipeline.iml" />
     </modules>
   </component>
 </project>
-

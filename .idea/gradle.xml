@@ -11,8 +11,12 @@
             <option value="$PROJECT_DIR$/manuscript/pipeline" />
           </set>
         </option>
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$/manuscript/pipeline" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>
 </project>
-
