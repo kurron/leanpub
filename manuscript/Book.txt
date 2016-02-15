@@ -13,7 +13,7 @@ developer/DeveloperWarsaw.txt
 developer/SpringBoot.txt
 developer/Layering.txt
 developer/DeveloperTokyo.txt
-developer/DeveloperParis.txt
+developer/Spock.txt
 developer/SpringRestDocs.txt
 developer/Developer.txt
 
