@@ -1,31 +1,34 @@
 ## As a Developer I want to reduce the boilerplate code in my Spring projects
 
-> *Dear JVM Guy, we're a Spring shop and we are slowing migrating to micro-service based solutions.  What I've noticed is that each project has a certain
-> amount of 'plumbing' code that has to get written before any real logic gets put in place.  We've thought about creating our own set of libraries
-> but we're afraid of having to maintain it as versions of the Spring libraries change over time.  Is there something you can recommend that allows our shop to
-> focus on writing solution-specific code and avoid some of the infratructure code we know needs to exist?*
+> *Dear JVM Guy, we're a Spring shop and we are slowing migrating to micro-service based solutions.  What I've noticed
+> is that each project has a certain amount of 'plumbing' code that has to get written before any real logic gets put in
+> place.  We've thought about creating our own set of libraries but we're afraid of having to maintain it as versions of
+> the Spring libraries change over time.  Is there something you can recommend that allows our shop to focus on writing
+> solution-specific code and avoid some of the infrastructure code we know needs to exist?*
 >
-> *Interested in Ipswich*
+> *Interested Ivan*
 
 **The JVM Guy Solution: [Spring Boot](http://projects.spring.io/spring-boot/)**
 
-Dear Interested, I've written my fair share of Spring applications and ran into the exact situation you've decribed.  My solution took the form of Spring Boot.
+Dear Interested, I've written my fair share of Spring applications and ran into the exact situation you've described.
+My solution took the form of Spring Boot.
 
 > From the Spring website:
 >
-> "Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that can you can "just run". We take an opinionated view 
-> of the Spring platform and third-party libraries so you can get started with minimum fuss. Most Spring Boot applications need very little Spring 
-> configuration."
+> "Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications that can you can "just
+> run". We take an opinionated view of the Spring platform and third-party libraries so you can get started with minimum
+> fuss. Most Spring Boot applications need very little Spring configuration."
 
-The Spring Boot documentation is well written so I won't focus on the **how** of Spring Boot.  Instead, I'll focus on the **what** and the **why**.
-What you get from Spring Boot is the freedom to ignore parts of the infrastructure that do not require special attention or configuration.  For example,
-if my application uses Spring Data MongoDB I can just add a few dependencies to my Gradle file and Spring will add all the necessary beans for me.
+The Spring Boot documentation is well written so I won't focus on the **how** of Spring Boot.  Instead, I'll focus on
+the **what** and the **why**. What you get from Spring Boot is the freedom to ignore parts of the infrastructure that do
+not require special attention or configuration.  For example, if my application uses Spring Data MongoDB I can just add
+a few dependencies to my Gradle file and Spring will add all the necessary beans for me.
 
 {title="Example Spring Boot Dependencies"} 
 ~~~~~~~~ 
-compile "org.springframework.boot:spring-boot-starter-data-mongodb:1.2.0.RELEASE"
-compile "org.springframework.boot:spring-boot-starter-web:1.2.0.RELEASE" 
-compile "org.springframework.boot:spring-boot-starter-actuator:1.2.0.RELEASE"
+compile "org.springframework.boot:spring-boot-starter-data-mongodb:1.3.2.RELEASE"
+compile "org.springframework.boot:spring-boot-starter-web:1.3.2.RELEASE"
+compile "org.springframework.boot:spring-boot-starter-actuator:1.3.2.RELEASE"
 ~~~~~~~~ 
  
 Those dependencies gets me the following beans:
@@ -498,15 +501,17 @@ Those dependencies gets me the following beans:
 ]
 ~~~~~~~~ 
 
-As you can see, a few lines of Gradle code install numerous beans into our application.  Some of the interesting beans include:
+As you can see, a few lines of Gradle code install numerous beans into our application.  Some of the interesting beans
+include:
 
 * an embedded servlet container enabling you to run your application as an executable JAR/WAR
 * fully configured MongoDB setup, including GridFS
 * various operational endpoints, including health monitoring and the ability to shutdown the application via a REST call
 
-Another feature that Spring Boot gives you is a nice hierarchical, type-safe configuration mechanism.  Your beans can have a configuration object
-injected into them that contains the application's deployed state.  This configuration is backed by a hierarchy of either property files or YML files.
-If you couple the configuration mechanism with Spring Profiles and you have a very powerful mechanism for tuning your application's deployments.
+Another feature that Spring Boot gives you is a nice hierarchical, type-safe configuration mechanism.  Your beans can
+have a configuration object injected into them that contains the application's deployed state.  This configuration is
+backed by a hierarchy of either property files or YML files. If you couple the configuration mechanism with Spring
+Profiles and you have a very powerful mechanism for tuning your application's deployments.
 
 {title="Relevant Configuration Files"} 
 ~~~~~~~~ 
@@ -521,10 +526,8 @@ service/
     │   │           ├── ApplicationProperties.groovy
     │   ├── resources
     │   │   ├── config
-    │   │   │   ├── application-production.properties
-    │   │   │   ├── application.properties
-    │   │   │   └── application-test.properties
-~~~~~~~~ 
+    │   │   │   ├── application.yml
+~~~~~~~~
 
 {title="ApplicationProperties.groovy"} 
 ~~~~~~~~ 
@@ -536,24 +539,64 @@ class ApplicationProperties {
     /**
      * The name of the AMQP queue where messages go to.
      */
-    String queue = 'echo-queue'
+    String queue
 }
 ~~~~~~~~ 
 
-{title="application.properties"} 
-~~~~~~~~ 
-example.queue = development-queue
-~~~~~~~~ 
+{title="application.yml"}
+~~~~~~~~
+# default value
+example:
+    queue: development-queue
 
-{title="application-test.properties"} 
-~~~~~~~~ 
-example.queue = qa-queue
-~~~~~~~~ 
+---
+spring:
+  profiles: test
+example:
+    queue: qa-queue
 
-{title="application-production.properties"} 
-~~~~~~~~ 
-example.queue = production-queue
-~~~~~~~~ 
+---
+spring:
+  profiles: production
+example:
+    queue: production-queue
+~~~~~~~~
 
-In the above example, the value of the `queue` value will change depending on which Spring profile is currently active.  The Spring Boot documentation
-has some nice examples and I encourage you to look there for a deeper discussion.
+In the above example, the value of the `queue` value will change depending on which Spring profile is currently active.
+The Spring Boot documentation has some nice examples and I encourage you to look there for a deeper discussion.
+
+T> ## Spring IO Platform
+T>
+T> Many times, you don't want to have to know which versions of the various Spring libraries are compatible with each
+T> other.  The [Spring IO Platform](http://platform.spring.io/platform/) manages library versioning for you so you can
+T> be certain that the combination of libraries are known to properly work together.  Here is an example Gradle build
+T> file.  Notice how the version numbers for the dependencies are omitted:
+T> {title="build.gradle"}
+T> ~~~~~~~~
+T> buildscript {
+T>     repositories {
+T>         jcenter()
+T>     }
+T>     dependencies {
+T>         classpath "io.spring.gradle:dependency-management-plugin:${dependencyPluginVersion}"
+T>         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+T>     }
+T> }
+T>
+T> apply plugin: 'io.spring.dependency-management'
+T>
+T> dependencyManagement {
+T>     imports {
+T>         mavenBom "io.spring.platform:platform-bom:${ioPlatformVersion}"
+T>     }
+T> }
+T>
+T> dependencies {
+T>     compile('org.springframework.boot:spring-boot-starter-aop')
+T>     compile('org.springframework.boot:spring-boot-starter-cache')
+T>     compile('org.springframework.boot:spring-boot-devtools')
+T>     compile('org.springframework.boot:spring-boot-starter-security')
+T>     compile('org.springframework.boot:spring-boot-starter-validation')
+T>     testCompile('org.springframework.boot:spring-boot-starter-test')
+T> }
+T> ~~~~~~~~

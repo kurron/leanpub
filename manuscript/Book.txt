@@ -10,7 +10,7 @@ developer/DeveloperPreamble.txt
 developer/Vagrant.txt
 developer/Lazybones.txt
 developer/DeveloperWarsaw.txt
-developer/DeveloperIpswich.txt
+developer/SpringBoot.txt
 developer/Layering.txt
 developer/DeveloperTokyo.txt
 developer/DeveloperParis.txt
