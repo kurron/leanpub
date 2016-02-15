@@ -572,31 +572,31 @@ T> other.  The [Spring IO Platform](http://platform.spring.io/platform/) manages
 T> be certain that the combination of libraries are known to properly work together.  Here is an example Gradle build
 T> file.  Notice how the version numbers for the dependencies are omitted:
 T> {title="build.gradle"}
-T> ~~~~~~~~
-T> buildscript {
-T>     repositories {
-T>         jcenter()
-T>     }
-T>     dependencies {
-T>         classpath "io.spring.gradle:dependency-management-plugin:${dependencyPluginVersion}"
-T>         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-T>     }
-T> }
-T>
-T> apply plugin: 'io.spring.dependency-management'
-T>
-T> dependencyManagement {
-T>     imports {
-T>         mavenBom "io.spring.platform:platform-bom:${ioPlatformVersion}"
-T>     }
-T> }
-T>
-T> dependencies {
-T>     compile('org.springframework.boot:spring-boot-starter-aop')
-T>     compile('org.springframework.boot:spring-boot-starter-cache')
-T>     compile('org.springframework.boot:spring-boot-devtools')
-T>     compile('org.springframework.boot:spring-boot-starter-security')
-T>     compile('org.springframework.boot:spring-boot-starter-validation')
-T>     testCompile('org.springframework.boot:spring-boot-starter-test')
-T> }
-T> ~~~~~~~~
+~~~~~~~~
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:${dependencyPluginVersion}"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+    imports {
+        mavenBom "io.spring.platform:platform-bom:${ioPlatformVersion}"
+    }
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-aop')
+    compile('org.springframework.boot:spring-boot-starter-cache')
+    compile('org.springframework.boot:spring-boot-devtools')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-validation')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+~~~~~~~~
