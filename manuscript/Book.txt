@@ -9,7 +9,7 @@ architect/Architect.txt
 developer/DeveloperPreamble.txt
 developer/Vagrant.txt
 developer/Lazybones.txt
-developer/DeveloperWarsaw.txt
+developer/FastIntegrationTest.txt
 developer/SpringBoot.txt
 developer/Layering.txt
 developer/SpockUnit.txt
