@@ -1,0 +1,136 @@
+## As a Developer I want to be able to easily create automated tests
+
+> *Dear JVM Guy, I'm trying to cultivate a test-first mindset but I'm having difficulties getting into a rhythm.  I
+> think it is because I'm struggling with my tools.  I'm using JUnit, which isn't hard to grasp, but I am having
+> issues with dealing with inter-object collaborations.  All the text books say I should be mocking and stubbing so I've
+> tried a couple libraries including EasyMock and Mockito, but found the syntax for setup and replay to be cumbersome.
+> Do you have any suggestions on tooling that might make my struggle a bit easier?*
+>
+> Tire of Testing
+
+**The JVM Guy Recommends: [Spock](https://code.google.com/p/spock/)**
+
+Dear Tired, I feel your pain.  I too have struggled with writing automated tests.  Some tests were super simple to write
+and others were more complex than the object I was testing!  My breakthrough came when I realized it was *ok to be a
+polyglot programmer*.  At the time I was working on a Java project and *assumed* that I had to use Java in my tests as
+well. Once I decided that it was okay to look to other JVM languages for my testing needs, my world opened up.  I looked
+at JRuby and others but eventually settled on Groovy, mainly because of its small learning curve for Java developers.
+In the Groovy space I found an excellent testing tool named Spock and can't recommend it enough.  It has allowed the
+teams I've worked on to breeze through most testing tasks. In fact, we cringe when we have to revisit tests written in
+Java.  My only complaint about Spock is that its documentation could use some work but Mr. Haki has filled that void
+with his book [Spocklinght Notebook](https://leanpub.com/spockframeworknotebook). The book describes everything you need
+to know so I'll just restrict this discussion to an example or two of my favorite recipes.
+
+### Data Driven Testing
+
+Sometimes you need to test an algorithm using different data sets.  The naive way to accomplish this would be to create
+multiple tests that differ only in the data.  Spock, of course, has a more elegant solution to the problem.
+
+{title="Data Driven Test", lang=groovy}
+~~~~~~~
+@Unroll( 'verify addition where #description' )
+def 'verify addition scenarios'() {
+
+    given: 'valid subject under test'
+    def sut = new Adder()
+
+    when: 'two numbers are added'
+    def result = sut.add( x, y )
+
+    then: 'expected results are returned'
+    result == expected
+
+    where: 
+     x  | y || expected
+     0  | 0 || 0
+     1  | 0 || 1
+    -1  | 1 || 0
+
+    description = "x is ${x} and ${y}" )
+}
+~~~~~~~
+
+One thing to notice that I'm using the given/when/then format in the test but Spock allows you to use other forms as
+well.  Spock will loop through the data in the `where` clause and run an instance of the test replacing the variables
+with the data in the table. For example, the first run will have `x` replaced with 0, `y` with 0 and `expected` with 0.
+The `description` variable is also replaced with evaluated GString and printed in the `@Unroll` statement.  Enriching
+the `@Unroll` annotation makes it easier to see exactly why data is being used when a test case fails.
+
+{title="Mocking A Network Failure", lang=groovy}
+~~~~~~~
+def 'verify exception is wrapped'() {
+
+    def uri = generateRandomURI()
+
+    given: 'valid subject under test'
+    def sut = new SomeIntegrationPoint()
+
+    and: 'trained test double'
+    def restTemplate = Stub( RestOperation )
+    sut.restTemplate = restTemplate
+    restTemplate.headForHeaders( uri ) >> throw new IOException( 'Oops!' )
+
+    when: 'the connection fails'
+    sut.fetchResourceHeaders( uri )
+
+    then: 'a domain exception is returned'
+    def thrown = thrown( IntegrationFailure )
+    thrown.statusCode == 0xDEAD     
+}
+~~~~~~~
+
+In this test, we are using a test double to replace the actual REST template we would normally use.  In this
+case the test double has been instructed to thrown an `IOException` when `headForHeaders` is called with a
+particular value.  The check uses the `thrown` clause to verify that an exception of type `IntegrationFailure`
+was thrown.  We also verify that the correct status code was filled in. This is a nice way to simulate a 
+link failure at the network level and verify that the raw exception is properly wrapped in a domain exception.
+
+I> ## Stubs and Mocks
+I> 
+I> Spock follows the definitions put forth by Martin Fowler in
+I> [Mocks Aren't Stubs](http://martinfowler.com/articles/mocksArentStubs.html). Spock's `Stub` API allows you to
+I> train your test double with a specific behavior but doesn't require that the behavior is invoked.  Said another
+I> way, a Stub will never cause a failing test.  Using the `Mock` API, however, will fail the test if the behavior
+I> is not invoked exactly as specified.  I typically will reach for a Stub first until I realize that I cannot verify
+I> the logic without 'peeking' inside a closed object.  At that time, I'll use a Mock and ensure that the collaborator
+I> is called as expected.
+
+{title="Endo-testing Example", lang=groovy}
+~~~~~~~
+def 'verify failure is logged at highest level'() {
+
+    def uri = generateRandomURI()
+    def forcedError = new IOException( 'Forced to fail' )
+
+    given: 'valid subject under test'
+    def sut = new SomeIntegrationPoint()
+
+    and: 'trained test double'
+    def restTemplate = Stub( RestOperation )
+    sut.restTemplate = restTemplate
+    restTemplate.headForHeaders( uri ) >> throw forcedError
+
+    and: 'trained test double'
+    def logger = Mock( FeedbackProvider )
+    sut.logger = logger
+
+    when: 'the connection fails'
+    sut.fetchResourceHeaders( uri )
+
+    then: 'operations is notified one time'
+    1 * logger.notifyOperations( forcedError)
+}
+~~~~~~~
+
+In this test, we want to ensure that a particular type of error is brought to the attention of operations.
+Since the state of the subject under test is not affected by the error, we need to use a `Mock` to verify  
+our expectation that operation is properly notified.  For tests where the state of an object doesn't change,
+a Mock can be used to verify your expectations.
+
+W> ## Too Many Collaborators
+W>
+W> Hopefully, you can see that using dependency injection and Spock can help ease the testing burden. I must
+W> warn you, however, that having to set up numerous collaborators before you can run your
+W> test is a code smell and should indicate a review of the design.  A high efferent coupling can indicate that
+W> the object is trying to do too many things.  It can also indicate that an abstraction is too low-level and needs
+W> to be revisited.

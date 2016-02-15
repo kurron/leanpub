@@ -12,8 +12,8 @@ developer/Lazybones.txt
 developer/DeveloperWarsaw.txt
 developer/SpringBoot.txt
 developer/Layering.txt
-developer/DeveloperTokyo.txt
-developer/Spock.txt
+developer/SpockUnit.txt
+developer/SpockIntegration.txt
 developer/SpringRestDocs.txt
 developer/Developer.txt
 
