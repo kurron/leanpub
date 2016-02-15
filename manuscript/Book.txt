@@ -8,7 +8,7 @@ architect/Architect.txt
 
 developer/DeveloperPreamble.txt
 developer/Vagrant.txt
-developer/DeveloperCambridge.txt
+developer/Lazybones.txt
 developer/DeveloperWarsaw.txt
 developer/DeveloperIpswich.txt
 developer/DeveloperDarjeeling.txt

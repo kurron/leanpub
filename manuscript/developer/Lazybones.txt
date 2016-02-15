@@ -1,0 +1,286 @@
+**Using Lazybones To Bootstrap A New Project**
+
+## As a Developer I want to be able to quickly create a skeleton for my new project
+
+> *Dear JVM Guy, whenever I start a new project I usually end up copying files from an existing project just to get
+> things bootstrapped.  It is pain because there is so much trial and error figuring out what files I forgot to copy.
+> Any suggestions?*
+>
+> *Constantly Copying*
+
+
+**The JVM Guy Recommends: [SDKMAN!](http://sdkman.io/) and [lazybones](https://github.com/pledbrook/lazybones)**
+
+Dear Constantly Copying, I think I have a solution for you: lazybones.  This Groovy-based tool allows you to define a
+customized template, store it in the cloud, and share it with your peers.  The mechanics are very simple and can be
+used to template almost any project type. The steps go something like this:
+
+* create a template directory structure
+* provide a version file
+* publish the template to the cloud
+* tell all of your friends
+
+It really is that simple. Before we can create our template, we need to get lazybones installed and that is where
+`SDKMAN!` comes into play.  The Software Development Kit Manager is a nice utility that helps ease the pain of
+installing some of the commonly used JVM tools, such as Gradle, Vert.x, Spring Boot and, of course, lazybones.
+Installing SDKMAN! is trivial on a Linux box.
+
+{title="Installing SDKMAN! on Linux"}
+~~~~~~~~ 
+curl -s http://get.sdkman.io | bash
+~~~~~~~~ 
+
+The shell script will modify your `.bashrc` file, making SDKMAN! and all its goodness available to you.  Try
+`sdk install` to see a list of all programs that SDKMAN! can manage.  To install lazybones type `sdk install lazybones`
+and follow the prompts.  If things are successful you should be able to type `lazybones --version` and see something
+like `Lazybones version 0.7.1`.
+
+I> ## SDKMAN! used to be called GVM
+I>
+I> SDKMAN! used to be called GVM, the Groovy enVironment Manager.  SDKMAN! has grown in scope and can handle
+I> non-Groovy tools, hence the new name.
+
+T> ## Customize SDKMAN!
+T>
+T> I like to allow SDKMAN! to do as much as it can on its own and not wait for my permission.  I usually create a
+T> `.sdkman/etc/config` file with the following contents so that SDKMAN! will automatically stay current.
+T>
+T> {lang="Bash"}
+T> ~~~~~~~~
+T> # make sdkman non-interactive, preferred for CI environments
+T> sdkman_auto_answer=true
+T>
+T> # perform automatic selfupdates
+T> sdkman_auto_selfupdate=true
+T> # configure curl timeouts
+T> sdkman_curl_connect_timeout=5
+T> sdkman_curl_max_time=4
+T> ~~~~~~~~
+T>
+
+Once we have lazybones available to us, we'll use it to bootstrap our custom template by issuing the command
+`lazybones create lazybones-project 1.1 my-templates`. In this command, I'm specifying a template version to use.  If
+the version is omitted, the most current version is used.  The command leaves us with the following directory structure:
+
+~~~~~~~~
+my-templates/
+├── build.gradle
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+├── README.md
+└── templates
+~~~~~~~~
+
+The template we are creating must go into the `templates` directory and be named using a hyphenated naming structure.
+Here we will use an extremely simple example to get you started but this is easily expanded into a much richer template
+specific to your needs. Our template will be named `simple-groovy-project` and contains just a few files and folders.
+
+~~~~~~~~
+my-templates/
+├── build.gradle
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+├── README.md
+└── templates
+    └── simple-groovy-project
+        ├── build.gradle
+        ├── gradle.properties
+        ├── README
+        ├── settings.gradle
+        ├── src
+        │   ├── main
+        │   │   ├── groovy
+        │   │   │   └── .retain
+        │   │   └── resources
+        │   │       └── .retain
+        │   └── test
+        │       ├── groovy
+        │       │   └── .retain
+        │       └── resources
+        │           └── .retain
+        └── VERSION
+~~~~~~~~
+
+As you can see the layout is a basic Gradle layout devoid of any source files. The `.retain` files are special marker
+files that indicate an empty directory is part of the template.  Just like Git, lazybones only respects files and not
+directories.  Once you have your template laid out, you'll need a place to publish it.  Although it is possible to use
+the template locally and never publish it, I find it much more useful to have access to my templates from any machine
+that has an internet connection.
+
+T> ## Richer Templates
+T>
+T> Although this simple example only contains a couple Gradle files, a template typically contains a richer variety of
+T> files.  Personally, I try to include anything that will help make me productive on a new project. That includes:
+T>
+T> * example unit test
+T> * example integration test
+T> * example acceptance test
+T> * Gradle file with my typical dependencies already enumerated
+T> * reference to the corporate artifact repository
+T>
+T> You can also take advantage of lazybones' templating engine to replace tokens with values provided at project
+T> creation time, such as package names.
+T>
+
+A friendly place to host your templates is [Bintray](https://bintray.com/).  Bintray uses a freemium model but, for
+hosting our templates, all we need is the free version of the service.  Once you have an account created, you'll need
+to create repository.  If you want lazybones to handle the details of publishing your template you'll need to make your
+repository of type `Generic`.  Other than that, you can fill in the other details anyway you want.  For this example,
+I'll be publishing to a repository named `lazybones`.
+
+The Gradle files at the top of the tree are special because they are generated from the lazybones template and contain
+the publishing logic. Before you can publish to Bintray you need to tell Gradle about your Bintray account.  The
+simplest way is to modify the `build.gradle` file so that is has your information.
+
+{title="Modified build.gradle", lang="Groovy"} 
+~~~~~~~~ 
+lazybones {
+    repositoryUrl = 'https://api.bintray.com/content/jvmguy/lazybones'
+    repositoryUsername = 'jvmguy'
+    repositoryApiKey = 'jvm guy API key'
+}
+~~~~~~~~ 
+
+The information contained in the modified section of the build file is obtained from your Bintray account.
+
+T> ## Externalize your Bintray credentials.
+T>
+T> A good idea is to modify your `build.gradle` files so that it looks up your credentials from a properties file
+T> that **is not stored under source control**. That way, you can safely store your build file under source control
+T> and don't have to worry about accidentally checking in your Bintray credentials.
+T> 
+T> {title="Modified build.gradle using properties", lang="Groovy"} 
+T> ~~~~~~~~ 
+T> lazybones {
+T>     repositoryUrl = 'https://api.bintray.com/content/jvmguy/lazybones'
+T>     repositoryUsername = bintrayUsername
+T>     repositoryApiKey = bintrayApiKey
+T> }
+T> ~~~~~~~~ 
+T> 
+T> {title="gradle.properties", lang="Groovy"} 
+T> ~~~~~~~~ 
+T> bintrayUsername = jvmguy
+T> bintrayApiKey = jvmguyapikey
+T> ~~~~~~~~ 
+T> 
+
+Ensure that you have a `VERSION` file in your template.  Without it, lazybones will refuse to publish your template.
+The contents do not appear to matter to lazybones other than it must be different from any previously published
+templates.  Mine is very simple:
+
+{title="VERSION"} 
+~~~~~~~~ 
+0.0.1
+~~~~~~~~ 
+
+One final step is to go to the Bintray web site and create a new Bintray package.  The only pieces of information that
+are required are the package name and the license.  The package name must match the name of the template being
+published with a `-template` suffix added to the end.  For example, to publish our template named `simple-groovy-project`
+I need to create a Bintray packaged named `simple-groovy-project-template`.  Once the package is created, we should be
+able to publish our template using the following command-line:
+
+{title="The lazybones command to publish the simple-groovy-project template"} 
+~~~~~~~~ 
+./gradlew publishTemplateSimpleGroovyProject
+~~~~~~~~ 
+
+Notice that we have converted the hyphen casing of the template name into camel case?  Once the publish is completed,
+there is one final step to perform before your template can be used in the wild.  You need to go back to the Bintray
+website and confirm that you want the lazybones artifact published.
+
+T> ## Test Your Template Locally
+T>
+T> You'll want to test your template locally before publishing.  The easiest way to do that it to use the
+T> `installAllTemplates` target.
+T> 
+T> {title="Package and install the simple-groovy-project template"} 
+T> ~~~~~~~~ 
+T> ./gradlew installAllTemplates
+T> 
+T> :packageTemplateSimpleGroovyProject
+T> :installTemplateSimpleGroovyProject
+T> :installAllTemplates
+T> 
+T> BUILD SUCCESSFUL
+T> 
+T> Total time: 5.791 secs
+T> 
+T> ~~~~~~~~ 
+T> 
+T> {title="Testing the new template"} 
+T> ~~~~~~~~ 
+T> lazybones create simple-groovy-project 0.0.1 template-test
+T> Creating project from template simple-groovy-project 0.0.1 in 'template-test'
+T> 
+T> This is the contents of the README file.
+T> 
+T> 
+T> Project created in template-test!
+T> ~~~~~~~~ 
+T> 
+
+Once your template is published and available for the world to see your users will have to tell lazybones about your
+repository, which is very simple to do.  Have them create a file called `config.groovy` in the `~/.lazybones` directory
+and have it point to your repository:
+
+{title="~/.lazybones/config.groovy", lang="Groovy"} 
+~~~~~~~~ 
+bintrayRepositories = [ "jvmguy/lazybones", 
+                        "kyleboon/lazybones", 
+                        "pledbrook/lazybones-templates" ]
+~~~~~~~~ 
+
+Once this is done, they should see your template in lazybones' list:
+
+{title="List available templates"}
+~~~~~~~~ 
+lazybones list
+
+Available templates in jvmguy/lazybones
+
+    simple-groovy-project
+
+Available templates in kyleboon/lazybones
+
+    dropwizard
+    groovy-app
+    java-basic
+    jbake
+
+Available templates in pledbrook/lazybones-templates
+
+    aem-multimodule-project
+    afterburnerfx
+    afterburnergfx
+    angular-grails
+    asciidoctor-gradle
+    dropwizard
+    gaelyk
+    gradle-plugin
+    gradle-quickstart
+    groovy-app
+    groovy-lib
+    java-basic
+    lazybones-project
+    nebula-plugin
+    ratpack
+    ratpack-lite
+    spring-boot-actuator
+~~~~~~~~ 
+
+T> ## Spring Initializr
+T>
+T> The folks over at Pivotal have created a handy web application, called [Spring Initializer](http://start.spring.io/),
+T> that will generate either build files or an entire folder structure for your Spring projects.  All you do is specify
+T> a few parameters, click the button and you are handed a skeleton for your project.  It really doesn't get much easier
+T> than that.
+T>
