@@ -7,7 +7,7 @@ architect/SpringCloud.txt
 architect/Architect.txt
 
 developer/DeveloperPreamble.txt
-developer/DeveloperCairo.txt
+developer/Vagrant.txt
 developer/DeveloperCambridge.txt
 developer/DeveloperWarsaw.txt
 developer/DeveloperIpswich.txt
