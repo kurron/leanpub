@@ -448,7 +448,7 @@ COPY *.gradle /usr/lib/jvm/gradle-2.2/init.d/
 # entrypoint is inherited from the gradle image
 ~~~~~~~~ 
 
-From the perspective of the CI server, the benefit of a Docker-based build system is easu to see -- no more installation
+From the perspective of the CI server, the benefit of a Docker-based build system is easy to see -- no more installation
 of build tools or runtimes.  From the developer's perspective, the burden of writing and maintaining a build system has
 been off-loaded to somebody else.  The developer just puts the code in expected places and runs the version of the build
 tool needed for that particular project.  Obviously, the developer has to know something about the build tool, such as
