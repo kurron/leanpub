@@ -323,9 +323,9 @@ docker run --volume $(pwd):/src
            --workdir=/src 
            --user=$(id -u $(whoami)):$(id -g $(whoami)) 
            --rm 
-           --attach stdout 
-           --attach stderr 
-           --interactive jvm-guy/ant-build:1.0.0 "$@" 
+           --tty
+           --interactive
+           jvm-guy/ant-build:1.0.0 "$@"
 ~~~~~~~~ 
 
 {title="Gradle-based project's assemble-artifacts.sh", lang="Bash"} 
@@ -336,9 +336,9 @@ docker run --volume $(pwd):/src
            --workdir=/src 
            --user=$(id -u $(whoami)):$(id -g $(whoami)) 
            --rm 
-           --attach stdout 
-           --attach stderr 
-           --interactive jvm-guy/gradle-build:1.0.0 "$@" 
+           --tty
+           --interactive
+           jvm-guy/gradle-build:1.0.0 "$@"
 ~~~~~~~~ 
 
 Each script simply runs a docker command with a particular set of switches. There is a lot going on in the command but
