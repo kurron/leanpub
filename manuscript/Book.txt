@@ -14,7 +14,7 @@ developer/SpringBoot.txt
 developer/Layering.txt
 developer/DeveloperTokyo.txt
 developer/DeveloperParis.txt
-developer/DeveloperMoscow.txt
+developer/SpringRestDocs.txt
 developer/Developer.txt
 
 tester/Tester.txt
